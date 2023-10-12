@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <h2>Budget Tracker</h2>
+
+    <form action="/create_events" method="post">
+        <ul>
+            <li>
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" />
+            </li>
+
+            <li>
+                <label for="event_type">Rodzaj</label>
+                <input type="text" id="event_type" name="event_type" />
+            </li>
+
+            <li>
+                <label for="category">Kategoria</label>
+                <input type="text" id="category" name="category"/>
+            </li>
+
+            <li>
+                <label for="subcategory">Podkategoria</label>
+                <input type="subcategory" id="subcategory" name="subcategory"/>
+            </li>
+
+            <li>
+                <label for="amount">Kwota</label>
+                <input type="number" id="amount" name="amount"/>
+            </li>
+
+            <li class="button">
+                <button type="submit">Send your message</button>
+            </li>
+
+        </ul>
+    </form>
+
+{% endblock %}
