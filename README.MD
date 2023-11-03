@@ -17,6 +17,7 @@ Create web app for entering income and expenses.
 
 
 ## To Do Plan
-- create post method for income_expense,
-- create category, subcategory tables,
-- create dropdowns for forms,
+- create tables with categories and subcategories,
+- create dropdowns for forms with name from DB,
+- create remove buttons,
+- create dashboard,
