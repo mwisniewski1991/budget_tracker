@@ -2,7 +2,7 @@ from . import db
 from sqlalchemy.sql import func
 
 class INCEXP(db.Model):
-    __tablename__ = 'INCEXP'
+    __tablename__ = 'incexp'
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
