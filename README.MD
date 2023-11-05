@@ -17,7 +17,9 @@ Create web app for entering income and expenses.
 
 
 ## To Do Plan
-- create tables with categories and subcategories,
-- create dropdowns for forms with name from DB,
-- create remove buttons,
+- create Flask View for position list
+    - enable removing positions
+- create accounts table,
+- create shop table, 
+
 - create dashboard,
