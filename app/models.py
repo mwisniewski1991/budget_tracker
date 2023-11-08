@@ -1,12 +1,20 @@
 from . import db 
 from sqlalchemy.sql import func
 
-class INCEXP(db.Model):
-    __tablename__ = 'incexp'
+
+
+class INCEXP_header(db.Model):
+    __tablename__ = 'incexp_header'
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
     type_id = db.Column(db.Integer, nullable=False)
+
+class INCEXP_position(db.Model):
+    __tablename__ = 'incexp_position'
+
+    header_id = db.Column(db.Integer, primary_key=True)
+    position_id = db.Column(db.Integer),
     category_id = db.Column(db.String(100), nullable=False)
     subcategory_id = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Integer, nullable=False)

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 from . import db
-from .models import INCEXP, Category, Subategory, Type
+from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
