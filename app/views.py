@@ -1,13 +1,18 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, send_from_directory
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
 
-@views.route('/', methods=['GET', 'POST'])
-def home():
-    return render_template('home.html')
+@views.route("/")
+def base():
+    return send_from_directory('../frontend/public', 'index.html')
+
+@views.route("/<path:path>")
+def home(path):
+    return send_from_directory('../frontend/public', path)
+
 
 @views.route('/aboutme', methods=['GET'])
 def about_me():
@@ -89,7 +94,6 @@ def add():
     #     'connection': request.form['connection'],
     # }
 
-
 @views.route('/categories', methods=['GET'])
 def get_categories():
 
@@ -104,7 +108,6 @@ def get_categories():
         } for cat in categories
     ]
 
-
 @views.route('/subcategories', methods=['GET'])
 def get_subcategories():
 
@@ -118,7 +121,6 @@ def get_subcategories():
             'name_pl': subcat.name_pl,
         } for subcat in subcategories
     ]
-
 
 @views.route('/testdb', methods=['GET'])
 def testdb():
