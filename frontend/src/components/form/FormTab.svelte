@@ -1,23 +1,41 @@
 <script>
     import FormPosition from "./FormPosition.svelte";
+    import FormPositionTab from "./FormPositionTab.svelte";
+    import {range} from './range.js';
+
+    let currentPositionNumber = 1;
+    
+    function addPosition(){
+      currentPositionNumber += 1;  
+    };
+
+    function RemovePosition(){
+      if (currentPositionNumber>1){
+          currentPositionNumber -= 1;  
+      }  
+    };
+
 </script>
 
-<ul class="nav nav-tabs" id="positionTab" role="tablist">
-    <li class="nav-item" role="presentation">
-      <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#pos_1" type="button" role="tab" aria-controls="pos_1" aria-selected="true">Poz 1</button>
-    </li>
+<div>
+  <button class="btn btn-secondary" type="button" on:click={addPosition}>Dodaj pozycję</button>
+  <button class="btn btn-secondary" type="button" on:click={RemovePosition}>Usuń pozycję</button>
 
-    <li class="nav-item" role="presentation">
-      <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#pos_2" type="button" role="tab" aria-controls="pos_2" aria-selected="false">Poz 2</button>
-    </li>
-</ul>
+</div>
 
+<div>
 
-<div class="tab-content" id="positionContent">
-    
-    <FormPosition position_id=1/>
-    <FormPosition position_id=2/>
+  <ul class="nav nav-tabs" id="positionTab" role="tablist">
+    {#each range(1, currentPositionNumber + 1, 1) as i}
+      <FormPositionTab positionTabId= {i}/>  
+    {/each}
+  </ul>
 
 
+  <div class="tab-content" id="positionContent">
+    {#each range(1, currentPositionNumber + 1, 1) as i}
+      <FormPosition position_id={i}/>
+    {/each}
+  </div>
 
 </div>
