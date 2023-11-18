@@ -1,4 +1,5 @@
 import { writable } from "svelte/store"
 
 
-export let userTypeId = writable(2)
+export const userTypeId = writable('1')
+export const userCategoryId = writable('01')

@@ -1,10 +1,12 @@
 <script>
-    // import { each } from "svelte/internal";
-
-    export let type_id = 2;
+    import { userTypeId, userCategoryId } from "../store.js"
+    
     export let position_id;
-    export let selected = "false";
+    
+    $:userTypeId, categoriesPromise = getCategories({type_id: $userTypeId}); 
+    $:userCategoryId, subcategoriesPromise = getSubcategories({category_id: $userCategoryId});
 
+    
     function selectClass(position){
         if(position == 1){
             return "tab-pane fade show active"
@@ -13,9 +15,11 @@
         }
     }
 
+    let userCategory = "01";
+    
     let html_position_id = `pos_${position_id}`;
-    let categoriesPromise = getCategories({type_id: type_id});
-    let subcategoriesPromise = getSubcategories({category_id: "02"});
+    let categoriesPromise = getCategories({type_id: $userTypeId});
+    let subcategoriesPromise = getSubcategories({category_id: $userCategoryId});
 
     let html_category_name = `category_${position_id}`;
     let html_subcategory_name = `subcategory_${position_id}`;
@@ -23,15 +27,13 @@
     let html_comment_name = `comment_${position_id}`;
     let html_shop_name = `shop_${position_id}`;
     let html_connection_name = `connection_${position_id}`;
-
-    
     
 
     async function getCategories(userParameters){
         const parameters = new URLSearchParams(userParameters)
         const resposne = await fetch(`/categories?${parameters}`, {method:"GET"})
-        
         const json = await resposne.json()
+
         return json
     }
 
@@ -43,6 +45,10 @@
         return json
     }
 
+    function onCategoryChange(){
+        userCategoryId.set(userCategory)
+    };
+
 </script>
 
 <div class={selectClass(position_id)} id={html_position_id} role="tabpanel" aria-labelledby="home-tab">
@@ -51,7 +57,7 @@
 
         <div class="mb-3">
         <label for={html_category_name} class="form-label">Kategoria</label>
-            <select class="form-select" aria-label="Default select example" id={html_category_name} name={html_category_name}>
+            <select class="form-select" aria-label="Default select example" id={html_category_name} name={html_category_name} bind:value={userCategory} on:change={onCategoryChange}>
                 {#await categoriesPromise}
                     <p></p>
                 {:then categoriesList} 

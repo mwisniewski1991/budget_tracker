@@ -20,7 +20,6 @@
 <div>
   <button class="btn btn-secondary" type="button" on:click={addPosition}>Dodaj pozycję</button>
   <button class="btn btn-secondary" type="button" on:click={RemovePosition}>Usuń pozycję</button>
-
 </div>
 
 <div>
