@@ -14,7 +14,7 @@ class INCEXP_position(db.Model):
     __tablename__ = 'incexp_position'
 
     header_id = db.Column(db.Integer, primary_key=True)
-    position_id = db.Column(db.Integer),
+    position_id = db.Column(db.Integer)
     category_id = db.Column(db.String(100), nullable=False)
     subcategory_id = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Integer, nullable=False)

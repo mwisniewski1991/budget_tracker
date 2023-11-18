@@ -5,8 +5,9 @@ from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
 
-@views.route("/")
+@views.route("/", methods=['GET', 'POST'])
 def base():
+    print(request.form)
     return send_from_directory('../frontend/public', 'index.html')
 
 @views.route("/<path:path>")
