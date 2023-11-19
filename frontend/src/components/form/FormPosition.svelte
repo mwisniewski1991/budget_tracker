@@ -1,25 +1,14 @@
 <script>
-    import { userTypeId, userCategoryId } from "../store.js"
-    
+    import { userTypeId, userCategoryId  } from "../store.js"
+
     export let position_id;
-    
-    $:userTypeId, categoriesPromise = getCategories({type_id: $userTypeId}); 
-    $:userCategoryId, subcategoriesPromise = getSubcategories({category_id: $userCategoryId});
 
-    
-    function selectClass(position){
-        if(position == 1){
-            return "tab-pane fade show active"
-        }else{
-            return "tab-pane fade"
-        }
-    }
+    let userCategory;
 
-    let userCategory = "01";
+    let categoriesPromise;
+    let subcategoriesPromise;
     
     let html_position_id = `pos_${position_id}`;
-    let categoriesPromise = getCategories({type_id: $userTypeId});
-    let subcategoriesPromise = getSubcategories({category_id: $userCategoryId});
 
     let html_category_name = `category_${position_id}`;
     let html_subcategory_name = `subcategory_${position_id}`;
@@ -27,27 +16,41 @@
     let html_comment_name = `comment_${position_id}`;
     let html_shop_name = `shop_${position_id}`;
     let html_connection_name = `connection_${position_id}`;
+
+    $: categoriesPromise = getCategories({type_id: $userTypeId}); 
+    $: subcategoriesPromise = getSubcategories({category_id: $userCategoryId}); 
     
+
+    function selectClass(position){
+        if(position == 1){
+            return "tab-pane fade show active"
+        }else{
+            return "tab-pane fade"
+        }
+    };
 
     async function getCategories(userParameters){
         const parameters = new URLSearchParams(userParameters)
         const resposne = await fetch(`/categories?${parameters}`, {method:"GET"})
         const json = await resposne.json()
+        
+        const fistCategoryValue = json[0].id
+        userCategoryId.set(fistCategoryValue)
 
         return json
-    }
+    };
 
     async function getSubcategories(userParameters){
-
         const parameters = new URLSearchParams(userParameters)
         const resposne = await fetch(`/subcategories?${parameters}`, {method:"GET"})
         const json = await resposne.json()
         return json
-    }
+    };
 
-    function onCategoryChange(){
+    function onCategoryChange(userCategory){
         userCategoryId.set(userCategory)
     };
+
 
 </script>
 
@@ -57,7 +60,8 @@
 
         <div class="mb-3">
         <label for={html_category_name} class="form-label">Kategoria</label>
-            <select class="form-select" aria-label="Default select example" id={html_category_name} name={html_category_name} bind:value={userCategory} on:change={onCategoryChange}>
+            <select class="form-select" aria-label="Default select example" id={html_category_name} name={html_category_name} bind:value={userCategory} on:change={onCategoryChange(userCategory)}>
+
                 {#await categoriesPromise}
                     <p></p>
                 {:then categoriesList} 
@@ -84,7 +88,6 @@
                     {:catch Error}
                         <p>Something went wrong</p>
                 {/await}
-
 
             </select>
         </div>

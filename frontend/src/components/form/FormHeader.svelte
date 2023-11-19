@@ -1,9 +1,7 @@
 <script>
     import { userTypeId  } from '../store.js';
-    
-    let userTypeIdValue = '';
 
-    let userType = '1';
+    let userType;
 
     function onTypeChange(){
         userTypeId.set(userType)
@@ -23,8 +21,8 @@
         <label for="type_id" class="form-label">Rodzaj</label>
         <select class="form-select" aria-label="Default select example" id="type_id" name="type_id" bind:value={userType} on:change={onTypeChange}>
 
-            <option value="2">Wydatek</option>
             <option value="1">Dochód</option>
+            <option value="2">Wydatek</option>
 
         </select>
     </div>    
