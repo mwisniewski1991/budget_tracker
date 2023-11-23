@@ -119,6 +119,16 @@ def get_accounts():
         } for account in accounts
     ]
 
+@views.route('/api/v1/types', methods=['GET'])
+def get_types():
+    types = Type.query.all()
+    return [
+        {
+            'id':type.id,
+            'name_pl': type.name_pl,
+        } for type in types
+    ]
+
 @views.route('/api/v1/categories', methods=['GET'])
 def get_categories():
 
