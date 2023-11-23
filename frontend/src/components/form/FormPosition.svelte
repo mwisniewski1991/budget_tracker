@@ -31,7 +31,7 @@
 
     async function getCategories(userParameters){
         const parameters = new URLSearchParams(userParameters)
-        const resposne = await fetch(`/categories?${parameters}`, {method:"GET"})
+        const resposne = await fetch(`/api/v1/categories?${parameters}`, {method:"GET"})
         const json = await resposne.json()
         
         const fistCategoryValue = json[0].id
@@ -42,7 +42,7 @@
 
     async function getSubcategories(userParameters){
         const parameters = new URLSearchParams(userParameters)
-        const resposne = await fetch(`/subcategories?${parameters}`, {method:"GET"})
+        const resposne = await fetch(`/api/v1/subcategories?${parameters}`, {method:"GET"})
         const json = await resposne.json()
         return json
     };
