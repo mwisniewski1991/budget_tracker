@@ -1,24 +1,25 @@
 <script>
-    import { userTypeId, userCategoryId  } from "../store.js"
+    import { userTypeId, userCategoryId, userSubcategoryId  } from "../store.js"
 
     export let position_id;
 
     let userCategory;
+    let userSubcategory;
 
     let categoriesPromise;
     let subcategoriesPromise;
     
-    let html_position_id = `pos_${position_id}`;
+    let htmlPositionId = `pos_${position_id}`;
 
-    let html_category_name = `category_${position_id}`;
-    let html_subcategory_name = `subcategory_${position_id}`;
-    let html_amount_name = `amount_${position_id}`;
-    let html_comment_name = `comment_${position_id}`;
-    let html_shop_name = `shop_${position_id}`;
-    let html_connection_name = `connection_${position_id}`;
+    let htmlCategoryName = `category_${position_id}`;
+    let htmlSubcategoryName = `subcategory_${position_id}`;
+    let htmlAmountName = `amount_${position_id}`;
+    let htmlCommentName = `comment_${position_id}`;
+    let htmlShopName = `shop_${position_id}`;
+    let htmlConnectionName = `connection_${position_id}`;
 
-    $: categoriesPromise = getCategories({type_id: $userTypeId}); 
-    $: subcategoriesPromise = getSubcategories({category_id: $userCategoryId}); 
+    $: categoriesPromise = getCategories($userTypeId); 
+    $: subcategoriesPromise = getSubcategories($userCategoryId); 
     
 
     function selectClass(position){
@@ -29,38 +30,47 @@
         }
     };
 
-    async function getCategories(userParameters){
-        const parameters = new URLSearchParams(userParameters)
+    async function getCategories(userTypeId){
+        const parameters = new URLSearchParams({type_id: userTypeId});
         const resposne = await fetch(`/api/v1/categories?${parameters}`, {method:"GET"})
-        const json = await resposne.json()
+        const categories = await resposne.json()
         
-        const fistCategoryValue = json[0].id
+        const fistCategoryValue = categories[0].id
         userCategoryId.set(fistCategoryValue)
 
-        return json
+        return categories
     };
 
-    async function getSubcategories(userParameters){
-        const parameters = new URLSearchParams(userParameters)
+    async function getSubcategories(userCategoryId){
+
+        const parameters = new URLSearchParams({category_id: userCategoryId});
         const resposne = await fetch(`/api/v1/subcategories?${parameters}`, {method:"GET"})
-        const json = await resposne.json()
-        return json
+        const subcategories = await resposne.json()
+
+        const firstSubcategoryOd = subcategories[0].id;
+        userSubcategoryId.set(firstSubcategoryOd);
+
+        return subcategories
     };
 
     function onCategoryChange(userCategory){
-        userCategoryId.set(userCategory)
+        userCategoryId.set(userCategory);
+    };
+
+    function onSubcategoryChange(userSubcategory){
+        userSubcategoryId.set(userSubcategory);
     };
 
 
 </script>
 
-<div class={selectClass(position_id)} id={html_position_id} role="tabpanel" aria-labelledby="home-tab">
+<div class={selectClass(position_id)} id={htmlPositionId} role="tabpanel" aria-labelledby="home-tab">
 
     <div class="position-1">
 
         <div class="mb-3">
-        <label for={html_category_name} class="form-label">Kategoria</label>
-            <select class="form-select" aria-label="Default select example" id={html_category_name} name={html_category_name} bind:value={userCategory} on:change={onCategoryChange(userCategory)}>
+        <label for={htmlCategoryName} class="form-label">Kategoria</label>
+            <select class="form-select" aria-label="Default select example" id={htmlCategoryName} name={htmlCategoryName} bind:value={userCategory} on:change={onCategoryChange(userCategory)}>
 
                 {#await categoriesPromise}
                     <p></p>
@@ -76,8 +86,8 @@
         </div>
         
         <div class="mb-3">
-            <label for={html_subcategory_name} class="form-label">Podkategoria</label>
-            <select class="form-select" aria-label="Default select example" id={html_subcategory_name} name={html_subcategory_name}>
+            <label for={htmlSubcategoryName} class="form-label">Podkategoria</label>
+            <select class="form-select" aria-label="Default select example" id={htmlSubcategoryName} name={htmlSubcategoryName} bind:value={userSubcategory} on:change={onSubcategoryChange(userSubcategory)}>
 
                 {#await subcategoriesPromise}
                     <p></p>
@@ -93,23 +103,23 @@
         </div>
 
         <div class="mb-3">
-            <label for={html_amount_name} class="form-label">Kwota</label>
-            <input type="number" step="0.01" value="0"  class="form-control" id={html_amount_name} name={html_amount_name}>
+            <label for={htmlAmountName} class="form-label">Kwota</label>
+            <input type="number" step="0.01" value="0"  class="form-control" id={htmlAmountName} name={htmlAmountName}>
         </div>
         
         <div class="mb-3">
-            <label for={html_comment_name} class="form-label">Komentarz</label>
-            <input type="text" class="form-control" id={html_comment_name} name={html_comment_name}>
+            <label for={htmlCommentName} class="form-label">Komentarz</label>
+            <input type="text" class="form-control" id={htmlCommentName} name={htmlCommentName}>
         </div>
 
         <div class="mb-3">
-            <label for={html_shop_name} class="form-label">Sklep</label>
-            <input type="text" class="form-control" id={html_shop_name} name={html_shop_name}>
+            <label for={htmlShopName} class="form-label">Sklep</label>
+            <input type="text" class="form-control" id={htmlShopName} name={htmlShopName}>
         </div>
 
         <div class="mb-3">
-        <label for={html_connection_name} class="form-label">Powiązanie</label>
-        <input type="text" class="form-control" id={html_connection_name} name={html_connection_name}>
+        <label for={htmlConnectionName} class="form-label">Powiązanie</label>
+        <input type="text" class="form-control" id={htmlConnectionName} name={htmlConnectionName}>
         </div>
 
     </div>

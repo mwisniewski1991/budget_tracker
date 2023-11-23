@@ -1,19 +1,28 @@
 <script>
-    import { userTypeId, userOwnerId } from '../store.js';
+    import { userTypeId, userOwnerId, userAccountId } from '../store.js';
 
     let ownersPromise = getOnwers();
     let accountsPromise;
     
     let userType;
     let userOwner;
+    let userAccount;
 
+    let typesPromise = getTypes();
     $: accountsPromise = getAccounts($userOwnerId);
 
 
-    function onTypeChange(){
-        userTypeId.set(userType)
+    async function getTypes(){
+        const response = await fetch('/api/v1/types');
+        const types = await response.json();
+        
+        const firstTypeId = types[0].id;
+        userTypeId.set(firstTypeId);
+
+        return types
     };
 
+ 
     async function getOnwers(){
         const response = await fetch('/api/v1/owners');
         const owners = await response.json(); 
@@ -28,11 +37,23 @@
         const parameters = new URLSearchParams({'owner_id': userOwnerId})
         const response = await fetch(`/api/v1/accounts?${parameters}`, {method:"GET"})
         const accounts = await response.json()
+
+        const firstAccountId = accounts[0].id;
+        userAccountId.set(firstAccountId);
+
         return accounts
+    };
+    
+    function onTypeChange(){
+        userTypeId.set(userType)
     };
 
     function onOwnerChange(userOwner){
         userOwnerId.set(userOwner);
+    };
+
+    function onAccountChange(userAccount){
+        userAccountId.set(userAccount);
     };
 
 </script>
@@ -62,7 +83,7 @@
         
     <div class="mb-3">
         <label for="account_id" class="form-label">Konto</label>
-        <select class="form-select" aria-label="Default select example" id="account_id" name="account_id">
+        <select class="form-select" aria-label="Default select example" id="account_id" name="account_id" bind:value={userAccount} on:change={onAccountChange(userAccount)}>
             
             {#await accountsPromise}
                 <option value=""></option>
@@ -80,10 +101,15 @@
     <div class="mb-3">
         <label for="type_id" class="form-label">Rodzaj</label>
         <select class="form-select" aria-label="Default select example" id="type_id" name="type_id" bind:value={userType} on:change={onTypeChange}>
-
-            <option value="2">Wydatek</option>
-            <option value="1">Dochód</option>
-
+            {#await typesPromise}
+                <option value=""></option>
+            {:then typesList }
+                {#each typesList as type }
+                    <option value={type.id}>{type.name_pl}</option>
+                {/each}
+                {:catch Error}
+                <p>Something went wrong</p>
+            {/await}
         </select>
     </div>    
 
