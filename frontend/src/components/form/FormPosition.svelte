@@ -1,10 +1,12 @@
 <script>
-    import { userTypeId, userCategoryId, userSubcategoryId  } from "../store.js"
+    import { userTypeId, userCategoryId, userSubcategoryId, billTotalAmount   } from "../store.js"
 
     export let position_id;
 
     let userCategory;
     let userSubcategory;
+    let oldUserAmount = 0;
+    let userAmount = 0;
 
     let categoriesPromise;
     let subcategoriesPromise;
@@ -61,6 +63,19 @@
         userSubcategoryId.set(userSubcategory);
     };
 
+    function onAmountChange(valueToAdd){
+        
+        let billValue;
+        billTotalAmount.subscribe((value) => billValue = value)
+
+        billValue = billValue - oldUserAmount;
+        oldUserAmount = valueToAdd;
+        billValue = billValue + valueToAdd;
+
+        billTotalAmount.set(billValue)
+
+        console.log(billValue);
+    };
 
 </script>
 
@@ -104,7 +119,7 @@
 
         <div class="mb-3">
             <label for={htmlAmountName} class="form-label">Kwota</label>
-            <input type="number" step="0.01" value="0"  class="form-control" id={htmlAmountName} name={htmlAmountName}>
+            <input type="number" step="0.01" class="form-control" id={htmlAmountName} name={htmlAmountName} bind:value={userAmount} on:input={onAmountChange(userAmount)} >
         </div>
         
         <div class="mb-3">

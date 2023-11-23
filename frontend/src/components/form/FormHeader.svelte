@@ -1,5 +1,5 @@
 <script>
-    import { userTypeId, userOwnerId, userAccountId } from '../store.js';
+    import { userTypeId, userOwnerId, userAccountId, billTotalAmount } from '../store.js';
 
     let ownersPromise = getOnwers();
     let accountsPromise;
@@ -11,6 +11,11 @@
     let typesPromise = getTypes();
     $: accountsPromise = getAccounts($userOwnerId);
 
+    let currentAmount;
+
+    const unsubscribe = billTotalAmount.subscribe((value)=>{
+        currentAmount = value;
+    });
 
     async function getTypes(){
         const response = await fetch('/api/v1/types');
@@ -21,7 +26,6 @@
 
         return types
     };
-
  
     async function getOnwers(){
         const response = await fetch('/api/v1/owners');
@@ -111,6 +115,10 @@
                 <p>Something went wrong</p>
             {/await}
         </select>
+    </div>    
+
+    <div class="mb-3">
+        <span>{currentAmount}</span>
     </div>    
 
 </div>
