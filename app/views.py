@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, send_from_directory
 from . import db
-from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type
+from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
@@ -95,7 +95,31 @@ def add():
     #     'connection': request.form['connection'],
     # }
 
-@views.route('/categories', methods=['GET'])
+
+@views.route('/api/v1/owners', methods=['GET'])
+def get_owners():
+    owners = Owners.query.all()
+    return [
+        {   
+            'id':owner.id,
+            'name_pl':owner.name_pl
+
+        } for owner in owners
+    ]
+
+@views.route('/api/v1/accounts', methods=['GET'])
+def get_accounts():
+    owner_id = request.args['owner_id']
+    accounts = Accounts.query.filter_by(owner_id=owner_id).order_by(Accounts.id).all()
+
+    return [
+        {
+            'id':account.id,
+            'name_pl':account.name_pl
+        } for account in accounts
+    ]
+
+@views.route('/api/v1/categories', methods=['GET'])
 def get_categories():
 
     user_type_id = request.args['type_id']
@@ -109,7 +133,7 @@ def get_categories():
         } for cat in categories
     ]
 
-@views.route('/subcategories', methods=['GET'])
+@views.route('/api/v1/subcategories', methods=['GET'])
 def get_subcategories():
 
     user_type_id = request.args['category_id']

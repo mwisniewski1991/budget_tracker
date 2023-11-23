@@ -2,6 +2,18 @@ from . import db
 from sqlalchemy.sql import func
 
 
+class Owners(db.Model):
+    __tablename__ = 'owners'
+    id = db.Column(db.String(2), primary_key=True)
+    name_pl = db.Column(db.String(50))
+
+class Accounts(db.Model):
+    __tablename__ = 'accounts'
+    id = db.Column(db.String(2), primary_key=True)
+    name_pl = db.Column(db.String(50))
+    owner_id =db.Column(db.String(2))
+
+
 
 class INCEXP_header(db.Model):
     __tablename__ = 'incexp_header'
