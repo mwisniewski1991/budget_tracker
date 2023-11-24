@@ -1,12 +1,13 @@
 <script>
+    import { onDestroy } from "svelte";
     import { userTypeId, userCategoryId, userSubcategoryId, billTotalAmount   } from "../store.js"
 
     export let position_id;
 
     let userCategory;
     let userSubcategory;
-    let oldUserAmount = 0;
-    let userAmount = 0;
+    let oldUserAmount = 0.0;
+    let userAmount = 0.0;
 
     let categoriesPromise;
     let subcategoriesPromise;
@@ -63,19 +64,31 @@
         userSubcategoryId.set(userSubcategory);
     };
 
-    function onAmountChange(valueToAdd){
-        
+    function onAmountChange(userValueToAdd){
+        let valueToAdd = userValueToAdd;
+        if(valueToAdd == null){
+            valueToAdd = 0; 
+        };
+
         let billValue;
-        billTotalAmount.subscribe((value) => billValue = value)
+        billTotalAmount.subscribe((value) => billValue = value);
 
-        billValue = billValue - oldUserAmount;
+        billValue = (parseFloat(billValue) - parseFloat(oldUserAmount)).toFixed(2);
         oldUserAmount = valueToAdd;
-        billValue = billValue + valueToAdd;
+        billValue = (parseFloat(billValue) + parseFloat(valueToAdd)).toFixed(2);
 
-        billTotalAmount.set(billValue)
+        billTotalAmount.set(billValue);
 
-        console.log(billValue);
     };
+
+    onDestroy(() =>{
+        let billValue;
+        billTotalAmount.subscribe((value) => billValue = value);
+        billValue = billValue - oldUserAmount;
+        billTotalAmount.set(billValue);
+    });
+
+
 
 </script>
 
