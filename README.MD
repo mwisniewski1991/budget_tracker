@@ -5,9 +5,11 @@ Create web app for entering income and expenses.
 
 
 ## Stack
-- Web 
+- Backend
     - Python
         - Flask
+- Frontend
+    - Svelte
 - DB
     - PostgreSQL
     - pgAdmin
@@ -17,9 +19,10 @@ Create web app for entering income and expenses.
 
 
 ## To Do Plan
-- create Flask View for position list
-    - enable removing positions
-- create accounts table,
-- create shop table, 
+- Create Accounts Container
+- Create Expenses Container
 
+- Create Bash to creating database and tables,
+
+- create shop table, 
 - create dashboard,
