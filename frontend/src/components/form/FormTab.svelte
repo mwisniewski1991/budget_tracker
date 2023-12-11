@@ -6,7 +6,9 @@
     let currentPositionNumber = 1;
     
     function addPosition(){
-      currentPositionNumber += 1;  
+      if (currentPositionNumber < 10){
+          currentPositionNumber += 1;  
+      }  
     };
 
     function RemovePosition(){

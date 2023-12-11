@@ -70,8 +70,8 @@
     </div>
         
     <div class="mb-3">
-        <label for="account_id" class="form-label">Właściciel</label>
-        <select class="form-select" aria-label="Default select example" id="account_id" name="account_id" bind:value={userOwner} on:change={onOwnerChange(userOwner)}>
+        <label for="owner_id" class="form-label">Właściciel</label>
+        <select class="form-select" aria-label="Default select example" id="owner_id" name="owner_id" bind:value={userOwner} on:change={onOwnerChange(userOwner)}>
             {#await ownersPromise}
                 <option value=""></option>
             {:then ownersList }

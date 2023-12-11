@@ -4,7 +4,7 @@
 </script>
 
 <div class="container-sm">
-    <form action="/" method="post">
+    <form action="/add" method="post">
 
     <FormHeader></FormHeader>
     
