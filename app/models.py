@@ -40,13 +40,16 @@ class INCEXP_header(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
-    type_id = db.Column(db.Integer, nullable=False)
+    type_id = db.Column(db.String(1), nullable=False)
+    owner_id = db.Column(db.String(2), nullable=False)
+    account_id = db.Column(db.String(2), nullable=False)
+
 
 class INCEXP_position(db.Model):
     __tablename__ = 'incexp_position'
 
     header_id = db.Column(db.Integer, primary_key=True)
-    position_id = db.Column(db.Integer)
+    position_id = db.Column(db.Integer, nullable=False)
     category_id = db.Column(db.String(100), nullable=False)
     subcategory_id = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Integer, nullable=False)

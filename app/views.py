@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, send_from_directory
+from flask import Blueprint, render_template, request, send_from_directory, redirect
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
 
@@ -41,46 +41,80 @@ def add():
         } for subcat in Subategory.query.all()]
     
     if request.method == "POST":
+        # print(request.form)
 
-        amount = float(request.form['amount']) * 100
+        header_date = request.form['date']
+        header_owner_id = request.form['owner_id']
+        header_account_id = request.form['account_id']
+        header_type_id = request.form['type_id']
 
-        new_incexp = INCEXP(
-                date=request.form['date'],
-                type_id=request.form['type_id'],
-                category_id=request.form['category'],
-                subcategory_id=request.form['subcategory'],
-                amount=amount,
-                comment=request.form['comment'],
-                shop=request.form['shop'],
-                connection=request.form['connection'],
+        position_category = request.form['category_1']
+        position_subcategory = request.form['subcategory_1']
+        position_amount = request.form['amount_1']
+        position_comment = request.form['comment_1']
+        position_shop = request.form['shop_1']
+        position_connection = request.form['connection_1']
+        
+
+        new_incexp_header = INCEXP_header(
+                date  = request.form['date'],
+                owner_id = request.form['owner_id'],
+                account_id = request.form['account_id'],
+                type_id = request.form['type_id'],
         )
 
-
-        db.session.add(new_incexp)
+        db.session.add(new_incexp_header)
         db.session.commit()
+        print(new_incexp_header.id)
 
-        ADDED_IDS.append({
-            'id': new_incexp.id,
-            'type_id': new_incexp.type_id,
-            'category_id': new_incexp.category_id,
-            'subcategory_id': new_incexp.subcategory_id,
-            'amount': new_incexp.amount / 100,
-        })
+        for i in range(1, 11):
+            value = request.form.get(f'category_{i}', None)
 
-        feedback = f"Dodano: {request.form['category']}, {request.form['subcategory']} na kwotę: {amount / 100}. ID: {new_incexp.id}"
+            if value:
+                new_incexp_position = INCEXP_position(
+                    header_id = new_incexp_header.id,
+                    category_id = request.form[f'category_{i}'],
+                    subcategory_id = request.form[f'subcategory_{i}'],
+                    amount = request.form[f'amount_{i}'],
+                    comment = request.form[f'comment_{i}'],
+                    shop = request.form[f'shop_{i}'],
+                    connection = request.form[f'connection_{i}'],
+                )
+                db.session.add(new_incexp_position)
 
-        print(ADDED_IDS)
+        db.session.commit()
+        return redirect('/')
+        #         category_id=request.form['category'],
+        #         subcategory_id=request.form['subcategory'],
+        #         amount=amount,
+        #         comment=request.form['comment'],
+        #         shop=request.form['shop'],
+        #         connection=request.form['connection'],
 
-        return render_template("add.html", 
-                                is_added=True, 
-                                types=types, categories=categories, subcategories=subcategories,
-                                feedback = feedback, 
-                                new_incexp = ADDED_IDS
-                                )
+
+    
+        # ADDED_IDS.append({
+        #     'id': new_incexp.id,
+        #     'type_id': new_incexp.type_id,
+        #     'category_id': new_incexp.category_id,
+        #     'subcategory_id': new_incexp.subcategory_id,
+        #     'amount': new_incexp.amount / 100,
+        # })
+
+        # feedback = f"Dodano: {request.form['category']}, {request.form['subcategory']} na kwotę: {amount / 100}. ID: {new_incexp.id}"
+
+        # print(ADDED_IDS)
+
+        # return render_template("add.html", 
+        #                         is_added=True, 
+        #                         types=types, categories=categories, subcategories=subcategories,
+        #                         feedback = feedback, 
+        #                         new_incexp = ADDED_IDS
+        #                         )
     
 
     
-    return render_template("add.html", is_added=False, types=types, categories=categories, subcategories=subcategories)
+    # return render_template("add.html", is_added=False, types=types, categories=categories, subcategories=subcategories)
     
 
 
