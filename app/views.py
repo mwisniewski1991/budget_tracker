@@ -104,7 +104,6 @@ def get_categories():
 def get_subcategories():
 
     user_type_id = request.args['category_id']
-
     subcategories = Subategory.query.filter_by(category_id=user_type_id).order_by(Subategory.id).all()
 
     return [
@@ -114,22 +113,14 @@ def get_subcategories():
         } for subcat in subcategories
     ]
 
-@views.route('/testdb', methods=['GET'])
-def testdb():
-    events = INCEXP.query.all()
-    results = [
-        {   
-            'id':event.id, 
-            'date': event.date,
-            'event_type': event.event_type,
-            'category': event.category,
-            'subcategory': event.subcategory,
-            'amount': event.amount,
-            'comment': event.comment,
-            'shop': event.shop,
-            'connection': event.connection,
-        } for event in events
-    ]
+@views.route('/api/v1/shops', methods=['GET'])
+def get_shops():
+    shops_list:list = []
+    for rows in INCEXP_position.query.with_entities(INCEXP_position.shop).distinct().order_by(INCEXP_position.shop).all():
+        formated_shops:str = str(rows.shop).strip()
+        if formated_shops != "":
+            shops_list.append(formated_shops)
+
     return {
-        'INCEXP':results
-    }
+        "shops": shops_list
+    } 

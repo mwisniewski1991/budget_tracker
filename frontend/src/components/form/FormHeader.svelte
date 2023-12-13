@@ -16,7 +16,6 @@
     let typesPromise = getTypes();
     $: accountsPromise = getAccounts($userOwnerId);
 
-
     const unsubscribe = billTotalAmount.subscribe((value)=>{
         currentAmount = value;
     });
