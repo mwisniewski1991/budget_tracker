@@ -1,5 +1,6 @@
 <script>
     import { userTypeId, userOwnerId, userAccountId, billTotalAmount } from '../store.js';
+    import { onMount } from 'svelte';
 
     let ownersPromise = getOnwers();
     let accountsPromise;
@@ -7,15 +8,31 @@
     let userType;
     let userOwner;
     let userAccount;
+    let currentAmount;
+
+    let now = new Date(), month, day, year;
+    let nowString;
 
     let typesPromise = getTypes();
     $: accountsPromise = getAccounts($userOwnerId);
 
-    let currentAmount;
 
     const unsubscribe = billTotalAmount.subscribe((value)=>{
         currentAmount = value;
     });
+
+    onMount(()=> {
+        month = '' + (now.getMonth() + 1),
+        day = '' + now.getDate(),
+        year = now.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        nowString = [year, month, day].join('-');
+	})
 
     async function getTypes(){
         const response = await fetch('/api/v1/types');
@@ -66,7 +83,7 @@
 <div class="formHeader">
     <div class="mb-3">
         <label for="date" class="form-label">Data</label>
-        <input type="date" class="form-control" id="date" name="date">
+        <input type="date" class="form-control" id="date" name="date" bind:value={nowString}>
     </div>
         
     <div class="mb-3">

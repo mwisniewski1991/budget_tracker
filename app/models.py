@@ -52,6 +52,7 @@ class INCEXP_position(db.Model):
     position_id = db.Column(db.Integer, nullable=False)
     category_id = db.Column(db.String(100), nullable=False)
     subcategory_id = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
     amount = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(200))
     shop = db.Column(db.String(100))

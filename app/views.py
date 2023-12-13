@@ -73,6 +73,7 @@ def add():
             if value:
                 new_incexp_position = INCEXP_position(
                     header_id = new_incexp_header.id,
+                    position_id = i,
                     category_id = request.form[f'category_{i}'],
                     subcategory_id = request.form[f'subcategory_{i}'],
                     amount = request.form[f'amount_{i}'],
@@ -84,51 +85,6 @@ def add():
 
         db.session.commit()
         return redirect('/')
-        #         category_id=request.form['category'],
-        #         subcategory_id=request.form['subcategory'],
-        #         amount=amount,
-        #         comment=request.form['comment'],
-        #         shop=request.form['shop'],
-        #         connection=request.form['connection'],
-
-
-    
-        # ADDED_IDS.append({
-        #     'id': new_incexp.id,
-        #     'type_id': new_incexp.type_id,
-        #     'category_id': new_incexp.category_id,
-        #     'subcategory_id': new_incexp.subcategory_id,
-        #     'amount': new_incexp.amount / 100,
-        # })
-
-        # feedback = f"Dodano: {request.form['category']}, {request.form['subcategory']} na kwotę: {amount / 100}. ID: {new_incexp.id}"
-
-        # print(ADDED_IDS)
-
-        # return render_template("add.html", 
-        #                         is_added=True, 
-        #                         types=types, categories=categories, subcategories=subcategories,
-        #                         feedback = feedback, 
-        #                         new_incexp = ADDED_IDS
-        #                         )
-    
-
-    
-    # return render_template("add.html", is_added=False, types=types, categories=categories, subcategories=subcategories)
-    
-
-
-    # return {
-    #     'date': request.form['date'],
-    #     'event_type': request.form['event_type'],
-    #     'category': request.form['category'],
-    #     'subcategory': request.form['subcategory'],
-    #     'amount': request.form['amount'],
-    #     'comment': request.form['comment'],
-    #     'shop': request.form['shop'],
-    #     'connection': request.form['connection'],
-    # }
-
 
 @views.route('/api/v1/owners', methods=['GET'])
 def get_owners():
