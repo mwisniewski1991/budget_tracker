@@ -20,41 +20,8 @@ def about_me():
     return render_template("about_me.html")
 
 @views.route('/add', methods=['GET', 'POST'])
-def add():
-    categories = [
-        {
-            'id':cat.id,
-            'name_pl':cat.name_pl,
-        } for cat in Category.query.all()]
-
-    types = [
-        {
-            'id':type.id,
-            'name_pl':type.name_pl,
-
-        } for type in Type.query.all()]
-
-    subcategories = [
-        {
-            'id':subcat.id,
-            'name_pl':subcat.name_pl,
-        } for subcat in Subategory.query.all()]
-    
+def add():    
     if request.method == "POST":
-        # print(request.form)
-
-        header_date = request.form['date']
-        header_owner_id = request.form['owner_id']
-        header_account_id = request.form['account_id']
-        header_type_id = request.form['type_id']
-
-        position_category = request.form['category_1']
-        position_subcategory = request.form['subcategory_1']
-        position_amount = request.form['amount_1']
-        position_comment = request.form['comment_1']
-        position_shop = request.form['shop_1']
-        position_connection = request.form['connection_1']
-        
 
         new_incexp_header = INCEXP_header(
                 date  = request.form['date'],
