@@ -115,12 +115,9 @@ def get_subcategories():
 
 @views.route('/api/v1/shops', methods=['GET'])
 def get_shops():
-    shops_list:list = []
-    for rows in INCEXP_position.query.with_entities(INCEXP_position.shop).distinct().order_by(INCEXP_position.shop).all():
-        formated_shops:str = str(rows.shop).strip()
-        if formated_shops != "":
-            shops_list.append(formated_shops)
+    shops = INCEXP_position.query.with_entities(INCEXP_position.shop).distinct().order_by(INCEXP_position.shop).all()
 
-    return {
-        "shops": shops_list
-    } 
+    return [{
+            'shop_name': str(shop.shop).strip()
+        } for shop in shops if str(shop.shop).strip() != ""
+    ] 
