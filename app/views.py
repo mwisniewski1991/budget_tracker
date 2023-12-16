@@ -134,7 +134,6 @@ def get_owners_accounts_amount():
     ''')
 
     results = db.session.execute(sql)
-    print(results)
 
     return [{
         "owner": str(row.owner).strip(),
@@ -142,3 +141,93 @@ def get_owners_accounts_amount():
         "amount_sum": row.amount_sum,
         } for row in results
     ]
+
+@views.route('/api/v1/positions', methods=['GET'])
+def get_positions():
+
+    sql_header = text('''
+        select 
+            incexp_header.id,
+            incexp_header.date,
+            type_dict.name_pl as type_name,
+            owners.name_pl as owner_name,
+            accounts.name_pl as account_name
+            
+        from public.incexp_header
+
+        left join public.type_dict as type_dict
+            on incexp_header.type_id = type_dict.id
+            
+        left join public.owners as owners
+            on incexp_header.owner_id = owners.id
+
+        left join public.accounts as accounts  
+        on incexp_header.account_id = accounts.id
+    ''')
+    sql_position = text('''
+        select 
+            incexp_position.header_id,
+            incexp_position.position_id,
+            category.name_pl as category,
+            subcategory.name_pl as subcategory,
+            incexp_position.amount,
+            incexp_position.shop
+            
+        from public.incexp_position as incexp_position
+
+        left join public.category as category
+            on incexp_position.category_id = category.id
+
+        left join public.subcategory as subcategory
+            on incexp_position.subcategory_id = subcategory.id
+    ''')
+
+    headers = db.session.execute(sql_header)
+    positions = db.session.execute(sql_position)
+
+
+
+    headers_list = [{
+        'header_id': header.id,
+        'header_date': header.date,
+        'type_name': header.type_name,
+        'owner_name': header.owner_name,
+        'account_name': header.account_name,
+        'positions':[],
+
+        } for header in headers 
+        ]
+
+    positions_list = [{
+        'header_id': position.header_id,
+        'position_id': position.position_id,
+        'category': position.category,
+        'subcategory': position.subcategory,
+        'amount': position.amount,
+        'shop': position.shop,
+
+        } for position in positions
+    ]
+
+    for header in headers_list:
+        current_header = header['header_id']
+        filtered_data = filter(lambda x: x['header_id'] == current_header ,positions_list)
+        header['positions'] = list(filtered_data)
+
+
+    return headers_list
+
+@views.route('/api/v1/position-delete', methods=['DELETE'])
+def delete_positions():
+    header_id_to_delete = request.args['headerid']
+    print(header_id_to_delete)
+
+
+    INCEXP_position.query.filter_by(header_id=header_id_to_delete).delete()
+    INCEXP_header.query.filter_by(id=header_id_to_delete).delete()
+    db.session.commit()
+
+    return [{
+        'value':header_id_to_delete
+
+    }]

@@ -3,6 +3,7 @@
 	import Navbar from "./components/Navbar.svelte";
 	import FormContainer from "./components/form/FormContainer.svelte";
     import AccountsBalanceContainer from "./components/accountsBalance/accountsBalanceContainer.svelte";
+	import MainContainer from "./components/positions/mainContainer.svelte";
 	import {addPostionViewVisible, accountsBalanceViewVisible, expensesViewVisible } from './components/store';
 
 	let addPostionViewVisibleValue;
@@ -25,7 +26,7 @@
 	{:else if accountsBalanceViewVisibleValue == true}
 		<AccountsBalanceContainer/>
 	{:else if expensesViewVisibleValue == true}
-		<span>XXX</span>
+		<MainContainer/>
 	{/if}
 
 </main>
