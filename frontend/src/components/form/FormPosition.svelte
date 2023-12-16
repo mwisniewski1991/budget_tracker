@@ -59,6 +59,7 @@
     };
 
     async function getShops(){
+
         const resposne = await fetch('/api/v1/shops');
         const shops =  await resposne.json();
         return shops

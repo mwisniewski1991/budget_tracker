@@ -1,4 +1,14 @@
-<script></script>
+<script>
+
+        let ownersAccountsAmountsPromise = getOwnersAccountsAmounts();
+
+        async function getOwnersAccountsAmounts(){
+                const resposne = await fetch('/api/v1/owners-accounts-amount');
+                const results =  await resposne.json();
+                return results
+        };
+
+</script>
 
 
 <div class="container-sm">
@@ -11,17 +21,19 @@
                 <div class="col"><strong>Stan</strong></div>
         </div>
 
-        <div class="row">
-                <div class="col">Mateusz</div>
-                <div class="col">eKonto</div>
-                <div class="col">5000</div>
-        </div>
-
-        <div class="row">
-                <div class="col">Mateusz</div>
-                <div class="col">Gotówka</div>
-                <div class="col">234.23</div>
-        </div>
+        {#await ownersAccountsAmountsPromise}
+                <p></p>
+        {:then ownersAccountsAmountsList} 
+        {#each ownersAccountsAmountsList as row }
+                <div class="row">
+                        <div class="col">{row.owner}</div>
+                        <div class="col">{row.account}</div>
+                        <div class="col">{row.amount_sum}</div>
+                </div>
+        {/each}
+        {:catch Error}
+                <p>Something went wrong</p>
+        {/await}
         
 </div>
 

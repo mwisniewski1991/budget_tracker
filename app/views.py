@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect
+from sqlalchemy import text
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
+
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
@@ -116,8 +118,27 @@ def get_subcategories():
 @views.route('/api/v1/shops', methods=['GET'])
 def get_shops():
     shops = INCEXP_position.query.with_entities(INCEXP_position.shop).distinct().order_by(INCEXP_position.shop).all()
-
     return [{
             'shop_name': str(shop.shop).strip()
         } for shop in shops if str(shop.shop).strip() != ""
     ] 
+
+@views.route('/api/v1/owners-accounts-amount', methods=['GET'])
+def get_owners_accounts_amount():
+    
+    sql = text('''
+        select owner, account, sum (amount) as amount_sum
+        from incexp_view
+        group by owner_id, owner, account_id, account
+        order by owner, account
+    ''')
+
+    results = db.session.execute(sql)
+    print(results)
+
+    return [{
+        "owner": str(row.owner).strip(),
+        "account": str(row.account).strip(),
+        "amount_sum": row.amount_sum,
+        } for row in results
+    ]
