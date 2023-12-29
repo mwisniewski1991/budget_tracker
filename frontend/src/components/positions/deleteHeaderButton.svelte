@@ -8,6 +8,7 @@
         location.reload()
     };
 
+
 </script>
 
 <button type="button" class="btn btn-danger" on:click={deleteHeader(headerIDtoDelete)}>DELETE</button>            

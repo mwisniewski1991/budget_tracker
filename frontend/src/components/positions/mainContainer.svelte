@@ -1,7 +1,7 @@
 <script>
     import HeaderContainer from "./headerContainer.svelte";
 
-    let hedaersPromise = getHeaders();
+    let headersPromise = getHeaders();
 
     async function getHeaders(){
         
@@ -14,7 +14,7 @@
 </script>
 
 <div>
-    {#await hedaersPromise}
+    {#await headersPromise}
         <p></p>
     {:then headersList} 
         {#each headersList as header }
