@@ -44,7 +44,6 @@ class INCEXP_header(db.Model):
     owner_id = db.Column(db.String(2), nullable=False)
     account_id = db.Column(db.String(2), nullable=False)
 
-
 class INCEXP_position(db.Model):
     __tablename__ = 'incexp_position'
 

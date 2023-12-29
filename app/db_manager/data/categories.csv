@@ -1,0 +1,21 @@
+name_pl,id,type_id
+Praca,01,2
+Inwestycje,02,2
+Inne dochody,03,2
+Rozliczeniowe dochody,04,2
+Niebilansowe dochody,05,2
+Spożywcze,06,1
+Aktywa,07,1
+Rozrywka,08,1
+Zdrowie i higiena,09,1
+Telekomunikacja,10,1
+Dzieci,11,1
+Mieszkanie,12,1
+Dom,13,1
+Samochód,14,1
+Transport,15,1
+Podróże,16,1
+Inne wydatki,17,1
+Inwestycje wydatek,18,1
+Rozliczeniowe wydatki,19,1
+Niebilansowe wydatki,20,1
