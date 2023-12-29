@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS public.incexp_position
     position_id integer not null,
     category_id character(2) references public.category(id) NOT NULL,
     subcategory_id character(4) references public.subcategory(id) NOT NULL,
-    amount real NOT NULL,
+    amount decimal NOT NULL,
     amount_full integer GENERATED ALWAYS AS (amount * 100) STORED,
     comment character(200) COLLATE pg_catalog."default",
     shop character(100) COLLATE pg_catalog."default",
