@@ -4,14 +4,17 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 from models.models import Owners, Accounts, Type, Category, Subategory 
 import csv
-
+from pathlib import Path
 
 def get_database_uri() -> str:
     '''
         Return URI for database.
     '''
+    if not Path('config/config.ini').exists():
+        raise FileNotFoundError('File config/config.ini does not exists!')
+    
     config = ConfigParser()
-    config.read('../config/config.ini')
+    config.read('config/config.ini')
     config_data = config['DATABASE']
 
     engine:str = config_data['engine']
@@ -24,7 +27,7 @@ def get_database_uri() -> str:
     return f"{engine}://{user}:{password}@{host}:{port}/{database_name}"
 
 def create_tables(engine) -> None:
-    query:str = open('queries/generate_tables.sql').read()
+    query:str = open('app/db_manager/queries/generate_tables.sql').read()
     with engine.connect() as conn:
         conn.execute(text(query))
         conn.commit()
@@ -36,7 +39,7 @@ def parse_csv(link:str) -> csv.reader:
         return [row for row in data]
 
 def add_owners(session) -> None:
-    data = parse_csv('data/owners.csv')
+    data = parse_csv('app/db_manager/data/owners.csv')
     
     for row in data:
         name_pl, id = row
@@ -45,7 +48,7 @@ def add_owners(session) -> None:
     session.commit()
 
 def add_accounts(session) -> None:
-    data = parse_csv('data/accounts.csv')
+    data = parse_csv('app/db_manager/data/accounts.csv')
     for row in data:
         id, name_pl, owner_id = row
         new_account = Accounts(id=id, name_pl=name_pl, owner_id=owner_id)
@@ -53,7 +56,7 @@ def add_accounts(session) -> None:
     session.commit()
 
 def add_types(session) -> None:
-    data = parse_csv('data/types.csv')
+    data = parse_csv('app/db_manager/data/types.csv')
     for row in data:
         id, name_eng, name_pl = row
         new_type = Type(id=id, name_eng=name_eng, name_pl=name_pl)
@@ -61,7 +64,7 @@ def add_types(session) -> None:
     session.commit()
     
 def add_categories(session) -> None:
-    data = parse_csv('data/categories.csv')
+    data = parse_csv('app/db_manager/data/categories.csv')
     for row in data:
         name_pl, id, type_id = row
         new_category = Category(id=id, name_pl=name_pl, type_id=type_id)
@@ -69,7 +72,7 @@ def add_categories(session) -> None:
     session.commit()
 
 def add_subcategorues(session) -> None:
-    data = parse_csv('data/subcategories.csv')
+    data = parse_csv('app/db_manager/data/subcategories.csv')
     for row in data:
         id, name_pl, category_id, is_fixed_cost = row
         new_subcategory = Subategory(id=id, name_pl=name_pl, category_id=category_id, is_fixed_cost=is_fixed_cost)

@@ -86,6 +86,7 @@ CREATE TABLE IF NOT EXISTS public.incexp_position
     category_id character(2) references public.category(id) NOT NULL,
     subcategory_id character(4) references public.subcategory(id) NOT NULL,
     amount decimal NOT NULL,
+    amount_absolute decimal GENERATED ALWAYS AS (abs(amount)) STORED,
     amount_full integer GENERATED ALWAYS AS (amount * 100) STORED,
     comment character(200) COLLATE pg_catalog."default",
     shop character(100) COLLATE pg_catalog."default",
@@ -146,17 +147,22 @@ select
 	
 	incexp_header.date,
 
+
 	type_dict.name_pl as type,
 	category.name_pl as category,
 	subcategory.name_pl as subcategory,
 
-	incexp_position.amount,
-    incexp_position.amount_full,
+    case 
+        when incexp_header.type_id = '1' then incexp_position.amount_absolute * -1
+        when incexp_header.type_id = '2' then incexp_position.amount_absolute
+    end as amount_absolute,
+
 	incexp_position.comment,
 	incexp_position.shop,
 	incexp_position.connection
 	
     from public.incexp_header as incexp_header
+
 	inner join public.incexp_position as incexp_position
 		on incexp_header.id = incexp_position.header_id
 

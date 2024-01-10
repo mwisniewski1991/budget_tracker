@@ -127,7 +127,7 @@ def get_shops():
 def get_owners_accounts_amount():
     
     sql = text('''
-        select owner, account, sum (amount) as amount_sum
+        select owner, account, sum (amount_absolute) as amount_sum
         from incexp_view
         group by owner_id, owner, account_id, account
         order by owner, account
@@ -170,7 +170,7 @@ def get_positions():
             incexp_position.position_id,
             category.name_pl as category,
             subcategory.name_pl as subcategory,
-            incexp_position.amount,
+            incexp_position.amount_absolute,
             incexp_position.shop
             
         from public.incexp_position as incexp_position
@@ -203,7 +203,7 @@ def get_positions():
         'position_id': position.position_id,
         'category': position.category,
         'subcategory': position.subcategory,
-        'amount': position.amount,
+        'amount': position.amount_absolute,
         'shop': position.shop,
 
         } for position in positions
