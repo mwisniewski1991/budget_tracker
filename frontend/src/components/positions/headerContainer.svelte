@@ -19,7 +19,7 @@
         <!-- <div class="col"><strong>{header_id}</strong></div> -->
         <div class="col"><strong></strong></div>
         <div class="col"><strong>{type_name}</strong></div>
-        <div class="col"><strong>2023.03.03</strong></div>
+        <div class="col"><strong>{header_date}</strong></div>
         
         <div class="col"><strong>{owner_name}</strong></div>
         <div class="col"><strong>{account_name}</strong></div>

@@ -185,11 +185,9 @@ def get_positions():
     headers = db.session.execute(sql_header)
     positions = db.session.execute(sql_position)
 
-
-
     headers_list = [{
         'header_id': header.id,
-        'header_date': header.date,
+        'header_date': header.date.strftime('%Y-%m-%d'),
         'type_name': header.type_name,
         'owner_name': header.owner_name,
         'account_name': header.account_name,
