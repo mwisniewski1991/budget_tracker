@@ -25,10 +25,12 @@ def about_me():
 def add():    
     if request.method == "POST":
 
+        owner_id, account_id =  request.form['owner_account_ids'].split('_')
+
         new_incexp_header = INCEXP_header(
                 date  = request.form['date'],
-                owner_id = request.form['owner_id'],
-                account_id = request.form['account_id'],
+                owner_id = owner_id,
+                account_id = account_id,
                 type_id = request.form['type_id'],
         )
 

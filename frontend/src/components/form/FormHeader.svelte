@@ -1,20 +1,14 @@
 <script>
-    import { userTypeId, userOwnerId, userAccountId, billTotalAmount } from '../store.js';
+    import { userTypeId, billTotalAmount } from '../store.js';
     import { onMount } from 'svelte';
-
-    let ownersPromise = getOnwers();
-    let accountsPromise;
     
     let userType;
-    let userOwner;
-    let userAccount;
     let currentAmount;
 
     let now = new Date(), month, day, year;
     let nowString;
-
     let typesPromise = getTypes();
-    $: accountsPromise = getAccounts($userOwnerId);
+    let ownersAccountsPromise = getOwnersAccounts()
 
     const unsubscribe = billTotalAmount.subscribe((value)=>{
         currentAmount = value;
@@ -42,81 +36,44 @@
 
         return types
     };
- 
-    async function getOnwers(){
-        const response = await fetch('/api/v1/owners');
-        const owners = await response.json(); 
-         
-        const fistOwnerId = owners[0].id;
-        userOwnerId.set(fistOwnerId);
 
-        return owners;
+    async function getOwnersAccounts(){
+        const response = await fetch('/api/v1/owners-accounts')
+        const results = await response.json()
+        return results
     };
 
-    async function getAccounts(userOwnerId){
-        const parameters = new URLSearchParams({'owner_id': userOwnerId})
-        const response = await fetch(`/api/v1/accounts?${parameters}`, {method:"GET"})
-        const accounts = await response.json()
-
-        const firstAccountId = accounts[0].id;
-        userAccountId.set(firstAccountId);
-
-        return accounts
-    };
     
     function onTypeChange(){
         userTypeId.set(userType)
     };
 
-    function onOwnerChange(userOwner){
-        userOwnerId.set(userOwner);
-    };
-
-    function onAccountChange(userAccount){
-        userAccountId.set(userAccount);
-    };
 
 </script>
 
 
 <div class="formHeader">
+
     <div class="mb-3">
         <label for="date" class="form-label">Data</label>
         <input type="date" class="form-control" id="date" name="date" bind:value={nowString}>
     </div>
-        
-    <div class="mb-3">
-        <label for="owner_id" class="form-label">Właściciel</label>
-        <select class="form-select" aria-label="Default select example" id="owner_id" name="owner_id" bind:value={userOwner} on:change={onOwnerChange(userOwner)}>
-            {#await ownersPromise}
-                <option value=""></option>
-            {:then ownersList }
-                {#each ownersList as owner }
-                    <option value={owner.id}>{owner.name_pl}</option>
-                {/each}
-                {:catch Error}
-                <p>Something went wrong</p>
-            {/await}
-        </select>
-    </div>    
 
-        
+
     <div class="mb-3">
-        <label for="account_id" class="form-label">Konto</label>
-        <select class="form-select" aria-label="Default select example" id="account_id" name="account_id" bind:value={userAccount} on:change={onAccountChange(userAccount)}>
-            
-            {#await accountsPromise}
+        <label for="owner_account_ids" class="form-label">Właściciel - konto</label>
+        <select class="form-select" aria-label="Default select example" id="owner_account_ids" name="owner_account_ids">
+            {#await ownersAccountsPromise}
                 <option value=""></option>
-            {:then accountsList }
-                {#each accountsList as account }
-                    <option value={account.id}>{account.name_pl}</option>
+            {:then ownersAccountsList }
+                {#each ownersAccountsList as ownerAccount }
+                    <option value="{ownerAccount.owner_id}_{ownerAccount.account_id}" >{ownerAccount.owner_name_pl} -   {ownerAccount.account_name_pl}</option>
                 {/each}
                 {:catch Error}
                 <p>Something went wrong</p>
             {/await}
         </select>
     </div>    
-    
     
     <div class="mb-3">
         <label for="type_id" class="form-label">Rodzaj</label>
