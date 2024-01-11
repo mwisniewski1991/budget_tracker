@@ -19,10 +19,5 @@ Create web app for entering income and expenses.
 
 
 ## To Do Plan
-- Create Accounts Container
-- Create Expenses Container
-
-- Create Bash to creating database and tables,
-
-- create shop table, 
-- create dashboard,
+- Refresh behavior after remove position,
+- Adding tab with position behavior
