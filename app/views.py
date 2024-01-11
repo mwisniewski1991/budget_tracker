@@ -129,7 +129,8 @@ def get_shops():
 def get_owners_accounts():
     sql_query = text('''
         SELECT owner_id, owner_name_pl, account_id, account_name_pl
-        FROM public.owners_accounts;    
+        FROM public.owners_accounts
+        ORDER BY owner_id, account_id;
         ''')
     
     owners_accounts = db.session.execute(sql_query)
