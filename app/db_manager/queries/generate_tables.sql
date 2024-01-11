@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS public.incexp_position
 -- VIEWS
 CREATE view owners_accounts as (
     SELECT 
-	owners.id as onwer_id,
+	owners.id as owner_id,
 	owners.name_pl as owner_name_pl,
 	accounts.id as account_id,
 	accounts.name_pl as account_name_pl 

@@ -1,6 +1,6 @@
 <script>
-    import PositionContainer from "./positionContainer.svelte";
-    import DeleteHeaderButton from "./deleteHeaderButton.svelte";
+    import PositionBox from "./PositionBox.svelte";
+    import DeleteHeaderButton from "./DeleteHeaderButton.svelte";
 
     export let header_id;
     export let type_name;
@@ -31,7 +31,7 @@
     </div>
 
     {#each positions as position }
-        <PositionContainer {...position}/>    
+        <PositionBox {...position}/>    
     {/each}
 
 </div>

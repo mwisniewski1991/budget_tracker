@@ -12,3 +12,6 @@ export const billTotalAmount = writable(0.0);
 export const addPostionViewVisible = writable(true);
 export const accountsBalanceViewVisible = writable(false);
 export const expensesViewVisible = writable(false);
+
+export const positionsOwnerID = writable('2');
+export const positionsAccountID = writable('01');

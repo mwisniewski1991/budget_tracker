@@ -123,6 +123,26 @@ def get_shops():
         } for shop in shops if str(shop.shop).strip() != ""
     ] 
 
+@views.route('/api/v1/owners-accounts', methods=['GET'])
+def get_owners_accounts():
+    sql_query = text('''
+        SELECT owner_id, owner_name_pl, account_id, account_name_pl
+        FROM public.owners_accounts;    
+        ''')
+    
+    owners_accounts = db.session.execute(sql_query)
+
+    return [
+        {
+            'owner_id':owner_account.owner_id,
+            'owner_name_pl':owner_account.owner_name_pl,
+            'account_id':owner_account.account_id,
+            'account_name_pl':owner_account.account_name_pl,
+            
+        } for owner_account in owners_accounts
+    ]
+
+
 @views.route('/api/v1/owners-accounts-amount', methods=['GET'])
 def get_owners_accounts_amount():
     
@@ -144,8 +164,10 @@ def get_owners_accounts_amount():
 
 @views.route('/api/v1/positions', methods=['GET'])
 def get_positions():
+    user_owner_id = request.args['owner_id']
+    user_account_id = request.args['account_id']
 
-    sql_header = text('''
+    sql_header = text(f'''
         select 
             incexp_header.id,
             incexp_header.date,
@@ -163,6 +185,10 @@ def get_positions():
 
         left join public.accounts as accounts  
         on incexp_header.account_id = accounts.id
+                      
+        where incexp_header.owner_id = '{user_owner_id}'
+        and incexp_header.account_id = '{user_account_id}'
+
     ''')
     sql_position = text('''
         select 
@@ -213,7 +239,7 @@ def get_positions():
         header['positions'] = list(filtered_data)
 
 
-    return headers_list
+    return sorted(headers_list, key=lambda incexp: incexp['header_date'] )
 
 @views.route('/api/v1/position-delete', methods=['DELETE'])
 def delete_positions():
