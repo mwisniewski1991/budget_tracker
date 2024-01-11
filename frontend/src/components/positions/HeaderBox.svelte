@@ -9,7 +9,6 @@
     export let account_name;
     export let positions;
 
-
 </script>
 
 <div class="container container-border">
@@ -18,9 +17,18 @@
 
         <!-- <div class="col"><strong>{header_id}</strong></div> -->
         <div class="col"><strong></strong></div>
-        <div class="col"><strong>{type_name}</strong></div>
-        <div class="col"><strong>{header_date}</strong></div>
+
+        <div class="col">
+            {#if type_name.trim() == "Dochód"}
+                <span class="income-position"><strong>{type_name.trim()}</strong></span>
+            {:else if type_name.trim() == "Wydatek"}
+                <span class="expense-position"><strong>{type_name.trim()}</strong></span>
+            {:else}
+                <span ><strong>{type_name}</strong></span>
+            {/if}
+        </div>
         
+        <div class="col"><strong>{header_date}</strong></div>
         <div class="col"><strong>{owner_name}</strong></div>
         <div class="col"><strong>{account_name}</strong></div>
         <div class="col">
@@ -42,5 +50,12 @@
         padding: 5px 0px;
         margin-bottom: 20px;
     }
+    .income-position{
+        color: green;
+    }
+    .expense-position{
+        color: red;
+    }
+
 
 </style>
