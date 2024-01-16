@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, request, send_from_directory, redi
 from sqlalchemy import text
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
-
+from functools import reduce
+from operator import add
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
@@ -238,8 +239,12 @@ def get_positions():
 
     for header in headers_list:
         current_header = header['header_id']
-        filtered_data = filter(lambda x: x['header_id'] == current_header ,positions_list)
-        header['positions'] = list(filtered_data)
+        filtered_data = list(filter(lambda x: x['header_id'] == current_header, positions_list))
+
+        header['positions'] = filtered_data
+        header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data])
+
+    # headers_list['total_amount'] = reduce(add, [position['amount'] for position in positions_list]) 
 
 
     return sorted(headers_list, key=lambda incexp: incexp['header_date'] )
