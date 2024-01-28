@@ -1,6 +1,7 @@
 <script>
     import { onDestroy } from "svelte";
     import { userTypeId, userCategoryId, userSubcategoryId, billTotalAmount   } from "../store.js"
+    import { get } from "svelte/store";
 
     export let position_id;
 
@@ -22,8 +23,13 @@
     let htmlShopName = `shop_${position_id}`;
     let htmlConnectionName = `connection_${position_id}`;
 
+    let current_postion_category
+    $: current_postion_category = get(userCategoryId);
+    const unsubscribe = userCategoryId.subscribe((value) => {current_postion_category = value});
+
+
     $: categoriesPromise = getCategories($userTypeId); 
-    $: subcategoriesPromise = getSubcategories($userCategoryId);
+    $: subcategoriesPromise = getSubcategories(current_postion_category);
     $: shopsPromise = getShops() 
     
 
@@ -66,7 +72,7 @@
     };
 
     function onCategoryChange(userCategory){
-        userCategoryId.set(userCategory);
+        current_postion_category = userCategory
     };
 
     function onSubcategoryChange(userSubcategory){
