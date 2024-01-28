@@ -151,20 +151,28 @@ def get_owners_accounts():
 def get_owners_accounts_amount():
     
     sql = text('''
-        select owner, account, sum (amount_absolute) as amount_sum
+        select owner_id, owner, account, sum (amount_absolute) as amount_sum
         from incexp_view
         group by owner_id, owner, account_id, account
         order by owner, account
     ''')
 
-    results = db.session.execute(sql)
+    results = list(db.session.execute(sql))
+    owners_list = { (owner_row.owner_id, owner_row.owner ) for owner_row in results} # unique owner_id, owner
 
     return [{
-        "owner": str(row.owner).strip(),
-        "account": str(row.account).strip(),
-        "amount_sum": row.amount_sum,
-        } for row in results
+        "owner_id": owner_id[0].strip(),
+        "owner": owner,
+        "owner_accounts": [
+            {
+                "account_name":  str(account_row.account).strip(),
+                "amount_sum": account_row.amount_sum,
+            }
+            for account_row in list(filter(lambda x: x.owner_id == owner_id, results))
+        ],
+        } for owner_id, owner in owners_list
     ]
+
 
 @views.route('/api/v1/positions', methods=['GET'])
 def get_positions():

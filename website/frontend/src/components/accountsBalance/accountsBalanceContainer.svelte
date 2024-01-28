@@ -1,4 +1,5 @@
 <script>
+        import AcountsCard from "./acountsCard.svelte"; 
 
         let ownersAccountsAmountsPromise = getOwnersAccountsAmounts();
 
@@ -12,27 +13,24 @@
 
 
 <div class="container-sm">
-        <div class="container">
+        
+        {#await ownersAccountsAmountsPromise}
+        <p></p>
+        {:then ownersAccountsAmountsList} 
+        {#each ownersAccountsAmountsList as ownerRow }
 
-                <div class="row">
-                        <div class="col"><strong>Właściciel</strong></div>
-                        <div class="col"><strong>Konto</strong></div>
-                        <div class="col"><strong>Stan</strong></div>
+                <div class="card-group">
+                        {#each ownerRow.owner_accounts as owner_accounts }
+                        <AcountsCard 
+                                owner_id={ownerRow.owner_id} 
+                                owner={ownerRow.owner} 
+                                account={owner_accounts.account_name} 
+                                amount={owner_accounts.amount_sum}></AcountsCard>
+                        {/each}
                 </div>
+        {/each}
+        {:catch Error}
+                <p>Something went wrong</p>
 
-                {#await ownersAccountsAmountsPromise}
-                        <p></p>
-                {:then ownersAccountsAmountsList} 
-                {#each ownersAccountsAmountsList as row }
-                        <div class="row">
-                                <div class="col">{row.owner}</div>
-                                <div class="col">{row.account}</div>
-                                <div class="col">{row.amount_sum}</div>
-                        </div>
-                {/each}
-                {:catch Error}
-                        <p>Something went wrong</p>
-                {/await}
-                
-        </div>
+        {/await}
 </div>
