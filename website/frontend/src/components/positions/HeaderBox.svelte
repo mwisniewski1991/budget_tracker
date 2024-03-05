@@ -5,8 +5,7 @@
     export let header_id;
     export let type_name;
     export let header_date;
-    export let owner_name;
-    export let account_name;
+    export let source;
     export let positions;
     export let total_amount;
 
@@ -30,7 +29,7 @@
         </div>
         
         <div class="col"><strong>{header_date}</strong></div>
-        <div class="col"><strong>{owner_name}</strong></div>
+        <div class="col"><strong>{source}</strong></div>
         <div class="col"><strong>{total_amount}</strong></div>
         <div class="col">
             <DeleteHeaderButton headerIDtoDelete={header_id} />

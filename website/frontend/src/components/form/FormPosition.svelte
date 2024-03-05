@@ -12,7 +12,6 @@
 
     let categoriesPromise;
     let subcategoriesPromise;
-    let shopsPromise;
     
     let htmlPositionId = `pos_${position_id}`;
 
@@ -20,7 +19,6 @@
     let htmlSubcategoryName = `subcategory_${position_id}`;
     let htmlAmountName = `amount_${position_id}`;
     let htmlCommentName = `comment_${position_id}`;
-    let htmlShopName = `shop_${position_id}`;
     let htmlConnectionName = `connection_${position_id}`;
 
     let current_postion_category
@@ -30,7 +28,6 @@
 
     $: categoriesPromise = getCategories($userTypeId); 
     $: subcategoriesPromise = getSubcategories(current_postion_category);
-    $: shopsPromise = getShops() 
     
 
     function selectClass(position){
@@ -62,13 +59,6 @@
         userSubcategoryId.set(firstSubcategoryOd);
 
         return subcategories
-    };
-
-    async function getShops(){
-
-        const resposne = await fetch('/api/v1/shops');
-        const shops =  await resposne.json();
-        return shops
     };
 
     function onCategoryChange(userCategory){
@@ -153,30 +143,6 @@
         <div class="mb-3">
             <label for={htmlCommentName} class="form-label">Komentarz</label>
             <input type="text" class="form-control" id={htmlCommentName} name={htmlCommentName}>
-        </div>
-
-        <div class="mb-3">
-            <label for={htmlShopName} class="form-label">Sklep</label>
-            <input type="text" list="shops" class="form-control" id={htmlShopName} name={htmlShopName}>
-            <datalist id="shops">
-
-                {#await shopsPromise}
-                    <p></p>
-                {:then shopsList} 
-                        {#each shopsList as shop }
-                        <option value={shop.shop_name}>
-                        {/each}
-                    {:catch Error}
-                        <p>Something went wrong</p>
-                {/await}
-<!--                 
-                <option value="Firefox">
-                <option value="Internet Explorer">
-                <option value="Opera">
-                <option value="Safari">
-                <option value="Microsoft Edge"> -->
-
-              </datalist>
         </div>
 
         <div class="mb-3">
