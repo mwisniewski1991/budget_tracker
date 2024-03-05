@@ -41,9 +41,16 @@ class INCEXP_header(base):
 
     id = Column(Integer, primary_key=True)
     date = Column(DateTime(timezone=True), nullable=False)
+    source = Column(String(100))
     type_id = Column(String(1), nullable=False)
     owner_id = Column(String(2), nullable=False)
     account_id = Column(String(2), nullable=False)
+    created_at = Column(DateTime(timezone=True), nullable=True)
+    created_at_utc = Column(DateTime(timezone=False), nullable=True)
+    updated_at = Column(DateTime(timezone=True), nullable=True)
+    updated_at_utc = Column(DateTime(timezone=False), nullable=True)
+
+
 
 class INCEXP_position(base):
     __tablename__ = 'incexp_position'
@@ -56,5 +63,8 @@ class INCEXP_position(base):
     amount_absolute = Column(Float, nullable=False)
     amount_full = Column(Integer, nullable=False)
     comment = Column(String(200))
-    shop = Column(String(100))
     connection = Column(String(100))
+    created_at = Column(DateTime(timezone=True), nullable=True)
+    created_at_utc = Column(DateTime(timezone=False), nullable=True)
+    updated_at = Column(DateTime(timezone=True), nullable=True)
+    updated_at_utc = Column(DateTime(timezone=False), nullable=True)

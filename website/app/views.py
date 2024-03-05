@@ -30,6 +30,7 @@ def add():
 
         new_incexp_header = INCEXP_header(
                 date  = request.form['date'],
+                source = request.form['source'],
                 owner_id = owner_id,
                 account_id = account_id,
                 type_id = request.form['type_id'],
@@ -50,7 +51,7 @@ def add():
                     subcategory_id = request.form[f'subcategory_{i}'],
                     amount = request.form[f'amount_{i}'],
                     comment = request.form[f'comment_{i}'],
-                    shop = request.form[f'shop_{i}'],
+                    # shop = request.form[f'shop_{i}'],
                     connection = request.form[f'connection_{i}'],
                 )
                 db.session.add(new_incexp_position)
@@ -118,13 +119,22 @@ def get_subcategories():
         } for subcat in subcategories
     ]
 
-@views.route('/api/v1/shops', methods=['GET'])
-def get_shops():
-    shops = INCEXP_position.query.with_entities(INCEXP_position.shop).distinct().order_by(INCEXP_position.shop).all()
+# @views.route('/api/v1/shops', methods=['GET'])
+# def get_shops():
+#     shops = INCEXP_header.query.with_entities(INCEXP_header.shop).distinct().order_by(INCEXP_header.shop).all()
+#     return [{
+#             'shop_name': str(shop.shop).strip()
+#         } for shop in shops if str(shop.shop).strip() != ""
+#     ] 
+
+@views.route('/api/v1/sources', methods=['GET'])
+def get_sources():
+    sources = INCEXP_header.query.with_entities(INCEXP_header.source).distinct().order_by(INCEXP_header.source).all()
     return [{
-            'shop_name': str(shop.shop).strip()
-        } for shop in shops if str(shop.shop).strip() != ""
+            'source_name': str(source.source).strip()
+        } for source in sources if str(source.source).strip() != ""
     ] 
+
 
 @views.route('/api/v1/owners-accounts', methods=['GET'])
 def get_owners_accounts():
@@ -183,6 +193,7 @@ def get_positions():
         select 
             incexp_header.id,
             incexp_header.date,
+            incexp_header.source,                      
             type_dict.name_pl as type_name,
             owners.name_pl as owner_name,
             accounts.name_pl as account_name
@@ -208,8 +219,7 @@ def get_positions():
             incexp_position.position_id,
             category.name_pl as category,
             subcategory.name_pl as subcategory,
-            incexp_position.amount_absolute,
-            incexp_position.shop
+            incexp_position.amount_absolute
             
         from public.incexp_position as incexp_position
 
@@ -226,11 +236,11 @@ def get_positions():
     headers_list = [{
         'header_id': header.id,
         'header_date': header.date.strftime('%Y-%m-%d'),
+        'source':  header.source,
         'type_name': header.type_name,
         'owner_name': header.owner_name,
         'account_name': header.account_name,
         'positions':[],
-
         } for header in headers 
         ]
 
@@ -240,8 +250,6 @@ def get_positions():
         'category': position.category,
         'subcategory': position.subcategory,
         'amount': position.amount_absolute,
-        'shop': position.shop,
-
         } for position in positions
     ]
 
@@ -251,9 +259,6 @@ def get_positions():
 
         header['positions'] = filtered_data
         header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data])
-
-    # headers_list['total_amount'] = reduce(add, [position['amount'] for position in positions_list]) 
-
 
     return sorted(headers_list, key=lambda incexp: incexp['header_date'] )
 

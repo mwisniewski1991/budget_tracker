@@ -40,9 +40,15 @@ class INCEXP_header(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
+    source = db.Column(db.String(100))
     type_id = db.Column(db.String(1), nullable=False)
     owner_id = db.Column(db.String(2), nullable=False)
     account_id = db.Column(db.String(2), nullable=False)
+    created_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    created_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    updated_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
+
 
 class INCEXP_position(db.Model):
     __tablename__ = 'incexp_position'
@@ -55,5 +61,8 @@ class INCEXP_position(db.Model):
     # amount_absolute = db.Column(db.Float)
     # amount_full = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(200))
-    shop = db.Column(db.String(100))
     connection = db.Column(db.String(100))
+    created_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    created_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
+    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
+    updated_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)

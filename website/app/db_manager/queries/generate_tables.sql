@@ -73,9 +73,14 @@ CREATE TABLE IF NOT EXISTS public.incexp_header
 (
     id serial primary key,
     date date NOT NULL,
+    source character(100) COLLATE pg_catalog."default",
     type_id character(1) references public.type_dict(id) NOT NULL,
     owner_id character(2) references public.owners(id) NOT NULL,
-    account_id character(2) references public.accounts(id) NOT NULL
+    account_id character(2) references public.accounts(id) NOT NULL,
+    created_at timestamptz DEFAULT now(),
+    created_at_utc timestamp DEFAULT (now() at time zone 'utc'),
+    updated_at timestamptz DEFAULT now(),
+    updated_at_utc timestamp DEFAULT (now() at time zone 'utc')
 
 );
 
@@ -89,8 +94,12 @@ CREATE TABLE IF NOT EXISTS public.incexp_position
     amount_absolute decimal GENERATED ALWAYS AS (abs(amount)) STORED,
     amount_full integer GENERATED ALWAYS AS (amount * 100) STORED,
     comment character(200) COLLATE pg_catalog."default",
-    shop character(100) COLLATE pg_catalog."default",
     connection character(100) COLLATE pg_catalog."default",
+    created_at timestamptz DEFAULT now(),
+    created_at_utc timestamp DEFAULT (now() at time zone 'utc'),
+    updated_at timestamptz DEFAULT now(),
+    updated_at_utc timestamp DEFAULT (now() at time zone 'utc')
+
     constraint header_pos_id PRIMARY KEY  (header_id, position_id)
 );
 
@@ -106,8 +115,7 @@ CREATE view owners_accounts as (
 
     from public.owners as owners
     left join public.accounts as accounts
-        on owners.id = accounts.owner_id
-	
+        on owners.id = accounts.owner_id	
 );
 
 CREATE VIEW type_category_subcategory as 
@@ -134,7 +142,7 @@ CREATE VIEW type_category_subcategory as
 
 CREATE VIEW incexp_view AS 
 (
-select
+    select
 
 	incexp_position.header_id,
 	incexp_position.position_id,
@@ -146,7 +154,7 @@ select
 	accounts.name_pl as account,
 	
 	incexp_header.date,
-
+    incexp_header.source,
 
 	type_dict.name_pl as type,
 	category.name_pl as category,
@@ -158,7 +166,6 @@ select
     end as amount_absolute,
 
 	incexp_position.comment,
-	incexp_position.shop,
 	incexp_position.connection
 	
     from public.incexp_header as incexp_header
