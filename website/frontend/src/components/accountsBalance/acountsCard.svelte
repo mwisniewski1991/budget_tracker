@@ -3,6 +3,7 @@
     export let owner;
     export let account;
     export let amount;
+    export let last_update;
 
     function colorForOwner(owner_obj){
         switch(owner_obj){
@@ -26,6 +27,7 @@
     <div class="card-header">{owner}</div>
     <div class="card-body">
       <h5 class="card-title">{account}</h5>
+      <p class="card-text"><small>{last_update}</small></p>
       <p class="card-text">{amount}</p>
     </div>
 </div>

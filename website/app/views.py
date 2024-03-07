@@ -161,7 +161,12 @@ def get_owners_accounts():
 def get_owners_accounts_amount():
     
     sql = text('''
-        select owner_id, owner, account, sum (amount_absolute) as amount_sum
+        select 
+            owner_id, 
+            owner, 
+            account, 
+            sum (amount_absolute) as amount_sum,
+            date(max(header_updated_at)) as last_update
         from incexp_view
         group by owner_id, owner, account_id, account
         order by owner, account
@@ -177,6 +182,7 @@ def get_owners_accounts_amount():
             {
                 "account_name":  str(account_row.account).strip(),
                 "amount_sum": account_row.amount_sum,
+                "last_update": str(account_row.last_update)
             }
             for account_row in list(filter(lambda x: x.owner_id == owner_id, results))
         ],

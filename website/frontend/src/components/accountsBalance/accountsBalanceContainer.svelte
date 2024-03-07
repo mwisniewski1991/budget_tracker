@@ -25,7 +25,9 @@
                                 owner_id={ownerRow.owner_id} 
                                 owner={ownerRow.owner} 
                                 account={owner_accounts.account_name} 
-                                amount={owner_accounts.amount_sum}></AcountsCard>
+                                amount={owner_accounts.amount_sum}
+                                last_update={owner_accounts.last_update}        
+                                ></AcountsCard>
                         {/each}
                 </div>
         {/each}
