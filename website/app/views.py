@@ -166,7 +166,7 @@ def get_owners_accounts_amount():
             owner, 
             account, 
             sum (amount_absolute) as amount_sum,
-            date(max(header_updated_at)) as last_update
+            date(max(header_updated_at_cet)) as last_update
         from incexp_view
         group by owner_id, owner, account_id, account
         order by owner, account
@@ -266,7 +266,7 @@ def get_positions():
         header['positions'] = filtered_data
         header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data])
 
-    return sorted(headers_list, key=lambda incexp: incexp['header_date'] )
+    return sorted(headers_list, reverse=True, key=lambda incexp: incexp['header_date'])
 
 @views.route('/api/v1/position-delete', methods=['DELETE'])
 def delete_positions():
