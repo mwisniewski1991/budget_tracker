@@ -1,10 +1,15 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect
-from sqlalchemy import text
+from sqlalchemy import text, and_
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
 from functools import reduce
 from operator import add
 from .incexp_modify import modify_header, modify_position
+import logging
+
+logging.basicConfig()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
+
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
@@ -65,14 +70,13 @@ def modify():
     if request.method == "POST":
         header_id = request.form['header_id']
         modify_header(INCEXP_header.query.filter_by(id=header_id).one(), request)
-        db.session.commit()
         
         for i in range(1,11):
-            value = request.form.get(f'category_{i}', None)
-            if value:
-                position_id =  request.form[f'position_id_{i}']
-                modify_position(INCEXP_position.query.filter_by(position_id=i, header_id=header_id).one(), request, i)
-                db.session.commit()
+            position_id = request.form.get(f'position_id_{i}', None)
+            
+            if position_id:
+                incexp_positions = INCEXP_position.query.filter(and_(INCEXP_position.header_id == header_id, INCEXP_position.position_id == position_id)).one() 
+                modify_position(incexp_positions,request, i)
 
         db.session.commit()
         return redirect('/')
