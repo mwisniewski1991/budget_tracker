@@ -9,3 +9,4 @@ services:
     volumes:
       - ./website/app:/website/app
       - ./website/frontend:/website/frontend
+    restart: always
