@@ -4,6 +4,7 @@ from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
 from functools import reduce
 from operator import add
+from .incexp_modify import modify_header, modify_position
 
 views = Blueprint ('views', __name__)
 ADDED_IDS = []
@@ -58,6 +59,24 @@ def add():
 
         db.session.commit()
         return redirect('/')
+
+@views.route('/modify', methods=['GET', 'POST'])
+def modify():
+    if request.method == "POST":
+        header_id = request.form['header_id']
+        modify_header(INCEXP_header.query.filter_by(id=header_id).one(), request)
+        db.session.commit()
+        
+        for i in range(1,11):
+            value = request.form.get(f'category_{i}', None)
+            if value:
+                position_id =  request.form[f'position_id_{i}']
+                modify_position(INCEXP_position.query.filter_by(position_id=i, header_id=header_id).one(), request, i)
+                db.session.commit()
+
+        db.session.commit()
+        return redirect('/')
+
 
 @views.route('/api/v1/owners', methods=['GET'])
 def get_owners():
@@ -119,13 +138,40 @@ def get_subcategories():
         } for subcat in subcategories
     ]
 
-# @views.route('/api/v1/shops', methods=['GET'])
-# def get_shops():
-#     shops = INCEXP_header.query.with_entities(INCEXP_header.shop).distinct().order_by(INCEXP_header.shop).all()
-#     return [{
-#             'shop_name': str(shop.shop).strip()
-#         } for shop in shops if str(shop.shop).strip() != ""
-#     ] 
+@views.route('/api/v1/categories-subcategories', methods=['GET'])
+def get_categories_subcategories():
+    types_list = [
+        {
+            'id':type.id,
+            'name_pl': type.name_pl,
+        } for type in Type.query.all()]
+
+    categories_list = [
+        {
+            'type_id':cat.type_id,
+            'id':cat.id,
+            'name_pl':cat.name_pl,
+        } for cat in Category.query.order_by(Category.id).all()]
+
+    subcategories_list = [
+        {
+            'category_id': subcat.category_id,
+            'id': subcat.id,
+            'name_pl': subcat.name_pl,
+        } for subcat in Subategory.query.order_by(Subategory.id).all()]
+
+
+    for category in categories_list:
+        iteration_category_id = category['id']
+        filterd_subcategories = filter(lambda x: x['category_id'] == iteration_category_id, subcategories_list)
+        category['subcategories_list'] = list(filterd_subcategories)
+
+    for typ in types_list:
+        iteration_type_id = typ['id']
+        filterd_categories = filter(lambda x: x['type_id'] == iteration_type_id, categories_list)
+        typ['categories_list'] = list(filterd_categories)
+
+    return types_list 
 
 @views.route('/api/v1/sources', methods=['GET'])
 def get_sources():
@@ -134,7 +180,6 @@ def get_sources():
             'source_name': str(source.source).strip()
         } for source in sources if str(source.source).strip() != ""
     ] 
-
 
 @views.route('/api/v1/owners-accounts', methods=['GET'])
 def get_owners_accounts():
@@ -199,9 +244,15 @@ def get_positions():
         select 
             incexp_header.id,
             incexp_header.date,
-            incexp_header.source,                      
+            incexp_header.source,           
+
+            incexp_header.type_id,                                 
             type_dict.name_pl as type_name,
+                      
+            incexp_header.owner_id,
             owners.name_pl as owner_name,
+                      
+            incexp_header.account_id,
             accounts.name_pl as account_name
             
         from public.incexp_header
@@ -223,9 +274,17 @@ def get_positions():
         select 
             incexp_position.header_id,
             incexp_position.position_id,
+                        
+            incexp_position.category_id,
             category.name_pl as category,
+
+            incexp_position.subcategory_id,
             subcategory.name_pl as subcategory,
-            incexp_position.amount_absolute
+            
+            incexp_position.amount_absolute,
+            
+            incexp_position.comment,
+            incexp_position.connection                         
             
         from public.incexp_position as incexp_position
 
@@ -242,10 +301,13 @@ def get_positions():
     headers_list = [{
         'header_id': header.id,
         'header_date': header.date.strftime('%Y-%m-%d'),
-        'source':  header.source,
-        'type_name': header.type_name,
-        'owner_name': header.owner_name,
-        'account_name': header.account_name,
+        'source':  header.source.strip(),
+        'type_id': header.type_id,
+        'type_name': header.type_name.strip(),
+        'owner_id': header.owner_id,
+        'owner_name': header.owner_name.strip(),
+        'account_id': header.account_id,
+        'account_name': header.account_name.strip(),
         'positions':[],
         } for header in headers 
         ]
@@ -253,9 +315,14 @@ def get_positions():
     positions_list = [{
         'header_id': position.header_id,
         'position_id': position.position_id,
-        'category': position.category,
-        'subcategory': position.subcategory,
+        'category_id': position.category_id,
+        'category': position.category.strip(),
+        'subcategory_id': position.subcategory_id,
+        'subcategory': position.subcategory.strip(),
         'amount': position.amount_absolute,
+        'comment': position.comment.strip(),
+        'connection':position.connection.strip(),
+
         } for position in positions
     ]
 
