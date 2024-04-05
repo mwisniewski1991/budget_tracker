@@ -44,10 +44,6 @@ class INCEXP_header(db.Model):
     type_id = db.Column(db.String(1), nullable=False)
     owner_id = db.Column(db.String(2), nullable=False)
     account_id = db.Column(db.String(2), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    created_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    updated_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
 
 
 class INCEXP_position(db.Model):
@@ -62,7 +58,3 @@ class INCEXP_position(db.Model):
     # amount_full = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(200))
     connection = db.Column(db.String(100))
-    created_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    created_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
-    updated_at = db.Column(db.DateTime(timezone=True), nullable=True)
-    updated_at_utc = db.Column(db.DateTime(timezone=False), nullable=True)
