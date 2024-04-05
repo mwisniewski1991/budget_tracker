@@ -1,5 +1,5 @@
 <script>
-    import { positionsOwnerID, positionsAccountID} from "../store.js";
+    import { positionsOwnerID, positionsAccountID, incexpList} from "../store.js";
     import HeaderBox from "./HeaderBox.svelte";
 
     let ownerAccountObject;
@@ -7,6 +7,11 @@
     
     let ownersAccountsPromise = getOwnersAccounts()
     $: headersPromise = getPositions($positionsOwnerID, $positionsAccountID);
+
+    function addToList(results){
+        $incexpList =  [...$incexpList, ...results];
+        console.log($incexpList);
+    };
 
     async function getOwnersAccounts(){
         const response = await fetch('/api/v1/owners-accounts')
@@ -20,6 +25,8 @@
         
         const resposne = await fetch(`/api/v1/positions?${parameters}`, {method:"GET"});
         const results =  await resposne.json();
+        addToList(results)
+
         return results
     };
 

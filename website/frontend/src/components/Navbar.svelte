@@ -1,23 +1,23 @@
 <script>
-  import {addPostionViewVisible, accountsBalanceViewVisible, expensesViewVisible } from './store';
+  import {addPostionViewVisible, accountsBalanceViewVisible ,positionsCockpitViewVisible } from './store';
 
   function changeAddPostionViewVisible(){
     addPostionViewVisible.set(true);
     accountsBalanceViewVisible.set(false);
-    expensesViewVisible.set(false);
+    positionsCockpitViewVisible.set(false);
 
   };
   function changeAccountsBalanceViewVisible(){
     addPostionViewVisible.set(false);
     accountsBalanceViewVisible.set(true);
-    expensesViewVisible.set(false);
+    positionsCockpitViewVisible.set(false);
 
   };
 
-  function changeExpensesViewVisible(){
+  function changePositionsCockpitViewVisible(){
     addPostionViewVisible.set(false);
     accountsBalanceViewVisible.set(false);
-    expensesViewVisible.set(true);
+    positionsCockpitViewVisible.set(true);
 
   };
 
@@ -30,7 +30,7 @@
           <div class="navbar-nav">
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeAddPostionViewVisible}>Dodaj pozycje</button>
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeAccountsBalanceViewVisible}>Bilans kont</button>
-            <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeExpensesViewVisible}>Wydatki</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changePositionsCockpitViewVisible}>Wydatki</button>
           </div>
 
   </nav>

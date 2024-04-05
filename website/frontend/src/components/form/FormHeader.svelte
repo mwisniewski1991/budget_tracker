@@ -118,7 +118,7 @@
 
 
     <div class="mb-3">
-        <span>{currentAmount} PLN</span>
+        <span>{currentAmount} PLN</span> 
     </div>    
 
 </div>

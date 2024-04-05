@@ -1,4 +1,4 @@
-import { writable } from "svelte/store"
+import { writable, readable } from "svelte/store"
 
 export const userTypeId = writable('2');
 export const userCategoryId = writable('02');
@@ -6,9 +6,25 @@ export const userSubcategoryId = writable('0001');
 
 export const billTotalAmount = writable(0.0);
 
-export const addPostionViewVisible = writable(true);
+export const addPostionViewVisible = writable(false);
 export const accountsBalanceViewVisible = writable(false);
-export const expensesViewVisible = writable(false);
+export const positionsCockpitViewVisible = writable(true);
 
-export const positionsOwnerID = writable('1');
-export const positionsAccountID = writable('05');
+export const incexpList = writable([]);
+export const incexpExistedList = writable([]);
+export const CategoriesSubcategoriesList = writable([]);
+
+// PositionsCockpit
+// export const activeOnwerId = writable(localStorage.getItem("activeOnwerIdLocalData") ? localStorage.getItem("activeOnwerIdLocalData") :'1');
+// export const activeAccountId = writable(localStorage.getItem("activeAccountIdLocalData") ? localStorage.getItem("activeAccountIdLocalData") :'05');
+
+export const activeOnwerId = writable(localStorage.getItem("activeOnwerIdLocalData") ? localStorage.getItem("activeOnwerIdLocalData") :'2');
+export const activeAccountId = writable(localStorage.getItem("activeAccountIdLocalData") ? localStorage.getItem("activeAccountIdLocalData") :'04');
+
+// IncExpNew
+export const IncExpNewTypeId = writable('2');
+export const IncExpNewTotalBillValue = writable(0.00);
+
+export const IncExpNewTypeIdDefault = writable('2');
+export const IncExpNewCategoryIdDefault = writable('02');
+export const IncExpNewSubcategoryIdDefault = writable('0001');
