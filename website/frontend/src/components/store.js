@@ -1,4 +1,4 @@
-import { writable, readable } from "svelte/store"
+import { writable } from "svelte/store"
 
 export const userTypeId = writable('2');
 export const userCategoryId = writable('02');
@@ -14,9 +14,6 @@ export const incexpExistedList = writable([]);
 export const CategoriesSubcategoriesList = writable([]);
 
 // PositionsCockpit
-// export const activeOnwerId = writable(localStorage.getItem("activeOnwerIdLocalData") ? localStorage.getItem("activeOnwerIdLocalData") :'1');
-// export const activeAccountId = writable(localStorage.getItem("activeAccountIdLocalData") ? localStorage.getItem("activeAccountIdLocalData") :'05');
-
 export const activeOnwerId = writable(localStorage.getItem("activeOnwerIdLocalData") ? localStorage.getItem("activeOnwerIdLocalData") :'2');
 export const activeAccountId = writable(localStorage.getItem("activeAccountIdLocalData") ? localStorage.getItem("activeAccountIdLocalData") :'04');
 
