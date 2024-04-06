@@ -2,7 +2,7 @@
 import {activeOnwerId, activeAccountId} from "../store";
 import IncExpNew from "./new/IncExpNew.svelte";
 import IncExpExistedList from "./existed/IncExpExistedList.svelte";
-import PositionsExisted from "./existed/PositionsExisted.svelte";
+import AccountBalance from "./accountBalance/accountBalance.svelte";
 
 let ownersAccountsPromise = getOwnersAccounts()
 let ownerAccountObject;
@@ -26,13 +26,6 @@ function onOwnerAccountChange(ownerAccountObject){
 
         localStorage.setItem("activeOnwerIdLocalData", newOwnerId);
         localStorage.setItem("activeAccountIdLocalData", newAccountID);
-        
-        // console.log(newOwnerId)
-        // console.log(newAccountID)
-        // console.log('----')
-        // console.log(localStorage.getItem("activeOnwerIdLocalData"))
-        // console.log(localStorage.getItem("activeAccountIdLocalData"))
-
     };
 
 </script>
@@ -60,9 +53,9 @@ function onOwnerAccountChange(ownerAccountObject){
         </select>
 </div>    
 
+<AccountBalance/>
 <IncExpNew/>
 <IncExpExistedList/>
-<!-- <PositionsExisted/> -->
 
 
 <!-- FORM TO CREATE POSITIONS -->

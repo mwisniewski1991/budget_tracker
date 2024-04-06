@@ -16,6 +16,7 @@
     
     <form action="/modify" method="post">
             <div>
+                <span>{IncExp['header_id']}</span>
                 <DeleteHeaderButton headerIDtoDelete={IncExp['header_id']}/>
                 <ModifyHeaderButton bind:isModifyMode/>
                 <PostHeaderButton isModifyMode={isModifyMode}/>
