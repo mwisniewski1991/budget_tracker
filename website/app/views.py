@@ -205,7 +205,6 @@ def get_owners_accounts():
         } for owner_account in owners_accounts
     ]
 
-
 @views.route('/api/v1/owners-accounts-amount', methods=['GET'])
 def get_owners_accounts_amount():
     
@@ -238,6 +237,20 @@ def get_owners_accounts_amount():
         } for owner_id, owner in owners_list
     ]
 
+@views.route('api/v1/accountBalance', methods=['GET'])
+def get_account_balace():
+    account_id = request.args['account_id']
+    sql = text(f'''
+        select 
+            sum (amount_absolute) as amount_sum
+        from incexp_view
+        where account_id = '{account_id}'
+    ''')
+    account_balance_value = list(db.session.execute(sql))
+
+    return {
+        'account_balance': account_balance_value[0][0],
+     }
 
 @views.route('/api/v1/positions', methods=['GET'])
 def get_positions():
