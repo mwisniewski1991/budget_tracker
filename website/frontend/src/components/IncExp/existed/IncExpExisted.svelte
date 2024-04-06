@@ -9,7 +9,6 @@
 
     let currentTypeId;
     let isModifyMode;
-
 </script>
 
 <div class="container container-border">
