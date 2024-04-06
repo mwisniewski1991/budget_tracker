@@ -15,7 +15,7 @@
 
 <div class="container p-2">
 {#await accountBalancePromise}
-    <span>Stan Konta:</span>
+    <span>Stan Konta: ______</span>
     {:then accountBalance }
     <span>Stan Konta: <strong>{accountBalance.account_balance}</strong></span>
     {:catch Error}

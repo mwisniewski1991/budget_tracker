@@ -4,12 +4,9 @@
 	import Navbar from "./components/Navbar.svelte";
 	import FormContainer from "./components/form/FormContainer.svelte";
     import AccountsBalanceContainer from "./components/accountsBalance/accountsBalanceContainer.svelte";
-	import {addPostionViewVisible, accountsBalanceViewVisible, positionsCockpitViewVisible, CategoriesSubcategoriesList } from './components/store';
+	import {accountsBalanceViewVisible, positionsCockpitViewVisible, CategoriesSubcategoriesList } from './components/store';
 	import IncExpCockpit from "./components/IncExp/IncExpCockpit.svelte"
     import AcountsCard from "./components/accountsBalance/acountsCard.svelte";
-
-	let addPostionViewVisibleValue;
-	addPostionViewVisible.subscribe((value) => addPostionViewVisibleValue = value);
 
 	let accountsBalanceViewVisibleValue;
 	accountsBalanceViewVisible.subscribe((value) => accountsBalanceViewVisibleValue = value);
@@ -34,9 +31,9 @@
 	<Header/>
 	<Navbar/>
 
-	{#if addPostionViewVisibleValue === true}
-		<FormContainer/>
-	{:else if accountsBalanceViewVisibleValue == true}
+	<!-- {#if addPostionViewVisibleValue === true} -->
+		<!-- <FormContainer/> -->
+	{#if accountsBalanceViewVisibleValue == true}
 		<AccountsBalanceContainer/>
 	{:else if positionsCockpitViewVisibleValue == true}
 		<IncExpCockpit/>
