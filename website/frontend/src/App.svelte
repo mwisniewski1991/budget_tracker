@@ -1,12 +1,10 @@
 <script>
 	import { onMount } from "svelte";
+	import {accountsBalanceViewVisible, positionsCockpitViewVisible, CategoriesSubcategoriesList } from './components/store';
 	import Header from "./components/Header.svelte";
 	import Navbar from "./components/Navbar.svelte";
-	import FormContainer from "./components/form/FormContainer.svelte";
     import AccountsBalanceContainer from "./components/accountsBalance/accountsBalanceContainer.svelte";
-	import {accountsBalanceViewVisible, positionsCockpitViewVisible, CategoriesSubcategoriesList } from './components/store';
 	import IncExpCockpit from "./components/IncExp/IncExpCockpit.svelte"
-    import AcountsCard from "./components/accountsBalance/acountsCard.svelte";
 
 	let accountsBalanceViewVisibleValue;
 	accountsBalanceViewVisible.subscribe((value) => accountsBalanceViewVisibleValue = value);

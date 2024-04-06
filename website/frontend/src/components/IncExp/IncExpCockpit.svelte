@@ -56,7 +56,3 @@ function onOwnerAccountChange(ownerAccountObject){
 <AccountBalance/>
 <IncExpNew/>
 <IncExpExistedList/>
-
-
-<!-- FORM TO CREATE POSITIONS -->
-<!-- EXISTED POSITIONS -->
