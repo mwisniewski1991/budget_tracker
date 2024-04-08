@@ -13,17 +13,18 @@
 
 <div class="container container-border">
     <form action="/add" method="post" class="IncExpNew">
-        <div>
-            <button type="submit" class="btn btn-primary" >Prześlij</button>
-            <button class="btn btn-secondary" type="button" on:click={addPosition}>Dodaj pozycję</button>
-            <button class="btn btn-secondary" type="button" on:click={removePosition}>Usuń pozycję</button>
-        </div>
+     
 
         <Header bind:currentTypeId/>
 
         {#each range(1, newPostitsionCounter + 1, 1) as i}
             <Positions positionId={i} currentTypeId={currentTypeId}/>
         {/each}
+        <div>
+            <button class="btn btn-secondary" type="button" on:click={addPosition}>Dodaj pozycję</button>
+            <button class="btn btn-secondary" type="button" on:click={removePosition}>Usuń pozycję</button>
+            <button type="submit" class="btn btn-primary" >Prześlij</button>
+        </div>
     </form>
 </div>
 
