@@ -24,3 +24,6 @@ export const IncExpNewTotalBillValue = writable(0.00);
 export const IncExpNewTypeIdDefault = writable('2');
 export const IncExpNewCategoryIdDefault = writable('02');
 export const IncExpNewSubcategoryIdDefault = writable('0001');
+
+// IncExpFilters
+export const incExpFilterLimitValue = writable(50); 

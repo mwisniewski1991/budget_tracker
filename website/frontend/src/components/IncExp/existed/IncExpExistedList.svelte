@@ -1,17 +1,18 @@
 <script>
-    import { activeOnwerId, activeAccountId, incexpExistedList} from "../../store";
+    import { activeOnwerId, activeAccountId, incexpExistedList, incExpFilterLimitValue} from "../../store";
     import IncExpExisted from "./IncExpExisted.svelte";
+    import IncExpFilters from "./components/IncExpFilters/IncExpFilters.svelte";
     
     // let IncExpExistedPromise; 
-    $: IncExpExistedPromise = getIncExpExisted($activeOnwerId, $activeAccountId);
+    $: IncExpExistedPromise = getIncExpExisted($activeOnwerId, $activeAccountId, $incExpFilterLimitValue);
 
     function addToList(results){
         $incexpExistedList =  [...$incexpExistedList, ...results];
     };
 
-    async function getIncExpExisted(ownerId, accountID){
+    async function getIncExpExisted(ownerId, accountID, resulstLimit){
 
-        const parameters = new URLSearchParams({owner_id: ownerId, account_id: accountID});
+        const parameters = new URLSearchParams({owner_id: ownerId, account_id: accountID, limit: resulstLimit});
 
         const resposne = await fetch(`/api/v1/positions?${parameters}`, {method:"GET"});
         const results =  await resposne.json();
@@ -24,6 +25,8 @@
 </script>
 
 <div class="container container-border">
+
+    <IncExpFilters/>
 
     {#await IncExpExistedPromise}
     <p></p>
