@@ -30,6 +30,7 @@
 <style>
     .container-border{
         border: 1px solid white;
+        border-radius: 10px;
         padding: 5px 5px;
         margin-bottom: 20px;
     }

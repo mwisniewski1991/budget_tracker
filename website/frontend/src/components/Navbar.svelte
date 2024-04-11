@@ -17,7 +17,9 @@
 </script>
 
 
-<nav class="navbar navbar-light bg-light">
+<nav class="navbar navbar-light p-2">
+<!-- <nav class="navbar navbar-light bg-light"> -->
+
 
           <div class="navbar-nav">
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changePositionsCockpitViewVisible}>Pozycje</button>
@@ -25,3 +27,15 @@
           </div>
 
   </nav>
+
+<style>
+  *{
+		background-color:#131516;
+		color: #fff;
+	}
+  nav{
+    border: #fff solid 1px;
+    border-radius: 10px;
+		background-color:#131516;
+  }
+</style>

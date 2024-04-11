@@ -30,8 +30,9 @@ function onOwnerAccountChange(ownerAccountObject){
 
 </script>
 
+<h3 class="pt-2">Właściciel</h3>
 <div class="container">
-        <label for="owner_id" class="form-label">Właściciel</label>
+        <!-- <label for="owner_id" class="form-label">Właściciel</label> -->
         <select class="form-select" aria-label="Default select example" id="owner_id" name="owner_id" bind:value={ownerAccountObject} on:change={onOwnerAccountChange(ownerAccountObject)}>
 
             {#await ownersAccountsPromise}
@@ -53,6 +54,11 @@ function onOwnerAccountChange(ownerAccountObject){
         </select>
 </div>    
 
+
 <AccountBalance/>
+
+<h3>Dodaj nowy rekord</h3>
 <IncExpNew/>
+
+<h3>Istniejące rekordy</h3>
 <IncExpExistedList/>
