@@ -256,6 +256,7 @@ def get_account_balace():
 def get_positions():
     user_owner_id = request.args['owner_id']
     user_account_id = request.args['account_id']
+    limit = request.args.get('limit', 50)
 
     sql_header = text(f'''
         select 
@@ -285,6 +286,10 @@ def get_positions():
                       
         where incexp_header.owner_id = '{user_owner_id}'
         and incexp_header.account_id = '{user_account_id}'
+
+        order by incexp_header.date DESC, incexp_header.id DESC
+
+        limit {limit}
 
     ''')
     sql_position = text('''
