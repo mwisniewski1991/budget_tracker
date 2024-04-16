@@ -1,4 +1,6 @@
 <script>
+    import { incExpFilterDetailsVisible } from "../../../store";
+
     import CategoryForm from "./positionFormElements/CategoryForm.svelte";
     import SubcategoryForm from "./positionFormElements/SubcategoryForm.svelte";
     import AmountForm from "./positionFormElements/AmountForm.svelte";
@@ -12,7 +14,6 @@
     export let typeId;
     
     let currentPostionCategory;
-
 
 </script>
 
@@ -45,17 +46,21 @@
 
     </div>
 
-    <div class="row">
-        <div class="col"><CommentForm   
-                            isModifyMode={isModifyMode} 
-                            positionId={PositionData['position_id']} 
-                            comment={PositionData['comment']}/></div>
+    {#if $incExpFilterDetailsVisible === true}
+        <div class="row">
+            <div class="col"><CommentForm   
+                                isModifyMode={isModifyMode} 
+                                positionId={PositionData['position_id']} 
+                                comment={PositionData['comment']}/></div>
 
-        <div class="col"><ConnectionForm 
-                            isModifyMode={isModifyMode} 
-                            positionId={PositionData['position_id']} 
-                            connection={PositionData['connection']}/></div>
-    </div>
+            <div class="col"><ConnectionForm 
+                                isModifyMode={isModifyMode} 
+                                positionId={PositionData['position_id']} 
+                                connection={PositionData['connection']}/></div>
+        </div>
+    {/if}
+
+
 </div>
 
 
