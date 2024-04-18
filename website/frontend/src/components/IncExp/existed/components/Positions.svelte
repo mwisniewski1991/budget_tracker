@@ -7,6 +7,7 @@
     import CommentForm from "./positionFormElements/CommentForm.svelte";
     import ConnectionForm from "./positionFormElements/ConnectionForm.svelte"
     import PositionIdForm from "./positionFormElements/PositionIdForm.svelte";
+    import UpdatedAtCet from "./positionFormElements/UpdatedAtCet.svelte";
     
     export let isModifyMode;
     export let currentTypeId;
@@ -57,6 +58,11 @@
                                 isModifyMode={isModifyMode} 
                                 positionId={PositionData['position_id']} 
                                 connection={PositionData['connection']}/></div>
+                
+            <div class='col'><UpdatedAtCet
+                                updatedAtCet={PositionData['updated_at_cet']}
+                            /></div>
+                            
         </div>
     {/if}
 
