@@ -306,7 +306,9 @@ def get_positions():
             incexp_position.amount_absolute,
             
             incexp_position.comment,
-            incexp_position.connection                         
+            incexp_position.connection,
+
+            incexp_position.updated_at_cet                      
             
         from public.incexp_position as incexp_position
 
@@ -344,6 +346,7 @@ def get_positions():
         'amount': position.amount_absolute,
         'comment': position.comment.strip(),
         'connection':position.connection.strip(),
+        'updated_at_cet': position.updated_at_cet.strftime('%Y-%m-%d %H:%M'),
 
         } for position in positions
     ]
