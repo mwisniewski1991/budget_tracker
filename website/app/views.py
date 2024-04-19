@@ -312,15 +312,13 @@ def get_positions():
 
     return sorted(headers_list, reverse=True, key=lambda incexp: incexp['header_date'])
 
-@views.route('/api/v1/position-delete', methods=['DELETE'])
-def delete_positions():
-    header_id_to_delete = request.args['headerid']
-
-    INCEXP_position.query.filter_by(header_id=header_id_to_delete).delete()
-    INCEXP_header.query.filter_by(id=header_id_to_delete).delete()
+@views.route('/api/v1/position-delete/<header_id>', methods=['DELETE'])
+def delete_positions(header_id):
+    INCEXP_position.query.filter_by(header_id=header_id).delete()
+    INCEXP_header.query.filter_by(id=header_id).delete()
     db.session.commit()
 
     return [{
-        'value':header_id_to_delete
-
+        'status': 'DELETED',
+        'value': header_id
     }]
