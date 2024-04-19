@@ -292,35 +292,8 @@ def get_positions():
         limit {limit}
 
     ''')
-    sql_position = text('''
-        select 
-            incexp_position.header_id,
-            incexp_position.position_id,
-                        
-            incexp_position.category_id,
-            category.name_pl as category,
-
-            incexp_position.subcategory_id,
-            subcategory.name_pl as subcategory,
-            
-            incexp_position.amount_absolute,
-            
-            incexp_position.comment,
-            incexp_position.connection,
-
-            incexp_position.updated_at_cet                      
-            
-        from public.incexp_position as incexp_position
-
-        left join public.category as category
-            on incexp_position.category_id = category.id
-
-        left join public.subcategory as subcategory
-            on incexp_position.subcategory_id = subcategory.id
-    ''')
 
     headers = db.session.execute(sql_header)
-    positions = db.session.execute(sql_position)
 
     headers_list = [{
         'header_id': header.id,
@@ -336,25 +309,33 @@ def get_positions():
         } for header in headers 
         ]
 
+    header_ids = list(row['header_id'] for row in headers_list)
+
+    positions = (db.session.query(INCEXP_position, Category, Subategory)
+                    .join(Category)
+                    .join(Subategory)
+                    .filter(INCEXP_position.header_id.in_(header_ids))
+                ).all()
+
     positions_list = [{
         'header_id': position.header_id,
         'position_id': position.position_id,
-        'category_id': position.category_id,
-        'category': position.category.strip(),
-        'subcategory_id': position.subcategory_id,
-        'subcategory': position.subcategory.strip(),
+        'category_id': category.id,
+        'category': category.name_pl.strip(),
+        'subcategory_id': subcategory.id,
+        'subcategory': subcategory.name_pl.strip(),
         'amount': position.amount_absolute,
+        'amount': position.amount,
         'comment': position.comment.strip(),
         'connection':position.connection.strip(),
         'updated_at_cet': position.updated_at_cet.strftime('%Y-%m-%d %H:%M'),
 
-        } for position in positions
+        } for position, category, subcategory in positions
     ]
 
     for header in headers_list:
         current_header = header['header_id']
         filtered_data = list(filter(lambda x: x['header_id'] == current_header, positions_list))
-
         header['positions'] = filtered_data
         header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data])
 
@@ -363,8 +344,6 @@ def get_positions():
 @views.route('/api/v1/position-delete', methods=['DELETE'])
 def delete_positions():
     header_id_to_delete = request.args['headerid']
-    print(header_id_to_delete)
-
 
     INCEXP_position.query.filter_by(header_id=header_id_to_delete).delete()
     INCEXP_header.query.filter_by(id=header_id_to_delete).delete()
