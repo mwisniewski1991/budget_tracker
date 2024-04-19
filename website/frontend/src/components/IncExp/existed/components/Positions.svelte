@@ -62,7 +62,24 @@
             <div class='col'><UpdatedAtCet
                                 updatedAtCet={PositionData['updated_at_cet']}
                             /></div>
-                            
+        </div>
+    
+    {:else}
+        <div class="row" style="display: none;">
+            <div class="col"><CommentForm   
+                isModifyMode={isModifyMode} 
+                positionId={PositionData['position_id']} 
+                comment={PositionData['comment']}/></div>
+
+            <div class="col"><ConnectionForm 
+                            isModifyMode={isModifyMode} 
+                            positionId={PositionData['position_id']} 
+                            connection={PositionData['connection']}/></div>
+
+            <div class='col'><UpdatedAtCet
+                            updatedAtCet={PositionData['updated_at_cet']}
+                        /></div>
+                    
         </div>
     {/if}
 
