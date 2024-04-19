@@ -1,5 +1,6 @@
 from . import db 
 from sqlalchemy.sql import func
+import datetime
 
 
 class Owners(db.Model):
@@ -51,10 +52,14 @@ class INCEXP_position(db.Model):
 
     header_id = db.Column(db.Integer, primary_key=True)
     position_id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.String(100), nullable=False)
-    subcategory_id = db.Column(db.String(100), nullable=False)
+    category_id = db.Column(db.String(100), db.ForeignKey('category.id'), nullable=False)
+    subcategory_id = db.Column(db.String(100), db.ForeignKey('subcategory.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    # amount_absolute = db.Column(db.Float)
-    # amount_full = db.Column(db.Integer, nullable=False)
+    amount_absolute = db.Column(db.Float, db.Computed("(abs(amount)"))
+    amount_full = db.Column(db.Integer, db.Computed("amount * 100"), nullable=False)
     comment = db.Column(db.String(200))
     connection = db.Column(db.String(100))
+    created_at_cet = db.Column(db.DateTime(), server_default=func.now())
+    created_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
+    updated_at_cet = db.Column(db.DateTime(), server_default=func.now())
+    updated_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
