@@ -34,7 +34,7 @@ class Subategory(db.Model):
     id = db.Column(db.String(4), nullable=False, primary_key=True)
     name_pl = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.String(2), nullable=False)
-    is_fixed_cost =  db.Column(db.Integer, nullable=False)
+    is_fixed_cost = db.Column(db.Integer, nullable=False)
 
 class INCEXP_header(db.Model):
     __tablename__ = 'incexp_header'
@@ -42,9 +42,9 @@ class INCEXP_header(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
     source = db.Column(db.String(100))
-    type_id = db.Column(db.String(1), nullable=False)
-    owner_id = db.Column(db.String(2), nullable=False)
-    account_id = db.Column(db.String(2), nullable=False)
+    type_id = db.Column(db.String(1), db.ForeignKey('type_dict.id'), nullable=False)
+    owner_id = db.Column(db.String(2), db.ForeignKey('owners.id'), nullable=False)
+    account_id = db.Column(db.String(2), db.ForeignKey('accounts.id'), nullable=False)
 
 
 class INCEXP_position(db.Model):
