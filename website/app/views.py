@@ -256,57 +256,28 @@ def get_account_balace():
 def get_positions():
     user_owner_id = request.args['owner_id']
     user_account_id = request.args['account_id']
-    limit = request.args.get('limit', 50)
-
-    sql_header = text(f'''
-        select 
-            incexp_header.id,
-            incexp_header.date,
-            incexp_header.source,           
-
-            incexp_header.type_id,                                 
-            type_dict.name_pl as type_name,
-                      
-            incexp_header.owner_id,
-            owners.name_pl as owner_name,
-                      
-            incexp_header.account_id,
-            accounts.name_pl as account_name
-            
-        from public.incexp_header
-
-        left join public.type_dict as type_dict
-            on incexp_header.type_id = type_dict.id
-            
-        left join public.owners as owners
-            on incexp_header.owner_id = owners.id
-
-        left join public.accounts as accounts  
-        on incexp_header.account_id = accounts.id
-                      
-        where incexp_header.owner_id = '{user_owner_id}'
-        and incexp_header.account_id = '{user_account_id}'
-
-        order by incexp_header.date DESC, incexp_header.id DESC
-
-        limit {limit}
-
-    ''')
-
-    headers = db.session.execute(sql_header)
+    user_limit = request.args.get('limit', 50)
+    headers = (db.session.query(INCEXP_header, Type, Owners, Accounts)
+                .join(Type)
+                .join(Owners)
+                .join(Accounts)
+                .filter(and_(INCEXP_header.owner_id == user_owner_id, INCEXP_header.account_id == user_account_id))
+                .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
+                .limit(user_limit)
+    ).all()
 
     headers_list = [{
-        'header_id': header.id,
-        'header_date': header.date.strftime('%Y-%m-%d'),
-        'source':  header.source.strip(),
-        'type_id': header.type_id,
-        'type_name': header.type_name.strip(),
-        'owner_id': header.owner_id,
-        'owner_name': header.owner_name.strip(),
-        'account_id': header.account_id,
-        'account_name': header.account_name.strip(),
+        'header_id': incexp_header.id,
+        'header_date': incexp_header.date.strftime('%Y-%m-%d'),
+        'source':  incexp_header.source.strip(),
+        'type_id': type.id,
+        'type_name': type.name_pl.strip(),
+        'owner_id': owners.id,
+        'owner_name': owners.name_pl.strip(),
+        'account_id': accounts.id,
+        'account_name': accounts.name_pl.strip(),
         'positions':[],
-        } for header in headers 
+            } for incexp_header, type, owners, accounts in headers 
         ]
 
     header_ids = list(row['header_id'] for row in headers_list)
