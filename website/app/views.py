@@ -95,16 +95,13 @@ def get_owners():
 
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET'])
 def get_owner_accounts(owner_id):
-    accounts = (Accounts
-                    .query
-                    .filter_by(owner_id = owner_id)
-                    .join(Owners, Accounts.owner_id == Owners.id)
-                    .add_columns(Accounts.id, Accounts.name_pl, Accounts.owner_id, Owners.name_pl)
-                    .order_by(Accounts.id)
-                ).all()
+
+    owner = Owners.query.with_entities(Owners.name_pl).filter_by(id = owner_id).first()
+    accounts = Accounts.query.filter(Accounts.owner_id == owner_id).order_by(Accounts.id).all()
+
     return {
         'owner_id': owner_id,
-        'onwer_name': accounts[0].name_pl,
+        'onwer_name': owner.name_pl,
         'accounts':[
                 {'id':account.id, 
                  'name_pl':account.name_pl, 
