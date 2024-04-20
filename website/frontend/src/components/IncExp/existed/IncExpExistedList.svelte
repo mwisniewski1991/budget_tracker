@@ -12,9 +12,8 @@
 
     async function getIncExpExisted(ownerId, accountID, resulstLimit){
 
-        const parameters = new URLSearchParams({owner_id: ownerId, account_id: accountID, limit: resulstLimit});
-
-        const resposne = await fetch(`/api/v1/positions?${parameters}`, {method:"GET"});
+        const parameters = new URLSearchParams({limit: resulstLimit});
+        const resposne = await fetch(`/api/v1/${ownerId}/${accountID}/positions?${parameters}`, {method:"GET"});
         const results =  await resposne.json();
         addToList(results)
 
