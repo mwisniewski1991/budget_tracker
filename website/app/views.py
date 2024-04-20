@@ -252,16 +252,16 @@ def get_account_balace():
         'account_balance': account_balance_value[0][0],
      }
 
-@views.route('/api/v1/positions', methods=['GET'])
-def get_positions():
-    user_owner_id = request.args['owner_id']
-    user_account_id = request.args['account_id']
+@views.route('/api/v1/<owner_id>/<account_id>/positions', methods=['GET'])
+def get_positions(owner_id, account_id):
+    # user_owner_id = request.args['owner_id']
+    # user_account_id = request.args['account_id']
     user_limit = request.args.get('limit', 50)
     headers = (db.session.query(INCEXP_header, Type, Owners, Accounts)
                 .join(Type)
                 .join(Owners)
                 .join(Accounts)
-                .filter(and_(INCEXP_header.owner_id == user_owner_id, INCEXP_header.account_id == user_account_id))
+                .filter(and_(INCEXP_header.owner_id == owner_id, INCEXP_header.account_id == account_id))
                 .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
                 .limit(user_limit)
     ).all()
