@@ -252,7 +252,7 @@ def get_account_balace():
         'account_balance': account_balance_value[0][0],
      }
 
-@views.route('/api/v1/<owner_id>/<account_id>/positions', methods=['GET'])
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/positions', methods=['GET'])
 def get_positions(owner_id, account_id):
     # user_owner_id = request.args['owner_id']
     # user_account_id = request.args['account_id']
