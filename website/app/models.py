@@ -12,7 +12,7 @@ class Accounts(db.Model):
     __tablename__ = 'accounts'
     id = db.Column(db.String(2), primary_key=True)
     name_pl = db.Column(db.String(50))
-    owner_id =db.Column(db.String(2))
+    owner_id =db.Column(db.String(2), db.ForeignKey('owners.id'))
 
 class Type(db.Model):
     __tablename__ = 'type_dict'
