@@ -26,14 +26,14 @@ class Category(db.Model):
 
     id = db.Column(db.String(2), nullable=False, primary_key=True)
     name_pl = db.Column(db.String(100), nullable=False)
-    type_id = db.Column(db.Integer, primary_key=True)
+    type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'), primary_key=True)
     
 class Subategory(db.Model):
     __tablename__ = 'subcategory'
 
     id = db.Column(db.String(4), nullable=False, primary_key=True)
     name_pl = db.Column(db.String(100), nullable=False)
-    category_id = db.Column(db.String(2), nullable=False)
+    category_id = db.Column(db.String(2), db.ForeignKey('category.id'), nullable=False)
     is_fixed_cost = db.Column(db.Integer, nullable=False)
 
 class INCEXP_header(db.Model):
