@@ -301,11 +301,10 @@ def get_positions(owner_id, account_id):
     header_ids = list(row['header_id'] for row in headers_list)
 
     positions = (db.session.query(INCEXP_position, Category, Subategory)
-                    .join(Category)
-                    .join(Subategory)
+                    .join(Category, INCEXP_position.category_id == Category.id)
+                    .join(Subategory, INCEXP_position.subcategory_id == Subategory.id)
                     .filter(INCEXP_position.header_id.in_(header_ids))
                 ).all()
-
     positions_list = [{
         'header_id': position.header_id,
         'position_id': position.position_id,
