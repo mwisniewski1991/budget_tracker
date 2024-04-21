@@ -276,6 +276,10 @@ def get_positions(owner_id, account_id):
     type_id = request.args.get('type-id', None)
     category_id = request.args.get('category-id', None)
     subcategory_id = request.args.get('subcategory-id', None)
+    comment_args = request.args.get('comment', None)
+    connection_args = request.args.get('connection', None)
+
+    logging.warning(connection_args)
 
     headers_query = (db.session.query(INCEXP_header, Type, Owners, Accounts)
                 .join(Type, INCEXP_header.type_id == Type.id)
@@ -322,6 +326,11 @@ def get_positions(owner_id, account_id):
         positions_query = positions_query.filter(INCEXP_position.category_id == category_id)
     if subcategory_id and subcategory_id != "0000":
         positions_query = positions_query.filter(INCEXP_position.subcategory_id == subcategory_id)
+    if comment_args and comment_args != "":
+        positions_query = positions_query.filter(INCEXP_position.comment.ilike(f'%{comment_args}%'))
+    if connection_args and connection_args != "":
+        positions_query = positions_query.filter(INCEXP_position.connection.ilike(f'%{connection_args}%'))
+
     positions = positions_query.all()
 
     positions_list = [{
