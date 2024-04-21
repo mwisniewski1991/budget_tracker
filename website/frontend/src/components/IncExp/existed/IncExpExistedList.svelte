@@ -10,7 +10,9 @@
     let componentTypeFilter;
     let componentCategoryFilter;
     let componentSubcategoryFilter;
-    
+    let componentCommentFilter;
+    let componentConnectionFilter;
+
     $: IncExpExistedPromise = getIncExpExisted(
                                 $activeOnwerId, 
                                 $activeAccountId, 
@@ -18,19 +20,31 @@
                                 componentTypeFilter,
                                 componentCategoryFilter,
                                 componentSubcategoryFilter,
+                                componentCommentFilter,
+                                componentConnectionFilter
                             );
 
     function addToList(results){
         $incexpExistedList =  [...$incexpExistedList, ...results];
     };
 
-    async function getIncExpExisted(ownerId, accountID, resulstLimit, typeId, categoryId, subcategoryId){
+    async function getIncExpExisted(
+                                    ownerId, 
+                                    accountID, 
+                                    resulstLimit, 
+                                    typeId, 
+                                    categoryId, 
+                                    subcategoryId, 
+                                    componentCommentFilter, 
+                                    componentConnectionFilter){
 
         const parameters = new URLSearchParams({
                         'limit': resulstLimit, 
                         'type-id': typeId,
                         'category-id': categoryId,
                         'subcategory-id': subcategoryId,
+                        'comment':componentCommentFilter,
+                        'connection':componentConnectionFilter
                     });
 
         const resposne = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountID}/positions?${parameters}`, {method:"GET"});
@@ -48,7 +62,6 @@
         typesCategoriesSubcategories = await getTypesCategoriesSubcategories();
     })
 
-        
 
 </script>
 
@@ -60,12 +73,9 @@
             bind:componentTypeFilter
             bind:componentCategoryFilter
             bind:componentSubcategoryFilter
+            bind:componentCommentFilter
+            bind:componentConnectionFilter
             />
-
-        <span>{componentTypeFilter}</span>
-        <span>{componentCategoryFilter}</span>
-        <span>{componentSubcategoryFilter}</span>
-
     {/if}
 
     {#await IncExpExistedPromise}

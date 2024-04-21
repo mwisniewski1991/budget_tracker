@@ -4,11 +4,15 @@
     import TypeFilter from "./components/TypeFilter.svelte";
     import CategoryFilter from "./components/CategoryFilter.svelte";
     import SubcategoryFilter from "./components/SubcategoryFilter.svelte";
+    import CommentsFilter from "./components/CommentsFilter.svelte";
+    import ConnectionFilter from "./components/ConnectionFilter .svelte";
 
     export let typesCategoriesSubcategories;
     export let componentTypeFilter;
     export let componentCategoryFilter;
     export let componentSubcategoryFilter;
+    export let componentCommentFilter;
+    export let componentConnectionFilter;
 
 </script>
 
@@ -31,6 +35,10 @@
                         componentTypeFilter={componentTypeFilter}
                         componentCategoryFilter={componentCategoryFilter}
                         bind:componentSubcategoryFilter/></div>
+</div>
+<div class="row">
+    <div class="col"><CommentsFilter bind:componentCommentFilter/></div>
+    <div class="col"><ConnectionFilter bind:componentConnectionFilter/></div>
 
 
 </div>

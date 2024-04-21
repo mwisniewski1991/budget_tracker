@@ -27,5 +27,5 @@ export const IncExpNewSubcategoryIdDefault = writable('0001');
 
 // IncExpFilters
 export const incExpFilterLimitValue = writable(50); 
-// export const incExpFilterDetailsVisible = writable(false);
+// export const incExpFilterDetailsVisible = writable(true);
 export const incExpFilterDetailsVisible = writable(localStorage.getItem("incExpFilterDetailsVisibleLocalData") ? localStorage.getItem("incExpFilterDetailsVisibleLocalData") : false);
