@@ -272,17 +272,29 @@ def get_account_balace():
 
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/positions', methods=['GET'])
 def get_positions(owner_id, account_id):
-    # user_owner_id = request.args['owner_id']
-    # user_account_id = request.args['account_id']
     user_limit = request.args.get('limit', 50)
-    headers = (db.session.query(INCEXP_header, Type, Owners, Accounts)
-                .join(Type)
-                .join(Owners)
-                .join(Accounts)
-                .filter(and_(INCEXP_header.owner_id == owner_id, INCEXP_header.account_id == account_id))
-                .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
-                .limit(user_limit)
-    ).all()
+    type_id = request.args.get('type-id', None)
+    category_id = request.args.get('category-id', None)
+    subcategory_id = request.args.get('subcategory-id', None)
+
+    headers_query = (db.session.query(INCEXP_header, Type, Owners, Accounts)
+                .join(Type, INCEXP_header.type_id == Type.id)
+                .join(Owners, INCEXP_header.owner_id == Owners.id)
+                .join(Accounts, INCEXP_header.account_id == Accounts.id)
+                .filter(and_(
+                                INCEXP_header.owner_id == owner_id, 
+                                INCEXP_header.account_id == account_id,
+                            ))
+                )
+    
+    if type_id and type_id != "0":
+        headers_query = headers_query.filter(INCEXP_header.type_id == type_id)
+
+    headers = (headers_query
+                    .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
+                    .limit(user_limit)
+            ).all()
+
 
     headers_list = [{
         'header_id': incexp_header.id,
@@ -300,11 +312,18 @@ def get_positions(owner_id, account_id):
 
     header_ids = list(row['header_id'] for row in headers_list)
 
-    positions = (db.session.query(INCEXP_position, Category, Subategory)
+    positions_query = (db.session.query(INCEXP_position, Category, Subategory)
                     .join(Category, INCEXP_position.category_id == Category.id)
                     .join(Subategory, INCEXP_position.subcategory_id == Subategory.id)
                     .filter(INCEXP_position.header_id.in_(header_ids))
-                ).all()
+                )
+    
+    if category_id and category_id != "00":
+        positions_query = positions_query.filter(INCEXP_position.category_id == category_id)
+    if subcategory_id and subcategory_id != "0000":
+        positions_query = positions_query.filter(INCEXP_position.subcategory_id == subcategory_id)
+    positions = positions_query.all()
+
     positions_list = [{
         'header_id': position.header_id,
         'position_id': position.position_id,
@@ -321,12 +340,16 @@ def get_positions(owner_id, account_id):
         } for position, category, subcategory in positions
     ]
 
+    
+
     for header in headers_list:
         current_header = header['header_id']
         filtered_data = list(filter(lambda x: x['header_id'] == current_header, positions_list))
         header['positions'] = filtered_data
-        header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data])
+        header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data], 0)
 
+    # logging.warning(list(filter(lambda row: (len(row['positions']) > 0), headers_list)))
+    headers_list = list(filter(lambda row: (len(row['positions']) > 0), headers_list))
     return sorted(headers_list, reverse=True, key=lambda incexp: incexp['header_date'])
 
 @views.route('/api/v1/position-delete/<header_id>', methods=['DELETE'])
