@@ -1,9 +1,36 @@
 <script>
     import LimitFilter from "./components/LimitFilter.svelte";
     import DetailsFilter from "./components/DetailsFilter.svelte";
+    import TypeFilter from "./components/TypeFilter.svelte";
+    import CategoryFilter from "./components/CategoryFilter.svelte";
+    import SubcategoryFilter from "./components/SubcategoryFilter.svelte";
+
+    export let typesCategoriesSubcategories;
+    export let componentTypeFilter;
+    export let componentCategoryFilter;
+    export let componentSubcategoryFilter;
+
 </script>
 
 <div class="row">
     <div class="col"><LimitFilter/></div>
     <div class="col"><DetailsFilter/></div>
+</div>
+<div class="row">
+    <div class="col"><TypeFilter 
+                        typesCategoriesSubcategories={typesCategoriesSubcategories} 
+                        bind:componentTypeFilter/></div>
+
+    <div class="col"><CategoryFilter 
+                        typesCategoriesSubcategories={typesCategoriesSubcategories} 
+                        componentTypeFilter={componentTypeFilter} 
+                        bind:componentCategoryFilter/></div>
+
+    <div class="col"><SubcategoryFilter 
+                        typesCategoriesSubcategories={typesCategoriesSubcategories}
+                        componentTypeFilter={componentTypeFilter}
+                        componentCategoryFilter={componentCategoryFilter}
+                        bind:componentSubcategoryFilter/></div>
+
+
 </div>

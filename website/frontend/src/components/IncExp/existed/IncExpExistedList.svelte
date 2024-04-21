@@ -1,31 +1,72 @@
 <script>
+    import { onMount } from "svelte";
     import { activeOnwerId, activeAccountId, incexpExistedList, incExpFilterLimitValue} from "../../store";
     import IncExpExisted from "./IncExpExisted.svelte";
     import IncExpFilters from "./components/IncExpFilters/IncExpFilters.svelte";
     
     // let IncExpExistedPromise; 
-    $: IncExpExistedPromise = getIncExpExisted($activeOnwerId, $activeAccountId, $incExpFilterLimitValue);
+    let typesCategoriesSubcategories;
+    
+    let componentTypeFilter;
+    let componentCategoryFilter;
+    let componentSubcategoryFilter;
+    
+    $: IncExpExistedPromise = getIncExpExisted(
+                                $activeOnwerId, 
+                                $activeAccountId, 
+                                $incExpFilterLimitValue,
+                                componentTypeFilter,
+                                componentCategoryFilter,
+                                componentSubcategoryFilter,
+                            );
 
     function addToList(results){
         $incexpExistedList =  [...$incexpExistedList, ...results];
     };
 
-    async function getIncExpExisted(ownerId, accountID, resulstLimit){
+    async function getIncExpExisted(ownerId, accountID, resulstLimit, typeId, categoryId, subcategoryId){
 
-        const parameters = new URLSearchParams({limit: resulstLimit});
+        const parameters = new URLSearchParams({
+                        'limit': resulstLimit, 
+                        'type-id': typeId,
+                        'category-id': categoryId,
+                        'subcategory-id': subcategoryId,
+                    });
+
         const resposne = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountID}/positions?${parameters}`, {method:"GET"});
         const results =  await resposne.json();
         addToList(results)
-
         return results
     };
+
+    async function getTypesCategoriesSubcategories(){
+        const resposne = await fetch(`/api/v1/categories-subcategories`, {method:"GET"})
+        return await resposne.json();
+    };
+
+    onMount(async() => {
+        typesCategoriesSubcategories = await getTypesCategoriesSubcategories();
+    })
+
         
 
 </script>
 
 <div class="container container-border">
 
-    <IncExpFilters/>
+    {#if typesCategoriesSubcategories}
+        <IncExpFilters 
+            typesCategoriesSubcategories={typesCategoriesSubcategories}
+            bind:componentTypeFilter
+            bind:componentCategoryFilter
+            bind:componentSubcategoryFilter
+            />
+
+        <span>{componentTypeFilter}</span>
+        <span>{componentCategoryFilter}</span>
+        <span>{componentSubcategoryFilter}</span>
+
+    {/if}
 
     {#await IncExpExistedPromise}
     <p></p>
