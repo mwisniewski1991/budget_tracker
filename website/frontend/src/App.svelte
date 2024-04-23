@@ -6,12 +6,6 @@
     import AccountsBalanceContainer from "./components/accountsBalance/accountsBalanceContainer.svelte";
 	import IncExpCockpit from "./components/IncExp/IncExpCockpit.svelte"
 
-	let accountsBalanceViewVisibleValue;
-	accountsBalanceViewVisible.subscribe((value) => accountsBalanceViewVisibleValue = value);
-
-	let positionsCockpitViewVisibleValue;
-	positionsCockpitViewVisible.subscribe((value) => positionsCockpitViewVisibleValue = value);
-
 	async function getCategoriesSubcategories(){
         const resposne = await fetch(`/api/v1/categories-subcategories`, {method:"GET"})
         const categoriesSubcategories = await resposne.json()
@@ -29,11 +23,9 @@
 	<Header/>
 	<Navbar/>
 
-	<!-- {#if addPostionViewVisibleValue === true} -->
-		<!-- <FormContainer/> -->
-	{#if accountsBalanceViewVisibleValue == true}
+	{#if $accountsBalanceViewVisible == true}
 		<AccountsBalanceContainer/>
-	{:else if positionsCockpitViewVisibleValue == true}
+	{:else if $positionsCockpitViewVisible == true}
 		<IncExpCockpit/>
 	{/if}
 
