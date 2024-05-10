@@ -82,16 +82,30 @@ def modify():
         return redirect('/')
 
 
-@views.route('/api/v1/owners', methods=['GET'])
+@views.route('/api/v1/owners', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def get_owners():
-    owners = Owners.query.all()
-    return [
-        {   
-            'id':owner.id,
-            'name_pl':owner.name_pl
+    if request.method == 'GET':
+        owners = Owners.query.all()
+        return [
+            {   
+                'id':owner.id,
+                'name_pl':owner.name_pl
 
-        } for owner in owners
-    ]
+            } for owner in owners
+        ]
+
+    if request.method == 'POST':
+        new_owner_name = request.form['owner_name']
+        new_owner = Owners(name_pl=new_owner_name)
+        
+        db.session.add(new_owner)
+        db.session.commit()
+
+        return redirect('/')
+    
+    if request.method == 'PUT':
+        return ''
+
 
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET'])
 def get_owner_accounts(owner_id):
@@ -260,7 +274,7 @@ def get_owners_accounts_amount():
     owners_list = { (owner_row.owner_id, owner_row.owner ) for owner_row in results} # unique owner_id, owner
 
     return [{
-        "owner_id": owner_id[0].strip(),
+        "owner_id": owner_id,
         "owner": owner,
         "owner_accounts": [
             {
