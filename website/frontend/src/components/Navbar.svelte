@@ -1,15 +1,25 @@
 <script>
-  import {accountsBalanceViewVisible ,positionsCockpitViewVisible } from './store';
+  import {accountsBalanceViewVisible ,positionsCockpitViewVisible, onwersAccountsCreatorViewVisible } from './store';
 
   function changeAccountsBalanceViewVisible(){
     accountsBalanceViewVisible.set(true);
     positionsCockpitViewVisible.set(false);
+    onwersAccountsCreatorViewVisible.set(false);
+
 
   };
 
   function changePositionsCockpitViewVisible(){
     accountsBalanceViewVisible.set(false);
     positionsCockpitViewVisible.set(true);
+    onwersAccountsCreatorViewVisible.set(false);
+
+  };
+
+  function changeOnwersAccountsCreatorViewVisible(){
+    accountsBalanceViewVisible.set(false);
+    positionsCockpitViewVisible.set(false);
+    onwersAccountsCreatorViewVisible.set(true);
 
   };
 
@@ -24,6 +34,8 @@
           <div class="navbar-nav">
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changePositionsCockpitViewVisible}>Pozycje</button>
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeAccountsBalanceViewVisible}>Bilans kont</button>
+            <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeOnwersAccountsCreatorViewVisible}>Właściciele i konta</button>
+            
           </div>
 
   </nav>
