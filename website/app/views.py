@@ -118,11 +118,11 @@ def get_owner_and_accounts():
     return [
         {
             'owner_id':owner.id,
-            'owner_name_pl':owner.name_pl,
+            'owner_name_pl':owner.name_pl.strip(),
             'owner_accounts': [
                 {
                     'account_id': account.id,
-                    'account_name_pl': account.name_pl,
+                    'account_name_pl': account.name_pl.strip(),
 
                 } for account in accounts if account.owner_id == owner.id
             ],
