@@ -112,16 +112,21 @@ def get_owner_accounts(owner_id):
 @views.route('/api/v1/owners/accounts', methods=['GET'])
 def get_owner_and_accounts():
 
-    owners_accounts = (db.session.query(Owners, Accounts)
-                    .join(Accounts, Owners.id == Accounts.owner_id)       
-                ).all()
+    owners = Owners.query.all()
+    accounts = Accounts.query.all()
 
-    return [{
-        'owner_id': owner.id,
-        'owner_name_pl': owner.name_pl.strip(),
-        'account_id': account.id,
-        'account_name_pl': account.name_pl.strip(),
-        } for owner, account in owners_accounts
+    return [
+        {
+            'owner_id':owner.id,
+            'owner_name_pl':owner.name_pl,
+            'owner_accounts': [
+                {
+                    'account_id': account.id,
+                    'account_name_pl': account.name_pl,
+
+                } for account in accounts if account.owner_id == owner.id
+            ],
+        } for owner in owners
     ]
 
 @views.route('/api/v1/accounts', methods=['GET'])
