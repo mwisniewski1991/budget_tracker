@@ -83,9 +83,9 @@ def modify():
 
 
 @views.route('/api/v1/owners', methods=['GET', 'POST', 'PUT', 'DELETE'])
-def get_owners():
+def owners():
     if request.method == 'GET':
-        owners = Owners.query.all()
+        owners = Owners.query.order_by(Owners.id).all()
         return [
             {   
                 'id':owner.id,
@@ -95,16 +95,26 @@ def get_owners():
         ]
 
     if request.method == 'POST':
-        new_owner_name = request.form['owner_name']
-        new_owner = Owners(name_pl=new_owner_name)
-        
-        db.session.add(new_owner)
-        db.session.commit()
+        owner_id = request.form.get('owner_id', None)
+        new_owner_name = request.form.get('owner_name_pl', None)
 
+        if owner_id:
+            owner_existing = Owners.query.filter_by(id = owner_id).one()
+            logging.warning(f'ISTNIEJE {owner_id}')
+            logging.warning(owner_existing)
+            logging.warning(f'{owner_existing.name_pl}')
+            logging.warning(f'{new_owner_name=}')
+
+            owner_existing.name_pl = new_owner_name
+
+        else:
+            logging.warning('DODAJEMY')
+            new_owner_name = request.form['owner_name']
+            new_owner = Owners(name_pl=new_owner_name)
+            db.session.add(new_owner)
+
+        db.session.commit()
         return redirect('/')
-    
-    if request.method == 'PUT':
-        return ''
 
 
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET'])
@@ -126,7 +136,7 @@ def get_owner_accounts(owner_id):
 @views.route('/api/v1/owners/accounts', methods=['GET'])
 def get_owner_and_accounts():
 
-    owners = Owners.query.all()
+    owners = Owners.query.order_by(Owners.id).all()
     accounts = Accounts.query.all()
 
     return [
