@@ -82,7 +82,7 @@ def modify():
         return redirect('/')
 
 
-@views.route('/api/v1/owners', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@views.route('/api/v1/owners', methods=['GET', 'POST'])
 def owners():
     if request.method == 'GET':
         owners = Owners.query.order_by(Owners.id).all()
