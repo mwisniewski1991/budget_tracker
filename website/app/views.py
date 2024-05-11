@@ -100,11 +100,6 @@ def owners():
 
         if owner_id:
             owner_existing = Owners.query.filter_by(id = owner_id).one()
-            logging.warning(f'ISTNIEJE {owner_id}')
-            logging.warning(owner_existing)
-            logging.warning(f'{owner_existing.name_pl}')
-            logging.warning(f'{new_owner_name=}')
-
             owner_existing.name_pl = new_owner_name
 
         else:
@@ -117,27 +112,42 @@ def owners():
         return redirect('/')
 
 
-@views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET'])
+@views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET', 'POST'])
 def get_owner_accounts(owner_id):
+    if request.method == 'GET':
+        owner = Owners.query.with_entities(Owners.name_pl).filter_by(id = owner_id).first()
+        accounts = Accounts.query.filter(Accounts.owner_id == owner_id).order_by(Accounts.id).all()
 
-    owner = Owners.query.with_entities(Owners.name_pl).filter_by(id = owner_id).first()
-    accounts = Accounts.query.filter(Accounts.owner_id == owner_id).order_by(Accounts.id).all()
+        return {
+            'owner_id': owner_id,
+            'onwer_name': owner.name_pl,
+            'accounts':[
+                    {'id':account.id, 
+                    'name_pl':account.name_pl, 
+                    } for account in accounts
+                    ] 
+        }
+    
+    if request.method == 'POST':
+        account_id = request.form.get('account_id', None)
+        new_account_name = request.form.get('account_name', None)
 
-    return {
-        'owner_id': owner_id,
-        'onwer_name': owner.name_pl,
-        'accounts':[
-                {'id':account.id, 
-                 'name_pl':account.name_pl, 
-                 } for account in accounts
-                ] 
-    }
+        if account_id:
+            account_existing = Accounts.query.filter_by(id = account_id).one()
+            account_existing.name_pl = new_account_name
+        else:
+            new_account = Accounts(name_pl = new_account_name, owner_id = owner_id)
+            db.session.add(new_account)
+
+        db.session.commit()
+
+        return redirect('/')
 
 @views.route('/api/v1/owners/accounts', methods=['GET'])
 def get_owner_and_accounts():
 
     owners = Owners.query.order_by(Owners.id).all()
-    accounts = Accounts.query.all()
+    accounts = Accounts.query.order_by(Accounts.id).all()
 
     return [
         {
