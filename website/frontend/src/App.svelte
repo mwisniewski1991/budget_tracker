@@ -1,10 +1,11 @@
 <script>
 	import { onMount } from "svelte";
-	import {accountsBalanceViewVisible, positionsCockpitViewVisible, CategoriesSubcategoriesList } from './components/store';
+	import {accountsBalanceViewVisible, positionsCockpitViewVisible, onwersAccountsCreatorViewVisible, CategoriesSubcategoriesList } from './components/store';
 	import Header from "./components/Header.svelte";
 	import Navbar from "./components/Navbar.svelte";
     import AccountsBalanceContainer from "./components/accountsBalance/accountsBalanceContainer.svelte";
 	import IncExpCockpit from "./components/IncExp/IncExpCockpit.svelte"
+	import OwnersAccountsCreator from "./components/ownersAccountsCreator/ownersAccountsCreator.svelte";
 
 	async function getCategoriesSubcategories(){
         const resposne = await fetch(`/api/v1/categories-subcategories`, {method:"GET"})
@@ -27,6 +28,8 @@
 		<AccountsBalanceContainer/>
 	{:else if $positionsCockpitViewVisible == true}
 		<IncExpCockpit/>
+	{:else if $onwersAccountsCreatorViewVisible == true}
+		<OwnersAccountsCreator/>
 	{/if}
 
 </main>
