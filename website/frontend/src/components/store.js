@@ -6,8 +6,10 @@ export const userSubcategoryId = writable('0001');
 
 export const billTotalAmount = writable(0.0);
 
-export const positionsCockpitViewVisible = writable(true);
+export const positionsCockpitViewVisible = writable(false);
 export const accountsBalanceViewVisible = writable(false);
+export const onwersAccountsCreatorViewVisible = writable(true);
+
 
 export const incexpList = writable([]);
 export const incexpExistedList = writable([]);
