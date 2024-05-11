@@ -1,5 +1,5 @@
 from . import db 
-from sqlalchemy.sql import func
+from sqlalchemy.sql import func, text
 import datetime
 
 
@@ -10,7 +10,7 @@ class Owners(db.Model):
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
-    id = db.Column(db.String(2), primary_key=True)
+    id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('test_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(50))
     owner_id =db.Column(db.String(2), db.ForeignKey('owners.id'))
 
