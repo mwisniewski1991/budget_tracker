@@ -5,7 +5,7 @@ import datetime
 
 class Owners(db.Model):
     __tablename__ = 'owners'
-    id = db.Column(db.String(2), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name_pl = db.Column(db.String(50))
 
 class Accounts(db.Model):
