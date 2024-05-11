@@ -19,16 +19,13 @@
 
     <AddNewOwner/>
 
-
     {#await ownersAccountsPromise}
-    <p></p>
+        <p></p>
     {:then ownersAccounts} 
     <div class="container p-2"> 
     
         {#each ownersAccounts as owner }
-
-        <OwnerExisting owner_id={owner.owner_id} owner_name_pl={owner.owner_name_pl}/>
-        
+            <OwnerExisting owner_id={owner.owner_id} owner_name_pl={owner.owner_name_pl} accounts={owner.owner_accounts}/>
         {/each}
 
     </div>
