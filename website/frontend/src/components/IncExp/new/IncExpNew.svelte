@@ -12,6 +12,8 @@
 </script>
 
 <div class="container container-border">
+    <h3>Dodaj nowy rekord</h3>
+    
     <form action="/add" method="post" class="IncExpNew">
      
 

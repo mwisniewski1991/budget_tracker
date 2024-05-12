@@ -67,6 +67,7 @@
 
 <div class="container container-border">
 
+
     {#if typesCategoriesSubcategories}
         <IncExpFilters 
             typesCategoriesSubcategories={typesCategoriesSubcategories}
@@ -77,6 +78,8 @@
             bind:componentConnectionFilter
             />
     {/if}
+
+    <h3>Istniejące rekordy</h3>
 
     {#await IncExpExistedPromise}
     <p></p>

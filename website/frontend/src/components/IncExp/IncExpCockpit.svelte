@@ -57,8 +57,7 @@ function onOwnerAccountChange(ownerAccountObject){
 
 <AccountBalance/>
 
-<h3>Dodaj nowy rekord</h3>
 <IncExpNew/>
 
-<h3>Istniejące rekordy</h3>
+
 <IncExpExistedList/>
