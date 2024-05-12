@@ -7,13 +7,13 @@
 
     function colorForOwner(owner_obj){
         switch(owner_obj){
-            case "1":
+            case 1:
                 return "bg-success"
-            case "2":
+            case 2:
                 return "bg-danger"
-            case "3":
+            case 3:
                 return "bg-warning"
-            case "4":
+            case 4:
                 return "bg-info"
             default: 
                 return "bg-secondary"
