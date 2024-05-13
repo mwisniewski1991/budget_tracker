@@ -11,10 +11,10 @@
     <div class="container">
         <form action="/api/v1/owners" method="post">
             <div class="row">
-                <div class="col">
+                <div class="col-2">
                     <input type="text" class="form-control" id="owner_id" name="owner_id" readonly value={owner_id}>
                 </div>
-                <div class="col-10">
+                <div class="col-6">
                     <input type="text" class="form-control" id="owner_name_pl" name="owner_name_pl" value={owner_name_pl}>
                 </div>
                 <div class="col">
@@ -26,12 +26,12 @@
     </div>
 
     <div class="container border border-white rounded">
-        <AddNewAccount owner_id={owner_id}/>
         
         <h5>Lista kont</h5>
         {#each accounts as account }
-            <Account owner_id={owner_id} account_id={account.account_id} account_name={account.account_name_pl}/>
+        <Account owner_id={owner_id} account_id={account.account_id} account_name={account.account_name_pl}/>
         {/each}
-
+        
+        <AddNewAccount owner_id={owner_id}/>
     </div>
 </div>
