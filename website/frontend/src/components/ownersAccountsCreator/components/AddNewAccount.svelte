@@ -4,9 +4,10 @@
 </script>
 
     
-<h6 class="pt-2">Dodaj nowego konto</h6>
+<div class="row m-2 border border-white rounded">
 
-<div class="container">
+    <h6 class="pt-2">Dodaj nowego konto</h6>
+
     <form action={method_route} method="POST">
 
         <div class="row">

@@ -7,8 +7,8 @@
 </script>
 
 
-<div class='container container-border p-2'>
-    <div class="row">
+<div class='container p-2 my-4 border border-white rounded'>
+    <div class="container">
         <form action="/api/v1/owners" method="post">
             <div class="row">
                 <div class="col">
@@ -25,22 +25,13 @@
         </form>
     </div>
 
-    <div class="row container-border">
-        <h5>Lista kont</h5>
+    <div class="container border border-white rounded">
         <AddNewAccount owner_id={owner_id}/>
-
+        
+        <h5>Lista kont</h5>
         {#each accounts as account }
             <Account owner_id={owner_id} account_id={account.account_id} account_name={account.account_name_pl}/>
         {/each}
 
     </div>
 </div>
-
-<style>
-    .container-border{
-        border: 1px solid white;
-        border-radius: 10px;
-        padding: 5px 5px;
-        margin-bottom: 20px;
-    }
-</style>

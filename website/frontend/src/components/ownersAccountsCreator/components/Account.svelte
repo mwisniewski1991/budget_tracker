@@ -6,11 +6,11 @@
 
 </script>
 
-<div class="container">
+<!-- <div class="row m-2"> -->
 
     <form action={method_route} method="post">
-        <div class="row">
-            <div class="col-2">
+        <div class="row m-2">
+            <div class="col">
                 <input type="text" class="form-control" id="account_id" name="account_id" readonly value={account_id}>
             </div>
             <div class="col-6">
@@ -23,5 +23,5 @@
         </div>
     </form>
 
-</div>
+<!-- </div> -->
 
