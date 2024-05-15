@@ -20,7 +20,7 @@
 </script>
 
 <div>
-    <label for="incExpFilterCategory" class="form-label">Podategoria</label>
+    <label for="incExpFilterCategory" class="form-label">Podkategoria</label>
     <select class="form-select" aria-label="Default select example" id="incExpFilterCategory" name="incExpFilterCategory" 
             bind:value={componentSubcategoryFilter}>
             
