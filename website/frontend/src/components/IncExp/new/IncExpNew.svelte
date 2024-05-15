@@ -23,9 +23,9 @@
             <Positions positionId={i} currentTypeId={currentTypeId}/>
         {/each}
         <div>
+            <button type="submit" class="btn btn-primary" >Prześlij</button>
             <button class="btn btn-secondary" type="button" on:click={addPosition}>Dodaj pozycję</button>
             <button class="btn btn-secondary" type="button" on:click={removePosition}>Usuń pozycję</button>
-            <button type="submit" class="btn btn-primary" >Prześlij</button>
         </div>
     </form>
 </div>
