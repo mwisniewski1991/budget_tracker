@@ -15,7 +15,13 @@
     export let componentConnectionFilter;
 
 </script>
-<div class="container container-border">
+
+
+<button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+    Filtruj rekody
+</button>
+    
+<div class="container container-border collapse" id="collapseFilters">
     <h3>Filtruj</h3>
 
     <div class="row">
