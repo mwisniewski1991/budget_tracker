@@ -330,8 +330,9 @@ def get_positions(owner_id, account_id):
     subcategory_id = request.args.get('subcategory-id', None)
     comment_args = request.args.get('comment', None)
     connection_args = request.args.get('connection', None)
-
-    logging.warning(connection_args)
+    source_args = request.args.get('source', None)
+    date_start = request.args.get('date-start', None)
+    date_end = request.args.get('date-end', None)
 
     headers_query = (db.session.query(INCEXP_header, Type, Owners, Accounts)
                 .join(Type, INCEXP_header.type_id == Type.id)
@@ -345,6 +346,15 @@ def get_positions(owner_id, account_id):
     
     if type_id and type_id != "0":
         headers_query = headers_query.filter(INCEXP_header.type_id == type_id)
+    
+    if source_args and source_args != '':
+        headers_query = headers_query.filter(INCEXP_header.source == source_args)
+
+    if date_start and date_start != 'undefined':
+        headers_query = headers_query.filter(INCEXP_header.date >= date_start)
+
+    if date_end and date_end != 'undefined':
+        headers_query = headers_query.filter(INCEXP_header.date <= date_end)
 
     headers = (headers_query
                     .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
