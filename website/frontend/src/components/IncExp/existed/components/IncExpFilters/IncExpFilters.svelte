@@ -6,6 +6,9 @@
     import SubcategoryFilter from "./components/SubcategoryFilter.svelte";
     import CommentsFilter from "./components/CommentsFilter.svelte";
     import ConnectionFilter from "./components/ConnectionFilter .svelte";
+    import SourceFilter from "./components/SourceFilter.svelte";
+    import DateStartFilter from "./components/DateStartFilter.svelte";
+    import DateEndFilter from "./components/DateEndFilter.svelte";
 
     export let typesCategoriesSubcategories;
     export let componentTypeFilter;
@@ -13,6 +16,9 @@
     export let componentSubcategoryFilter;
     export let componentCommentFilter;
     export let componentConnectionFilter;
+    export let componentSourceFilter;
+    export let componentDateStart;
+    export let componentDateEnd;
 
 </script>
 
@@ -21,12 +27,18 @@
     Filtruj rekody
 </button>
     
-<div class="container container-border collapse" id="collapseFilters">
+<!-- <div class="container container-border collapse" id="collapseFilters"> -->
+<div class="container container-border" id="collapseFilters">
     <h3>Filtruj</h3>
 
     <div class="row">
         <div class="col"><LimitFilter/></div>
         <div class="col"><DetailsFilter/></div>
+    </div>
+    <div class="row">
+        <div class="col"><DateStartFilter bind:componentDateStart/></div>
+        <div class="col"><DateEndFilter bind:componentDateEnd/></div>
+        <div class="col"><SourceFilter bind:componentSourceFilter/></div>
     </div>
     <div class="row">
         <div class="col"><TypeFilter 

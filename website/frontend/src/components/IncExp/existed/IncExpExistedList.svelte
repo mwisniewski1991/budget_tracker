@@ -12,6 +12,11 @@
     let componentSubcategoryFilter;
     let componentCommentFilter;
     let componentConnectionFilter;
+    let componentSourceFilter;
+    let componentDateStart;
+    let componentDateEnd;
+
+    console.log(componentDateStart)
 
     $: IncExpExistedPromise = getIncExpExisted(
                                 $activeOnwerId, 
@@ -21,7 +26,10 @@
                                 componentCategoryFilter,
                                 componentSubcategoryFilter,
                                 componentCommentFilter,
-                                componentConnectionFilter
+                                componentConnectionFilter,
+                                componentSourceFilter,
+                                componentDateStart,
+                                componentDateEnd
                             );
 
     function addToList(results){
@@ -36,7 +44,11 @@
                                     categoryId, 
                                     subcategoryId, 
                                     componentCommentFilter, 
-                                    componentConnectionFilter){
+                                    componentConnectionFilter,
+                                    componentSourceFilter,
+                                    componentDateStart,
+                                    componentDateEnd
+                                ){
 
         const parameters = new URLSearchParams({
                         'limit': resulstLimit, 
@@ -44,7 +56,10 @@
                         'category-id': categoryId,
                         'subcategory-id': subcategoryId,
                         'comment':componentCommentFilter,
-                        'connection':componentConnectionFilter
+                        'connection':componentConnectionFilter,
+                        'source':componentSourceFilter,
+                        'date-start':componentDateStart,
+                        'date-end':componentDateEnd,
                     });
 
         const resposne = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountID}/positions?${parameters}`, {method:"GET"});
@@ -76,6 +91,9 @@
             bind:componentSubcategoryFilter
             bind:componentCommentFilter
             bind:componentConnectionFilter
+            bind:componentSourceFilter
+            bind:componentDateStart
+            bind:componentDateEnd
             />
     {/if}
 
