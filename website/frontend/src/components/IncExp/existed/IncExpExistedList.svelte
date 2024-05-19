@@ -16,7 +16,6 @@
     let componentDateStart;
     let componentDateEnd;
 
-    console.log(componentDateStart)
 
     $: IncExpExistedPromise = getIncExpExisted(
                                 $activeOnwerId, 

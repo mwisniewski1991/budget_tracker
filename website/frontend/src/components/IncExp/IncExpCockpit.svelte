@@ -4,15 +4,16 @@ import IncExpNew from "./new/IncExpNew.svelte";
 import IncExpExistedList from "./existed/IncExpExistedList.svelte";
 import AccountBalance from "./accountBalance/accountBalance.svelte";
 
-let ownersAccountsPromise = getOwnersAccounts()
+let ownersPromise = getOwners()
 let ownerAccountObject;
 
 $: activeOnwerAccountId = createActiveOwnerAccountKey($activeOnwerId, $activeAccountId);
 const createActiveOwnerAccountKey = (ownerId, accountId) => `${ownerId}_${accountId}`;
 
-async function getOwnersAccounts(){
-    const response = await fetch('/api/v1/owners-accounts')
+async function getOwners(){
+    const response = await fetch('/api/v1/owners')
     const results = await response.json()
+    console.log(results)
     return results
 };
 
@@ -32,20 +33,21 @@ function onOwnerAccountChange(ownerAccountObject){
 
 <h3 class="pt-2">Właściciel</h3>
 <div class="container">
-        <!-- <label for="owner_id" class="form-label">Właściciel</label> -->
         <select class="form-select" aria-label="Default select example" id="owner_id" name="owner_id" bind:value={ownerAccountObject} on:change={onOwnerAccountChange(ownerAccountObject)}>
 
-            {#await ownersAccountsPromise}
+            {#await ownersPromise}
                 <option value=""></option>
-            {:then ownersAccountsList }
-                {#each ownersAccountsList as ownerAccount }
+            {:then owners }
+                {#each owners as owner }
+                    {#each owner.accounts as account }
 
-                    {#if createActiveOwnerAccountKey(ownerAccount.owner_id, ownerAccount.account_id) == activeOnwerAccountId}    
-                        <option selected value="{ownerAccount.owner_id}_{ownerAccount.account_id}" >{ownerAccount.owner_name_pl} - {ownerAccount.account_name_pl}</option>
-                    {:else}
-                        <option value="{ownerAccount.owner_id}_{ownerAccount.account_id}" >{ownerAccount.owner_name_pl} - {ownerAccount.account_name_pl}</option>
-                    {/if}
-
+                        {#if createActiveOwnerAccountKey(owner.owner_id, owner.account_id) == activeOnwerAccountId}    
+                            <option selected value="{owner.id}_{account.id}" >{owner.name_pl} - {account.name_pl}</option>
+                        {:else}
+                            <option value="{owner.id}_{account.id}" >{owner.name_pl} - {account.name_pl}</option>
+                        {/if}
+                        
+                    {/each}
                 {/each}
                 {:catch Error}
                 <p>Something went wrong</p>
