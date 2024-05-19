@@ -29,7 +29,7 @@
         
         <h5>Lista kont</h5>
         {#each accounts as account }
-        <Account owner_id={owner_id} account_id={account.account_id} account_name={account.account_name_pl}/>
+        <Account owner_id={owner_id} account_id={account.id} account_name={account.name_pl}/>
         {/each}
         
         <AddNewAccount owner_id={owner_id}/>

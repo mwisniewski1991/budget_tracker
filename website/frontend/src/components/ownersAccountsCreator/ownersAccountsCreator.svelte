@@ -6,7 +6,7 @@
     let ownersAccountsPromise = getOwnersAccounts();
 
     async function getOwnersAccounts(){
-        const resposne = await fetch('api/v1/owners/accounts');
+        const resposne = await fetch('api/v1/owners');
         const results =  await resposne.json();
         return results
     };
@@ -22,7 +22,7 @@
     {:then ownersAccounts} 
     
     {#each ownersAccounts as owner }
-        <OwnerExisting owner_id={owner.owner_id} owner_name_pl={owner.owner_name_pl} accounts={owner.owner_accounts}/>
+        <OwnerExisting owner_id={owner.id} owner_name_pl={owner.name_pl} accounts={owner.accounts}/>
     {/each}
 
     {:catch Error}
