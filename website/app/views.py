@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, request, send_from_directory, redirect
-from sqlalchemy import text, and_
+from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
+from sqlalchemy import text, and_, select
 from . import db
-from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts
+from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts, OwnersSchema, AccountsSchema
 from functools import reduce
 from operator import add
 from .incexp_modify import modify_header, modify_position
@@ -82,52 +82,49 @@ def modify():
         return redirect('/')
 
 
-@views.route('/api/v1/owners', methods=['GET', 'POST'])
-def owners():
+@views.route('/api/v1/owners', methods=['GET'])
+def get_owners():
+    # owners_schema = OwnersSchema(many=True, only=('id', 'name_pl'))
+    owners_schema = OwnersSchema(many=True)
+    owners = Owners.query.order_by(Owners.id).all()
+    return owners_schema.dump(owners)
+
+@views.route('/api/v1/owners', methods=['POST'])
+def add_owners():
+    owner_id = request.form.get('owner_id', None)
+    new_owner_name = request.form.get('owner_name_pl', None)
+
+    if owner_id:
+        owner_existing = Owners.query.filter_by(id = owner_id).one()
+        owner_existing.name_pl = new_owner_name
+    else:
+        new_owner_name = request.form['owner_name']
+        new_owner = Owners(name_pl=new_owner_name)
+        db.session.add(new_owner)
+
+    db.session.commit()
+    return redirect('/')
+    
+
+@views.route('/api/v1/owners/<owner_id>', methods=['GET'])
+def get_owner(owner_id):
     if request.method == 'GET':
-        owners = Owners.query.order_by(Owners.id).all()
-        return [
-            {   
-                'id':owner.id,
-                'name_pl':owner.name_pl
-
-            } for owner in owners
-        ]
-
-    if request.method == 'POST':
-        owner_id = request.form.get('owner_id', None)
-        new_owner_name = request.form.get('owner_name_pl', None)
-
-        if owner_id:
-            owner_existing = Owners.query.filter_by(id = owner_id).one()
-            owner_existing.name_pl = new_owner_name
-
-        else:
-            logging.warning('DODAJEMY')
-            new_owner_name = request.form['owner_name']
-            new_owner = Owners(name_pl=new_owner_name)
-            db.session.add(new_owner)
-
-        db.session.commit()
-        return redirect('/')
+        owners_schema = OwnersSchema()
+        owner = Owners.query.filter_by(id = owner_id).first()
+        return owners_schema.dump(owner)
 
 
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET', 'POST'])
 def get_owner_accounts(owner_id):
     if request.method == 'GET':
-        owner = Owners.query.with_entities(Owners.name_pl).filter_by(id = owner_id).first()
-        accounts = Accounts.query.filter(Accounts.owner_id == owner_id).order_by(Accounts.id).all()
-
-        return {
-            'owner_id': owner_id,
-            'onwer_name': owner.name_pl,
-            'accounts':[
-                    {'id':account.id, 
-                    'name_pl':account.name_pl, 
-                    } for account in accounts
-                    ] 
-        }
+        owners_schema = OwnersSchema()
+        owner = Owners.query.filter_by(id = owner_id).first()
+        return owners_schema.dump(owner)
     
+        # accounts_schema = AccountsSchema(many=True)
+        # accounts = Accounts.query.filter_by(owner_id = owner_id).all()
+        # return accounts_schema.dump(accounts)
+
     if request.method == 'POST':
         account_id = request.form.get('account_id', None)
         new_account_name = request.form.get('account_name', None)
@@ -142,26 +139,6 @@ def get_owner_accounts(owner_id):
         db.session.commit()
 
         return redirect('/')
-
-@views.route('/api/v1/owners/accounts', methods=['GET'])
-def get_owner_and_accounts():
-
-    owners = Owners.query.order_by(Owners.id).all()
-    accounts = Accounts.query.order_by(Accounts.id).all()
-
-    return [
-        {
-            'owner_id':owner.id,
-            'owner_name_pl':owner.name_pl.strip(),
-            'owner_accounts': [
-                {
-                    'account_id': account.id,
-                    'account_name_pl': account.name_pl.strip(),
-
-                } for account in accounts if account.owner_id == owner.id
-            ],
-        } for owner in owners
-    ]
 
 @views.route('/api/v1/accounts', methods=['GET'])
 def get_accounts():
@@ -254,26 +231,6 @@ def get_sources():
             'source_name': str(source.source).strip()
         } for source in sources if str(source.source).strip() != ""
     ] 
-
-@views.route('/api/v1/owners-accounts', methods=['GET'])
-def get_owners_accounts():
-    sql_query = text('''
-        SELECT owner_id, owner_name_pl, account_id, account_name_pl
-        FROM public.owners_accounts
-        ORDER BY owner_id, account_id;
-        ''')
-    
-    owners_accounts = db.session.execute(sql_query)
-
-    return [
-        {
-            'owner_id':owner_account.owner_id,
-            'owner_name_pl':owner_account.owner_name_pl,
-            'account_id':owner_account.account_id,
-            'account_name_pl':owner_account.account_name_pl,
-            
-        } for owner_account in owners_accounts
-    ]
 
 @views.route('/api/v1/owners-accounts-amount', methods=['GET'])
 def get_owners_accounts_amount():
@@ -419,7 +376,6 @@ def get_positions(owner_id, account_id):
         header['positions'] = filtered_data
         header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data], 0)
 
-    # logging.warning(list(filter(lambda row: (len(row['positions']) > 0), headers_list)))
     headers_list = list(filter(lambda row: (len(row['positions']) > 0), headers_list))
     return sorted(headers_list, reverse=True, key=lambda incexp: incexp['header_date'])
 
