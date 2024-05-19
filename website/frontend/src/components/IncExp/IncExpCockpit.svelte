@@ -13,7 +13,6 @@ const createActiveOwnerAccountKey = (ownerId, accountId) => `${ownerId}_${accoun
 async function getOwners(){
     const response = await fetch('/api/v1/owners')
     const results = await response.json()
-    console.log(results)
     return results
 };
 
