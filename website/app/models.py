@@ -1,12 +1,13 @@
 from . import db 
 from sqlalchemy.sql import func, text
-import datetime
-
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+import marshmallow as ma
 
 class Owners(db.Model):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key=True)
     name_pl = db.Column(db.String(50))
+    accounts = db.relationship("Accounts", backref="owners", single_parent=True, order_by="asc(Accounts.id)")
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
@@ -63,3 +64,18 @@ class INCEXP_position(db.Model):
     created_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
     updated_at_cet = db.Column(db.DateTime(), server_default=func.now())
     updated_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
+
+
+class AccountsSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Accounts
+        load_instance = True
+        include_fk = True
+
+class OwnersSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Owners
+        load_instance = True
+        include_relationships = True
+        
+    accounts = ma.fields.Nested(AccountsSchema, many=True, dump_only=True, exclude=('owner_id',))
