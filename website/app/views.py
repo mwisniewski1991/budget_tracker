@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
-from sqlalchemy import text, and_, select
+from sqlalchemy import text, and_, select, func, case, alias
 from . import db
 from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts, OwnersSchema, AccountsSchema
 from functools import reduce
@@ -81,7 +81,6 @@ def modify():
         db.session.commit()
         return redirect('/')
 
-
 @views.route('/api/v1/owners', methods=['GET'])
 def get_owners():
     # owners_schema = OwnersSchema(many=True, only=('id', 'name_pl'))
@@ -105,14 +104,12 @@ def add_owners():
     db.session.commit()
     return redirect('/')
     
-
 @views.route('/api/v1/owners/<owner_id>', methods=['GET'])
 def get_owner(owner_id):
     if request.method == 'GET':
         owners_schema = OwnersSchema()
         owner = Owners.query.filter_by(id = owner_id).first()
         return owners_schema.dump(owner)
-
 
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET', 'POST'])
 def get_owner_accounts(owner_id):
@@ -139,6 +136,44 @@ def get_owner_accounts(owner_id):
         db.session.commit()
 
         return redirect('/')
+
+@views.route('/api/v1/owners-accounts-amount', methods=['GET'])
+def get_owners_accounts_amount():
+
+    results = (db.session.query(
+                        INCEXP_header.owner_id, 
+                        INCEXP_header.account_id, 
+                        Owners.name_pl,
+                        Accounts.name_pl,
+                        func.sum(case(
+                                (INCEXP_header.type_id == '1', INCEXP_position.amount_absolute * -1),
+                                (INCEXP_header.type_id == '2', INCEXP_position.amount_absolute),
+                            )),
+                        func.max(INCEXP_position.updated_at_cet)
+                        )
+                    .join(INCEXP_position, INCEXP_header.id == INCEXP_position.header_id)
+                    .join(Owners, INCEXP_header.owner_id == Owners.id)
+                    .join(Accounts, INCEXP_header.account_id == Accounts.id)
+                    .group_by(INCEXP_header.owner_id, INCEXP_header.account_id, Owners.name_pl, Accounts.name_pl)
+                    .order_by(INCEXP_header.owner_id, INCEXP_header.account_id)
+                ).all()
+
+    unique_owners_list = sorted({ (owner_row[0], owner_row[2] ) for owner_row in results }) 
+
+    return [
+        {
+            'owner_id':owner[0],
+            'owner_name' : owner[1],
+            'accounts' : [
+                {
+                    "id":  str(account[1]).strip(),
+                    "name":  str(account[3]).strip(),
+                    "amount_sum": account[4],
+                    "last_update": str(account[5].strftime('%Y-%m-%d'))
+                } for account in list(filter(lambda x: x[0] ==  owner[0], results))
+            ]
+        } for owner in unique_owners_list
+    ]
 
 @views.route('/api/v1/accounts', methods=['GET'])
 def get_accounts():
@@ -231,38 +266,6 @@ def get_sources():
             'source_name': str(source.source).strip()
         } for source in sources if str(source.source).strip() != ""
     ] 
-
-@views.route('/api/v1/owners-accounts-amount', methods=['GET'])
-def get_owners_accounts_amount():
-    
-    sql = text('''
-        select 
-            owner_id, 
-            owner, 
-            account, 
-            sum (amount_absolute) as amount_sum,
-            date(max(header_updated_at_cet)) as last_update
-        from incexp_view
-        group by owner_id, owner, account_id, account
-        order by owner, account
-    ''')
-
-    results = list(db.session.execute(sql))
-    owners_list = { (owner_row.owner_id, owner_row.owner ) for owner_row in results} # unique owner_id, owner
-
-    return [{
-        "owner_id": owner_id,
-        "owner": owner,
-        "owner_accounts": [
-            {
-                "account_name":  str(account_row.account).strip(),
-                "amount_sum": account_row.amount_sum,
-                "last_update": str(account_row.last_update)
-            }
-            for account_row in list(filter(lambda x: x.owner_id == owner_id, results))
-        ],
-        } for owner_id, owner in owners_list
-    ]
 
 @views.route('api/v1/accountBalance', methods=['GET'])
 def get_account_balace():
