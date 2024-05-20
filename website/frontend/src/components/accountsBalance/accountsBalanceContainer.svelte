@@ -6,6 +6,7 @@
         async function getOwnersAccountsAmounts(){
                 const resposne = await fetch('/api/v1/owners-accounts-amount');
                 const results =  await resposne.json();
+                console.log(results)
                 return results
         };
 
@@ -20,13 +21,13 @@
         {#each ownersAccountsAmountsList as ownerRow }
 
                 <div class="card-group">
-                        {#each ownerRow.owner_accounts as owner_accounts }
+                        {#each ownerRow.accounts as account }
                         <AcountsCard 
                                 owner_id={ownerRow.owner_id} 
-                                owner={ownerRow.owner} 
-                                account={owner_accounts.account_name} 
-                                amount={owner_accounts.amount_sum}
-                                last_update={owner_accounts.last_update}        
+                                owner={ownerRow.owner_name} 
+                                account={account.name} 
+                                amount={account.amount_sum}
+                                last_update={account.last_update}        
                                 ></AcountsCard>
                         {/each}
                 </div>
