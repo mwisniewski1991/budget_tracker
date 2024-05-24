@@ -16,13 +16,11 @@ ADDED_IDS = []
 
 @views.route("/", methods=['GET', 'POST'])
 def base():
-    print(request.form)
     return send_from_directory('../frontend/public', 'index.html')
 
 @views.route("/<path:path>")
 def home(path):
     return send_from_directory('../frontend/public', path)
-
 
 @views.route('/aboutme', methods=['GET'])
 def about_me():
@@ -83,151 +81,6 @@ def get_owner_accounts(owner_id):
         db.session.commit()
 
         return redirect('/')
-
-@views.route('/api/v1/owners-accounts-amount', methods=['GET'])
-def get_owners_accounts_amount():
-
-    results = (db.session.query(
-                        INCEXP_header.owner_id, 
-                        INCEXP_header.account_id, 
-                        Owners.name_pl,
-                        Accounts.name_pl,
-                        func.sum(case(
-                                (INCEXP_header.type_id == '1', INCEXP_position.amount_absolute * -1),
-                                (INCEXP_header.type_id == '2', INCEXP_position.amount_absolute),
-                            )),
-                        func.max(INCEXP_position.updated_at_cet)
-                        )
-                    .join(INCEXP_position, INCEXP_header.id == INCEXP_position.header_id)
-                    .join(Owners, INCEXP_header.owner_id == Owners.id)
-                    .join(Accounts, INCEXP_header.account_id == Accounts.id)
-                    .group_by(INCEXP_header.owner_id, INCEXP_header.account_id, Owners.name_pl, Accounts.name_pl)
-                    .order_by(INCEXP_header.owner_id, INCEXP_header.account_id)
-                ).all()
-
-    unique_owners_list = sorted({ (owner_row[0], owner_row[2] ) for owner_row in results }) 
-
-    return [
-        {
-            'owner_id':owner[0],
-            'owner_name' : owner[1],
-            'accounts' : [
-                {
-                    "id":  str(account[1]).strip(),
-                    "name":  str(account[3]).strip(),
-                    "amount_sum": account[4],
-                    "last_update": str(account[5].strftime('%Y-%m-%d'))
-                } for account in list(filter(lambda x: x[0] ==  owner[0], results))
-            ]
-        } for owner in unique_owners_list
-    ]
-
-@views.route('/api/v1/accounts', methods=['GET'])
-def get_accounts():
-    owner_id = request.args['owner_id']
-    accounts = Accounts.query.filter_by(owner_id=owner_id).order_by(Accounts.id).all()
-
-    return [
-        {
-            'id':account.id,
-            'name_pl':account.name_pl
-        } for account in accounts
-    ]
-
-@views.route('/api/v1/types', methods=['GET'])
-def get_types():
-    types = Type.query.all()
-    return [
-        {
-            'id':type.id,
-            'name_pl': type.name_pl,
-        } for type in types
-    ]
-
-@views.route('/api/v1/categories', methods=['GET'])
-def get_categories():
-
-    user_type_id = request.args['type_id']
-
-    categories = Category.query.filter_by(type_id=user_type_id).order_by(Category.id).all()
-
-    return [
-        {
-            'id':cat.id,
-            'name_pl':cat.name_pl,
-        } for cat in categories
-    ]
-
-@views.route('/api/v1/subcategories', methods=['GET'])
-def get_subcategories():
-
-    user_type_id = request.args['category_id']
-    subcategories = Subategory.query.filter_by(category_id=user_type_id).order_by(Subategory.id).all()
-
-    return [
-        {
-            'id': subcat.id,
-            'name_pl': subcat.name_pl,
-        } for subcat in subcategories
-    ]
-
-@views.route('/api/v1/categories-subcategories', methods=['GET'])
-def get_categories_subcategories():
-    types_list = [
-        {
-            'id':type.id,
-            'name_pl': type.name_pl,
-        } for type in Type.query.all()]
-
-    categories_list = [
-        {
-            'type_id':cat.type_id,
-            'id':cat.id,
-            'name_pl':cat.name_pl,
-        } for cat in Category.query.order_by(Category.id).all()]
-
-    subcategories_list = [
-        {
-            'category_id': subcat.category_id,
-            'id': subcat.id,
-            'name_pl': subcat.name_pl,
-        } for subcat in Subategory.query.order_by(Subategory.id).all()]
-
-
-    for category in categories_list:
-        iteration_category_id = category['id']
-        filterd_subcategories = filter(lambda x: x['category_id'] == iteration_category_id, subcategories_list)
-        category['subcategories_list'] = list(filterd_subcategories)
-
-    for typ in types_list:
-        iteration_type_id = typ['id']
-        filterd_categories = filter(lambda x: x['type_id'] == iteration_type_id, categories_list)
-        typ['categories_list'] = list(filterd_categories)
-
-    return types_list 
-
-@views.route('/api/v1/sources', methods=['GET'])
-def get_sources():
-    sources = INCEXP_header.query.with_entities(INCEXP_header.source).distinct().order_by(INCEXP_header.source).all()
-    return [{
-            'source_name': str(source.source).strip()
-        } for source in sources if str(source.source).strip() != ""
-    ] 
-
-@views.route('api/v1/accountBalance', methods=['GET'])
-def get_account_balace():
-    account_id = request.args['account_id']
-    sql = text(f'''
-        select 
-            sum (amount_absolute) as amount_sum
-        from incexp_view
-        where account_id = '{account_id}'
-    ''')
-    account_balance_value = list(db.session.execute(sql))
-
-    return {
-        'account_balance': account_balance_value[0][0],
-     }
 
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['GET'])
 def get_incexp(owner_id, account_id):
@@ -394,4 +247,149 @@ def delete_incexp(owner_id, account_id, header_id):
     return {
             'status': 'ERROR',
         }
+
+@views.route('/api/v1/owners-accounts-amount', methods=['GET'])
+def get_owners_accounts_amount():
+
+    results = (db.session.query(
+                        INCEXP_header.owner_id, 
+                        INCEXP_header.account_id, 
+                        Owners.name_pl,
+                        Accounts.name_pl,
+                        func.sum(case(
+                                (INCEXP_header.type_id == '1', INCEXP_position.amount_absolute * -1),
+                                (INCEXP_header.type_id == '2', INCEXP_position.amount_absolute),
+                            )),
+                        func.max(INCEXP_position.updated_at_cet)
+                        )
+                    .join(INCEXP_position, INCEXP_header.id == INCEXP_position.header_id)
+                    .join(Owners, INCEXP_header.owner_id == Owners.id)
+                    .join(Accounts, INCEXP_header.account_id == Accounts.id)
+                    .group_by(INCEXP_header.owner_id, INCEXP_header.account_id, Owners.name_pl, Accounts.name_pl)
+                    .order_by(INCEXP_header.owner_id, INCEXP_header.account_id)
+                ).all()
+
+    unique_owners_list = sorted({ (owner_row[0], owner_row[2] ) for owner_row in results }) 
+
+    return [
+        {
+            'owner_id':owner[0],
+            'owner_name' : owner[1],
+            'accounts' : [
+                {
+                    "id":  str(account[1]).strip(),
+                    "name":  str(account[3]).strip(),
+                    "amount_sum": account[4],
+                    "last_update": str(account[5].strftime('%Y-%m-%d'))
+                } for account in list(filter(lambda x: x[0] ==  owner[0], results))
+            ]
+        } for owner in unique_owners_list
+    ]
+
+@views.route('/api/v1/accounts', methods=['GET'])
+def get_accounts():
+    owner_id = request.args['owner_id']
+    accounts = Accounts.query.filter_by(owner_id=owner_id).order_by(Accounts.id).all()
+
+    return [
+        {
+            'id':account.id,
+            'name_pl':account.name_pl
+        } for account in accounts
+    ]
+
+@views.route('/api/v1/types', methods=['GET'])
+def get_types():
+    types = Type.query.all()
+    return [
+        {
+            'id':type.id,
+            'name_pl': type.name_pl,
+        } for type in types
+    ]
+
+@views.route('/api/v1/categories', methods=['GET'])
+def get_categories():
+
+    user_type_id = request.args['type_id']
+
+    categories = Category.query.filter_by(type_id=user_type_id).order_by(Category.id).all()
+
+    return [
+        {
+            'id':cat.id,
+            'name_pl':cat.name_pl,
+        } for cat in categories
+    ]
+
+@views.route('/api/v1/subcategories', methods=['GET'])
+def get_subcategories():
+
+    user_type_id = request.args['category_id']
+    subcategories = Subategory.query.filter_by(category_id=user_type_id).order_by(Subategory.id).all()
+
+    return [
+        {
+            'id': subcat.id,
+            'name_pl': subcat.name_pl,
+        } for subcat in subcategories
+    ]
+
+@views.route('/api/v1/categories-subcategories', methods=['GET'])
+def get_categories_subcategories():
+    types_list = [
+        {
+            'id':type.id,
+            'name_pl': type.name_pl,
+        } for type in Type.query.all()]
+
+    categories_list = [
+        {
+            'type_id':cat.type_id,
+            'id':cat.id,
+            'name_pl':cat.name_pl,
+        } for cat in Category.query.order_by(Category.id).all()]
+
+    subcategories_list = [
+        {
+            'category_id': subcat.category_id,
+            'id': subcat.id,
+            'name_pl': subcat.name_pl,
+        } for subcat in Subategory.query.order_by(Subategory.id).all()]
+
+
+    for category in categories_list:
+        iteration_category_id = category['id']
+        filterd_subcategories = filter(lambda x: x['category_id'] == iteration_category_id, subcategories_list)
+        category['subcategories_list'] = list(filterd_subcategories)
+
+    for typ in types_list:
+        iteration_type_id = typ['id']
+        filterd_categories = filter(lambda x: x['type_id'] == iteration_type_id, categories_list)
+        typ['categories_list'] = list(filterd_categories)
+
+    return types_list 
+
+@views.route('/api/v1/sources', methods=['GET'])
+def get_sources():
+    sources = INCEXP_header.query.with_entities(INCEXP_header.source).distinct().order_by(INCEXP_header.source).all()
+    return [{
+            'source_name': str(source.source).strip()
+        } for source in sources if str(source.source).strip() != ""
+    ] 
+
+@views.route('api/v1/accountBalance', methods=['GET'])
+def get_account_balace():
+    account_id = request.args['account_id']
+    sql = text(f'''
+        select 
+            sum (amount_absolute) as amount_sum
+        from incexp_view
+        where account_id = '{account_id}'
+    ''')
+    account_balance_value = list(db.session.execute(sql))
+
+    return {
+        'account_balance': account_balance_value[0][0],
+     }
 
