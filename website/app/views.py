@@ -379,13 +379,19 @@ def add_incexp(owner_id, account_id):
         db.session.commit()
         return redirect('/')
 
-@views.route('/api/v1/position-delete/<header_id>', methods=['DELETE'])
-def delete_positions(header_id):
-    INCEXP_position.query.filter_by(header_id=header_id).delete()
-    INCEXP_header.query.filter_by(id=header_id).delete()
-    db.session.commit()
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp/<header_id>', methods=['DELETE'])
+def delete_incexp(owner_id, account_id, header_id):
+    
+    if INCEXP_header.query.filter_by(owner_id=owner_id, account_id=account_id, id=header_id).first():
+        INCEXP_position.query.filter_by(header_id=header_id).delete()
+        INCEXP_header.query.filter_by(id=header_id).delete()
+        db.session.commit()
 
-    return [{
-        'status': 'DELETED',
-        'value': header_id
-    }]
+        return {
+            'status': 'DELETED',
+            'value': header_id
+        }
+    
+    return {
+            'status': 'ERROR',
+        }
