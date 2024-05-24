@@ -229,8 +229,8 @@ def get_account_balace():
         'account_balance': account_balance_value[0][0],
      }
 
-@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/positions', methods=['GET'])
-def get_positions(owner_id, account_id):
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['GET'])
+def get_incexp(owner_id, account_id):
     user_limit = request.args.get('limit', 50)
     type_id = request.args.get('type-id', None)
     category_id = request.args.get('category-id', None)
