@@ -28,43 +28,6 @@ def home(path):
 def about_me():
     return render_template("about_me.html")
 
-@views.route('/add', methods=['GET', 'POST'])
-def add():    
-    if request.method == "POST":
-
-        owner_id, account_id =  request.form['owner_account_ids'].split('_')
-
-        new_incexp_header = INCEXP_header(
-                date  = request.form['date'],
-                source = request.form['source'],
-                owner_id = owner_id,
-                account_id = account_id,
-                type_id = request.form['type_id'],
-        )
-
-        db.session.add(new_incexp_header)
-        db.session.commit()
-        print(new_incexp_header.id)
-
-        for i in range(1, 11):
-            value = request.form.get(f'category_{i}', None)
-
-            if value:
-                new_incexp_position = INCEXP_position(
-                    header_id = new_incexp_header.id,
-                    position_id = i,
-                    category_id = request.form[f'category_{i}'],
-                    subcategory_id = request.form[f'subcategory_{i}'],
-                    amount = request.form[f'amount_{i}'],
-                    comment = request.form[f'comment_{i}'],
-                    # shop = request.form[f'shop_{i}'],
-                    connection = request.form[f'connection_{i}'],
-                )
-                db.session.add(new_incexp_position)
-
-        db.session.commit()
-        return redirect('/')
-
 @views.route('/modify', methods=['GET', 'POST'])
 def modify():
     if request.method == "POST":
@@ -382,6 +345,39 @@ def get_positions(owner_id, account_id):
 
     headers_list = list(filter(lambda row: (len(row['positions']) > 0), headers_list))
     return sorted(headers_list, reverse=True, key=lambda incexp: (incexp['header_date'], incexp['header_id']))
+
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['POST'])
+def add_incexp(owner_id, account_id):    
+    if request.method == "POST":
+        new_incexp_header = INCEXP_header(
+                date  = request.form['date'],
+                source = request.form['source'],
+                owner_id = owner_id,
+                account_id = account_id,
+                type_id = request.form['type_id'],
+        )
+
+        db.session.add(new_incexp_header)
+        db.session.commit()
+        print(new_incexp_header.id)
+
+        for i in range(1, 11):
+            value = request.form.get(f'category_{i}', None)
+
+            if value:
+                new_incexp_position = INCEXP_position(
+                    header_id = new_incexp_header.id,
+                    position_id = i,
+                    category_id = request.form[f'category_{i}'],
+                    subcategory_id = request.form[f'subcategory_{i}'],
+                    amount = request.form[f'amount_{i}'],
+                    comment = request.form[f'comment_{i}'],
+                    connection = request.form[f'connection_{i}'],
+                )
+                db.session.add(new_incexp_position)
+
+        db.session.commit()
+        return redirect('/')
 
 @views.route('/api/v1/position-delete/<header_id>', methods=['DELETE'])
 def delete_positions(header_id):
