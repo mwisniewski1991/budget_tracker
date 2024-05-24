@@ -28,22 +28,6 @@ def home(path):
 def about_me():
     return render_template("about_me.html")
 
-@views.route('/modify', methods=['GET', 'POST'])
-def modify():
-    if request.method == "POST":
-        header_id = request.form['header_id']
-        modify_header(INCEXP_header.query.filter_by(id=header_id).one(), request)
-        
-        for i in range(1,11):
-            position_id = request.form.get(f'position_id_{i}', None)
-            
-            if position_id:
-                incexp_positions = INCEXP_position.query.filter(and_(INCEXP_position.header_id == header_id, INCEXP_position.position_id == position_id)).one() 
-                modify_position(incexp_positions,request, i)
-
-        db.session.commit()
-        return redirect('/')
-
 @views.route('/api/v1/owners', methods=['GET'])
 def get_owners():
     # owners_schema = OwnersSchema(many=True, only=('id', 'name_pl'))
@@ -379,6 +363,21 @@ def add_incexp(owner_id, account_id):
         db.session.commit()
         return redirect('/')
 
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp/<header_id>', methods=['POST'])
+def modify_incexp(owner_id, account_id, header_id):
+        header_id = request.form['header_id']
+        modify_header(INCEXP_header.query.filter_by(owner_id=owner_id, account_id=account_id, id=header_id).one(), request)
+        
+        for i in range(1,11):
+            position_id = request.form.get(f'position_id_{i}', None)
+            
+            if position_id:
+                incexp_positions = INCEXP_position.query.filter(and_(INCEXP_position.header_id == header_id, INCEXP_position.position_id == position_id)).one() 
+                modify_position(incexp_positions,request, i)
+
+        db.session.commit()
+        return redirect('/')
+    
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp/<header_id>', methods=['DELETE'])
 def delete_incexp(owner_id, account_id, header_id):
     
@@ -395,3 +394,4 @@ def delete_incexp(owner_id, account_id, header_id):
     return {
             'status': 'ERROR',
         }
+
