@@ -1,8 +1,10 @@
 <script>
+    import {activeOnwerId, activeAccountId} from "../../../../store.js";
     export let headerIDtoDelete;
 
     async function deleteHeader(headerID){
-        const resposne = await fetch(`/api/v1/position-delete/${headerID}`, {method:"DELETE"})
+        let method_route = `/api/v1/owners/${$activeOnwerId}/accounts/${$activeAccountId}/incexp/${headerID}`
+        const resposne = await fetch(method_route, {method:"DELETE"})
         location.reload()
     };
 
