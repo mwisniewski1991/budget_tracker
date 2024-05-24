@@ -10,9 +10,7 @@ import logging
 logging.basicConfig()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.WARNING)
 
-
 views = Blueprint ('views', __name__)
-ADDED_IDS = []
 
 @views.route("/", methods=['GET', 'POST'])
 def base():
