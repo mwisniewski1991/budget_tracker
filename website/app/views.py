@@ -342,6 +342,7 @@ def get_positions(owner_id, account_id):
                     .join(Category, INCEXP_position.category_id == Category.id)
                     .join(Subategory, INCEXP_position.subcategory_id == Subategory.id)
                     .filter(INCEXP_position.header_id.in_(header_ids))
+                    .order_by(INCEXP_position.header_id)
                 )
     
     if category_id and category_id != "00":
@@ -380,7 +381,7 @@ def get_positions(owner_id, account_id):
         header['total_amount'] = reduce(lambda a,b: a+b, [position['amount'] for position in filtered_data], 0)
 
     headers_list = list(filter(lambda row: (len(row['positions']) > 0), headers_list))
-    return sorted(headers_list, reverse=True, key=lambda incexp: incexp['header_date'])
+    return sorted(headers_list, reverse=True, key=lambda incexp: (incexp['header_date'], incexp['header_id']))
 
 @views.route('/api/v1/position-delete/<header_id>', methods=['DELETE'])
 def delete_positions(header_id):
