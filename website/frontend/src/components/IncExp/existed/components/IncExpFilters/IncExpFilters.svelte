@@ -27,8 +27,7 @@
     Filtruj rekody
 </button>
     
-<!-- <div class="container container-border collapse" id="collapseFilters"> -->
-<div class="container container-border" id="collapseFilters">
+<div class="container container-border collapse" id="collapseFilters">
     <h3>Filtruj</h3>
 
     <div class="row">
