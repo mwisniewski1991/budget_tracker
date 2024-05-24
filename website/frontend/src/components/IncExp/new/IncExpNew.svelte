@@ -1,8 +1,10 @@
 <script>
+    import { activeOnwerId, activeAccountId} from "../../store.js";
     import Header from "./components/Header.svelte"
     import Positions from "./components/Positions.svelte";
     import {range} from "./components/range";
 
+    let method_route = `/api/v1/owners/${$activeOnwerId}/accounts/${$activeAccountId}/incexp`
     let newPostitsionCounter = 1;
     let currentTypeId;
 
@@ -14,7 +16,7 @@
 <div class="container container-border">
     <h3>Dodaj nowy rekord</h3>
     
-    <form action="/add" method="post" class="IncExpNew">
+    <form action={method_route} method="post" class="IncExpNew">
      
 
         <Header bind:currentTypeId/>
