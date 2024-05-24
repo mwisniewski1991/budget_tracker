@@ -61,7 +61,7 @@
                         'date-end':componentDateEnd,
                     });
 
-        const resposne = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountID}/positions?${parameters}`, {method:"GET"});
+        const resposne = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountID}/incexp?${parameters}`, {method:"GET"});
         const results =  await resposne.json();
         addToList(results)
         return results
