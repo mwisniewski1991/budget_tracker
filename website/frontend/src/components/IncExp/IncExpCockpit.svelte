@@ -40,7 +40,7 @@ function onOwnerAccountChange(ownerAccountObject){
                 {#each owners as owner }
                     {#each owner.accounts as account }
 
-                        {#if createActiveOwnerAccountKey(owner.owner_id, owner.account_id) == activeOnwerAccountId}    
+                        {#if createActiveOwnerAccountKey(owner.id, account.id) == activeOnwerAccountId}    
                             <option selected value="{owner.id}_{account.id}" >{owner.name_pl} - {account.name_pl}</option>
                         {:else}
                             <option value="{owner.id}_{account.id}" >{owner.name_pl} - {account.name_pl}</option>
