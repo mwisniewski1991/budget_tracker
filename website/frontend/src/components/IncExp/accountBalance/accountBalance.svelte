@@ -1,12 +1,11 @@
 <script>
-    import {activeAccountId} from "../../store";
+    import {activeOnwerId, activeAccountId} from "../../store";
 
     let accountBalancePromise
-    $: accountBalancePromise = getAccountBalance($activeAccountId); 
+    $: accountBalancePromise = getAccountBalance($activeOnwerId, $activeAccountId); 
 
-    async function getAccountBalance(accountId){
-        const parameters = new URLSearchParams({account_id: accountId});
-        const response = await fetch(`/api/v1/accountBalance?${parameters}`, {method: "GET"})
+    async function getAccountBalance(ownerId, accountId){
+        const response = await fetch(`/api/v1/owners/${ownerId}/accounts/${accountId}/balance`, {method: "GET"})
         const results = await response.json() 
         return results
     };
