@@ -79,6 +79,22 @@ def get_owner_accounts(owner_id):
         db.session.commit()
 
         return redirect('/')
+    
+@views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/balance', methods=['GET'])
+def get_owner_accounts_balance(owner_id, account_id):
+    sql = text(f'''
+        select 
+            sum (amount_absolute) as amount_sum
+        from incexp_view
+        where account_id = '{account_id}'
+        and owner_id = {owner_id}
+    ''')
+    account_balance_value = list(db.session.execute(sql))
+
+    return {
+        'account_balance': account_balance_value[0][0],
+     }
+
 
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['GET'])
 def get_incexp(owner_id, account_id):
@@ -351,19 +367,3 @@ def get_sources():
             'source_name': str(source.source).strip()
         } for source in sources if str(source.source).strip() != ""
     ] 
-
-@views.route('api/v1/accountBalance', methods=['GET'])
-def get_account_balace():
-    account_id = request.args['account_id']
-    sql = text(f'''
-        select 
-            sum (amount_absolute) as amount_sum
-        from incexp_view
-        where account_id = '{account_id}'
-    ''')
-    account_balance_value = list(db.session.execute(sql))
-
-    return {
-        'account_balance': account_balance_value[0][0],
-     }
-
