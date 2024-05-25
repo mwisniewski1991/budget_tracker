@@ -284,18 +284,6 @@ def get_owners_accounts_amount():
         } for owner in unique_owners_list
     ]
 
-@views.route('/api/v1/accounts', methods=['GET'])
-def get_accounts():
-    owner_id = request.args['owner_id']
-    accounts = Accounts.query.filter_by(owner_id=owner_id).order_by(Accounts.id).all()
-
-    return [
-        {
-            'id':account.id,
-            'name_pl':account.name_pl
-        } for account in accounts
-    ]
-
 @views.route('/api/v1/types', methods=['GET'])
 def get_types():
     types_schema = TypesSchema(many=True, only=('id', 'name_pl'))
