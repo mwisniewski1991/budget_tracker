@@ -54,31 +54,32 @@ def get_owner(owner_id):
         owner = Owners.query.filter_by(id = owner_id).first()
         return owners_schema.dump(owner)
 
-@views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET', 'POST'])
-def get_owner_accounts(owner_id):
-    if request.method == 'GET':
-        owners_schema = OwnersSchema()
-        owner = Owners.query.filter_by(id = owner_id).first()
-        return owners_schema.dump(owner)
+@views.route('/api/v1/owners/<owner_id>/accounts', methods=['GET'])
+def get_accounts(owner_id):
+    owners_schema = OwnersSchema()
+    owner = Owners.query.filter_by(id = owner_id).first()
+    return owners_schema.dump(owner)
+
+    # accounts_schema = AccountsSchema(many=True)
+    # accounts = Accounts.query.filter_by(owner_id = owner_id).all()
+    # return accounts_schema.dump(accounts)
+
     
-        # accounts_schema = AccountsSchema(many=True)
-        # accounts = Accounts.query.filter_by(owner_id = owner_id).all()
-        # return accounts_schema.dump(accounts)
+@views.route('/api/v1/owners/<owner_id>/accounts', methods=['POST'])
+def add_account(owner_id):
+    account_id = request.form.get('account_id', None)
+    new_account_name = request.form.get('account_name', None)
 
-    if request.method == 'POST':
-        account_id = request.form.get('account_id', None)
-        new_account_name = request.form.get('account_name', None)
+    if account_id:
+        account_existing = Accounts.query.filter_by(id = account_id).one()
+        account_existing.name_pl = new_account_name
+    else:
+        new_account = Accounts(name_pl = new_account_name, owner_id = owner_id)
+        db.session.add(new_account)
 
-        if account_id:
-            account_existing = Accounts.query.filter_by(id = account_id).one()
-            account_existing.name_pl = new_account_name
-        else:
-            new_account = Accounts(name_pl = new_account_name, owner_id = owner_id)
-            db.session.add(new_account)
+    db.session.commit()
 
-        db.session.commit()
-
-        return redirect('/')
+    return redirect('/')
     
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/balance', methods=['GET'])
 def get_owner_accounts_balance(owner_id, account_id):
@@ -94,7 +95,6 @@ def get_owner_accounts_balance(owner_id, account_id):
     return {
         'account_balance': account_balance_value[0][0],
      }
-
 
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['GET'])
 def get_incexp(owner_id, account_id):
