@@ -79,3 +79,8 @@ class OwnersSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         
     accounts = ma.fields.Nested(AccountsSchema, many=True, dump_only=True, exclude=('owner_id',))
+
+class TypesSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Type
+        load_instance = True
