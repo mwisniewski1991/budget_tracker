@@ -8,7 +8,7 @@
 	import OwnersAccountsCreator from "./components/ownersAccountsCreator/ownersAccountsCreator.svelte";
 
 	async function getCategoriesSubcategories(){
-        const resposne = await fetch(`/api/v1/categories-subcategories`, {method:"GET"})
+        const resposne = await fetch(`/api/v1/types/categories/subcategories`, {method:"GET"})
         const categoriesSubcategories = await resposne.json()
 		CategoriesSubcategoriesList.set(categoriesSubcategories);
     };
