@@ -89,3 +89,8 @@ class CategorySchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Category
         load_instance = True
+    
+class SubcategorySchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Subategory
+        load_instance = True
