@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
 from sqlalchemy import text, and_, select, func, case, alias
 from . import db
-from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts, OwnersSchema, AccountsSchema, TypesSchema, CategorySchema
+from .models import INCEXP_header, INCEXP_position, Category, Subategory, Type, Owners, Accounts, OwnersSchema, AccountsSchema, TypesSchema, CategorySchema, SubcategorySchema
 from functools import reduce
 from operator import add
 from .incexp_modify import modify_header, modify_position
@@ -314,18 +314,12 @@ def get_categories(type_id):
     categories = Category.query.filter_by(type_id=type_id).order_by(Category.id).all()
     return categories_schema.dump(categories)
 
-@views.route('/api/v1/subcategories', methods=['GET'])
-def get_subcategories():
+@views.route('/api/v1/types/<type_id>/categories/<category_id>/subcategories', methods=['GET'])
+def get_subcategories(type_id, category_id):
 
-    user_type_id = request.args['category_id']
-    subcategories = Subategory.query.filter_by(category_id=user_type_id).order_by(Subategory.id).all()
-
-    return [
-        {
-            'id': subcat.id,
-            'name_pl': subcat.name_pl,
-        } for subcat in subcategories
-    ]
+    subcategory_schema = SubcategorySchema(many=True)
+    subcategories = Subategory.query.filter_by(category_id=category_id).order_by(Subategory.id).all()
+    return subcategory_schema.dump(subcategories)
 
 @views.route('/api/v1/types/categories/subcategories', methods=['GET'])
 def get_types_categories_subcategories():
