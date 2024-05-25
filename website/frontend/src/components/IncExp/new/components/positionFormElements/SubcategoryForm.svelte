@@ -1,5 +1,6 @@
 <script>
     export let positionId;
+    export let currentTypeId;
     export let currentPostionCategory;
 
     let htmlNamePosition = `subcategory_${positionId}`;
@@ -10,8 +11,7 @@
 
     async function getSubcategories(category_id){
 
-        const parameters = new URLSearchParams({category_id: category_id});
-        const resposne = await fetch(`/api/v1/subcategories?${parameters}`, {method:"GET"})
+        const resposne = await fetch(`/api/v1/types/${currentTypeId}/categories/${category_id}/subcategories`, {method:"GET"})
         const subcategories = await resposne.json()
 
         return subcategories

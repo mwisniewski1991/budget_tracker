@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col">{positionId}</div>
         <div class="col-4"><CategoryForm positionId={positionId} currentTypeId={currentTypeId} bind:currentPostionCategory/></div>
-        <div class="col-4"><SubcategoryForm positionId={positionId} currentPostionCategory={currentPostionCategory}/></div>
+        <div class="col-4"><SubcategoryForm positionId={positionId} currentTypeId={currentTypeId} currentPostionCategory={currentPostionCategory}/></div>
         <div class="col"><AmountForm positionId={positionId}/></div>
     </div>
 
