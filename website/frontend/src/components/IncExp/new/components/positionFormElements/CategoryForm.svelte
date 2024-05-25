@@ -11,8 +11,7 @@
 
     async function getCategories(type_id){
         
-        const parameters = new URLSearchParams({type_id: type_id});
-        const resposne = await fetch(`/api/v1/categories?${parameters}`, {method:"GET"})
+        const resposne = await fetch(`/api/v1/types/${type_id}/categories`, {method:"GET"})
         const categories = await resposne.json()
         currentPostionCategory = categories[0].id;
 
