@@ -64,7 +64,6 @@ def get_accounts(owner_id):
     # accounts = Accounts.query.filter_by(owner_id = owner_id).all()
     # return accounts_schema.dump(accounts)
 
-    
 @views.route('/api/v1/owners/<owner_id>/accounts', methods=['POST'])
 def add_account(owner_id):
     account_id = request.form.get('account_id', None)
@@ -83,18 +82,21 @@ def add_account(owner_id):
     
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/balance', methods=['GET'])
 def get_owner_accounts_balance(owner_id, account_id):
-    sql = text(f'''
-        select 
-            sum (amount_absolute) as amount_sum
-        from incexp_view
-        where account_id = '{account_id}'
-        and owner_id = {owner_id}
-    ''')
-    account_balance_value = list(db.session.execute(sql))
-
+    result = (db.session.query(
+                                INCEXP_header.owner_id,
+                                INCEXP_header.account_id, 
+                                func.sum(case(
+                                    (INCEXP_header.type_id == '1', INCEXP_position.amount_absolute * -1),
+                                    (INCEXP_header.type_id == '2', INCEXP_position.amount_absolute))),
+                                )
+                .join(INCEXP_position, INCEXP_header.id == INCEXP_position.header_id)
+                .filter(INCEXP_header.owner_id==owner_id, INCEXP_header.account_id==account_id)
+                .group_by(INCEXP_header.owner_id, INCEXP_header.account_id)
+            ).first()
+    
     return {
-        'account_balance': account_balance_value[0][0],
-     }
+        'account_balance': result[2]
+    }
 
 @views.route('/api/v1/owners/<owner_id>/accounts/<account_id>/incexp', methods=['GET'])
 def get_incexp(owner_id, account_id):
