@@ -2,6 +2,7 @@ from . import db
 from sqlalchemy.sql import func, text
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 import marshmallow as ma
+from datetime import datetime
 
 class Owners(db.Model):
     __tablename__ = 'owners'
@@ -11,9 +12,10 @@ class Owners(db.Model):
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
-    id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('test_seq')::text, 2, '0')"))
+    # id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('test_seq')::text, 2, '0')"))
+    id = db.Column(db.String(2), primary_key=True)
     name_pl = db.Column(db.String(50))
-    owner_id =db.Column(db.String(2), db.ForeignKey('owners.id'))
+    owner_id =db.Column(db.Integer, db.ForeignKey('owners.id'))
 
 class Type(db.Model):
     __tablename__ = 'type_dict'
@@ -27,7 +29,7 @@ class Category(db.Model):
 
     id = db.Column(db.String(2), nullable=False, primary_key=True)
     name_pl = db.Column(db.String(100), nullable=False)
-    type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'), primary_key=True)
+    type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'))
     
 class Subategory(db.Model):
     __tablename__ = 'subcategory'
@@ -43,8 +45,8 @@ class INCEXP_header(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
     source = db.Column(db.String(100))
-    type_id = db.Column(db.String(1), db.ForeignKey('type_dict.id'), nullable=False)
-    owner_id = db.Column(db.String(2), db.ForeignKey('owners.id'), nullable=False)
+    type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'), nullable=False)
     account_id = db.Column(db.String(2), db.ForeignKey('accounts.id'), nullable=False)
 
 
@@ -56,14 +58,15 @@ class INCEXP_position(db.Model):
     category_id = db.Column(db.String(100), db.ForeignKey('category.id'), nullable=False)
     subcategory_id = db.Column(db.String(100), db.ForeignKey('subcategory.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
-    amount_absolute = db.Column(db.Float, db.Computed("(abs(amount)"))
+    amount_absolute = db.Column(db.Float, db.Computed("abs(amount)"))
     amount_full = db.Column(db.Integer, db.Computed("amount * 100"), nullable=False)
     comment = db.Column(db.String(200))
     connection = db.Column(db.String(100))
     created_at_cet = db.Column(db.DateTime(), server_default=func.now())
-    created_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
+    created_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
     updated_at_cet = db.Column(db.DateTime(), server_default=func.now())
-    updated_at_utc = db.Column(db.DateTime(), server_default=func.utcnow())
+    updated_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
+
 
 
 class AccountsSchema(SQLAlchemyAutoSchema):
