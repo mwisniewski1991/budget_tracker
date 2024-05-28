@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>Bilans kont</h2>
+
+    <div class="container">
+
+        {% for owner in owners %}
+        <div class="card-group">
+            
+            {% for account in owner.accounts %}
+                <div class="card mb-3" + colorForOwner(owner.id) style="max-width: 18rem;">
+                    <div class="card-header"> {{ owner.name }} </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ account.name }}</h5>
+                        <p class="card-text"><small>{{ account.last_update }}</small></p>
+                        <p class="card-text">{{ account.amount_sum   }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+
+{# {% block jsscript %} #}
+    {# <script src="{{url_for('static', filename='scripts.js')}}"></script> #}
+{# {% endblock %} #}
