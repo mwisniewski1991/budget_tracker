@@ -46,4 +46,4 @@ def accounts_results_home():
         } for owner in unique_owners_list
     ]
 
-    return render_template ('accounts_results/home.html.j2', owners=owners)
+    return render_template ('accounts_results/home.html.jinja', owners=owners)
