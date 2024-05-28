@@ -26,7 +26,7 @@ def create_app():
     from .views import views
     from .accounts_results.accounts_results import accounts_results
     app.register_blueprint(views, url_prefix='/')
-    app.register_blueprint(accounts_results, url_prefix='/accounts-balance')
+    app.register_blueprint(accounts_results, url_prefix='/accounts-results')
 
 
     return app
