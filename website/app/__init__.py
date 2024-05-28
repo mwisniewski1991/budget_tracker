@@ -1,4 +1,5 @@
 from flask import Flask
+from sqlalchemy import text
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from os import environ
@@ -17,11 +18,15 @@ def create_app():
     migrate = Migrate(app, db)
 
     from .models import Owners, Accounts, Type, Category, Subategory, INCEXP_header, INCEXP_position
+    from .custom_sql import accounts_id_seq_custom, insert_types
+
     with app.app_context():
         db.create_all()
 
     from .views import views
+    from .accounts_results.accounts_results import accounts_results
     app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(accounts_results, url_prefix='/accounts-balance')
 
 
     return app
