@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h2>Właściciele i konta</h2>
+
+    <div class="container border border-white rounded">
+        <h4>Dodaj nowego właściciela</h4>  
+         <form action='/owners' method="POST">
+
+            <div class="row">
+                <div class="col-2">
+                    <label for="owner_name">Wpisz nazwę</label>
+                </div>
+                <div class="col-6">
+                    <input type="text" id="owner_name_pl" name="owner_name_pl">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">Prześlij</button>
+                </div>
+            </div>
+
+        </form>
+  
+    </div>
+
+
+    <div class="container mt-2 border border-white rounded">
+
+        {% for owner in owners %}
+            <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
+                <div class="row border p-2 border-white rounded">
+                    <div class="col"><span>{{ owner.id }}</span></div>    
+                    <div class="col"><span>{{ owner.name_pl }}</span></div>    
+                    {# <div class="col"><button hx-get="/owners/" + {{ owner.id }} "/edit" class="btn btn-warning">Zmień</button> #}
+                    <div class="col"><button hx-get="{{ '/owners/%s/edit' %owner.id }} " class="btn btn-warning">Zmień</button>
+
+                    </div>
+                </div> 
+            </div>   
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
+
