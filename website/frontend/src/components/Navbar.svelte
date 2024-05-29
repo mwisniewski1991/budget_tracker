@@ -35,7 +35,8 @@
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changePositionsCockpitViewVisible}>Pozycje</button>
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeAccountsBalanceViewVisible}>Bilans kont</button>
             <button class="btn btn-sm btn-outline-secondary" type="button" on:click={changeOnwersAccountsCreatorViewVisible}>Właściciele i konta</button>
-            
+            <a class="nav-link active" aria-current="page" href="/accounts-results">Bilans kont</a>
+            <a class="nav-link active" aria-current="page" href="/owners">Właściciele</a>
           </div>
 
   </nav>
