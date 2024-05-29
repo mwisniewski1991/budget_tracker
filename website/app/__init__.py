@@ -24,9 +24,11 @@ def create_app():
         db.create_all()
 
     from .views import views
-    from .accounts_results.accounts_results import accounts_results
+    from .blueprints.accounts_results.accounts_results import accounts_results
+    from .blueprints.owners.owners import owners
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(accounts_results, url_prefix='/accounts-results')
+    app.register_blueprint(owners, url_prefix='/owners')
 
 
     return app

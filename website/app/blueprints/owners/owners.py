@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
 from sqlalchemy import text, and_, select, func, case, alias
-from .. import db
-from ..models import Owners
+from ... import db
+from ...models import Owners
 import logging
 
 logging.basicConfig()
