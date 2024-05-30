@@ -44,18 +44,20 @@ class INCEXP_header(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime(timezone=True), nullable=False)
     source = db.Column(db.String(100))
-    type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'), nullable=False)
+    type_id = db.Column(db.Integer, db.ForeignKey(Type.id), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'), nullable=False)
     account_id = db.Column(db.String(2), db.ForeignKey('accounts.id'), nullable=False)
-
+    incexp_positions = db.relationship("INCEXP_position", backref="incexp_header", single_parent=True, order_by="asc(INCEXP_position.position_id)")
+    
+    type = db.relationship('Type', foreign_keys='INCEXP_header.type_id')
 
 class INCEXP_position(db.Model):
     __tablename__ = 'incexp_position'
 
-    header_id = db.Column(db.Integer, primary_key=True)
+    header_id = db.Column(db.Integer, db.ForeignKey('incexp_header.id'), primary_key=True, )
     position_id = db.Column(db.Integer, primary_key=True)
-    category_id = db.Column(db.String(100), db.ForeignKey('category.id'), nullable=False)
-    subcategory_id = db.Column(db.String(100), db.ForeignKey('subcategory.id'), nullable=False)
+    category_id = db.Column(db.String(2), db.ForeignKey(Category.id), nullable=False)
+    subcategory_id = db.Column(db.String(2), db.ForeignKey(Subategory.id), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     amount_absolute = db.Column(db.Float, db.Computed("abs(amount)"))
     amount_full = db.Column(db.Integer, db.Computed("amount * 100"), nullable=False)
@@ -65,6 +67,9 @@ class INCEXP_position(db.Model):
     created_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
     updated_at_cet = db.Column(db.DateTime(), server_default=func.now())
     updated_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
+
+    category = db.relationship("Category",foreign_keys='INCEXP_position.category_id')
+    subcategory = db.relationship("Subategory",foreign_keys='INCEXP_position.subcategory_id')
 
 
 
