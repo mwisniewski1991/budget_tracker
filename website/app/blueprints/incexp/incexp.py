@@ -17,29 +17,30 @@ def get_incexp():
     owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
     owner_id, account_id = owner_account_ids.split('_')
 
+    type_id = request.args.get('type-id', None)
+    source = request.args.get('source',  None)
+    created_date_from = request.args.get('created_date_from',  None)
+
     incexp_list = (INCEXP_header
                 .query
                 .filter_by(owner_id=owner_id, account_id=account_id)
-                .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
-                .limit(5)
-            ).all()
-
-
-    # incexp_list = (db.session.query(INCEXP_header, INCEXP_position, Type, Owners, Accounts)
-    #             .join(INCEXP_position, INCEXP_header.id == INCEXP_position.header_id)
-    #             .join(Type, INCEXP_header.type_id == Type.id)
-    #             .join(Owners, INCEXP_header.owner_id == Owners.id)
-    #             .join(Accounts, INCEXP_header.account_id == Accounts.id)
-    #             .filter(and_(
-    #                             INCEXP_header.owner_id == owner_id, 
-    #                             INCEXP_header.account_id == account_id,
-    #                         ))
-    #             .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
-    #             .limit(5)
-    #             ).all()
+                )
     
+    if type_id:
+        incexp_list = incexp_list.filter(INCEXP_header.type_id == type_id)
+    
+    if source:
+        incexp_list = incexp_list.filter(INCEXP_header.source.ilike(f'%{source}%'))
 
-    # logging.warning(incexp_list[0].INCEXP_header)
+    if created_date_from:
+        incexp_list = incexp_list.filter(INCEXP_header.date >= created_date_from)
+
+
+    incexp_list = (incexp_list
+                    .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
+                    .limit(5)
+                   ).all()
+    
     return render_template("incexp/home.html.jinja", incexp_list=incexp_list)
 
 @incexp.route('/owners-accounts', methods=['GET'])
