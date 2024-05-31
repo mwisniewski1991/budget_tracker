@@ -6,16 +6,41 @@
     <div  class="container ">
         <form class="form" hx-get="/incexp/owners-accounts" hx-target="this" hx-swap="afterbegin"  hx-trigger="load">
         
-        <select class="form-select" name="type-id">
-            <option value=1>Wydatek</option>    
-            <option value=2>Dochód</option>    
-        </select>
+   
+        <div class="row">
+            <div class="col">
+                <label for="created_date_from">Data od</label>
+                <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_from">
+            </div>
+            <div class="col">
+                <label for="created_date_to">Data do</label>
+                <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_to">
+            </div>
+            <div class="col">
+                <label for="source">Źródło</label>
+                <input type="text"  class="form-control" placeholder="Szukaj źródła" name="source">
+            </div>
+        </div>
 
-        <input type="test"  class="form-control" placeholder="Szukaj źródła" name="source">
-        <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_from">
 
-        <input type="text"  class="form-control" placeholder="Szukaj komentarza" name="comment">
-        <input type="text"  class="form-control" placeholder="Szukaj powiązania" name="connection">
+        <div class="row">
+            <div class="col">
+                <label for="type-ud">Typ</label>
+                <select class="form-select" name="type-id">
+                    <option value=1>Wydatek</option>    
+                    <option value=2>Dochód</option>    
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col">
+                <input type="text"  class="form-control" placeholder="Szukaj komentarza" name="comment">
+            </div>
+            <div class="col">
+                <input type="text"  class="form-control" placeholder="Szukaj powiązania" name="connection">
+            </div>
+        </div>
 
 
 
