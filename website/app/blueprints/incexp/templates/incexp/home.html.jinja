@@ -3,7 +3,19 @@
 {% block content %}
     <h2 class="pt-2">Dochody i wydatki</h3>
 
-    <div  class="container test" hx-get="/incexp/owners-accounts" hx-target="this" hx-swap="innerHTML"  hx-trigger="load">
+    <div  class="container ">
+        <form class="form" hx-get="/incexp/owners-accounts" hx-target="this" hx-swap="afterbegin"  hx-trigger="load">
+        
+        <select class="form-select" name="type-id">
+            <option value=1>Wydatek</option>    
+            <option value=2>Dochód</option>    
+        </select>
+
+        <input type="test"  class="form-control" placeholder="Szukaj źródła" name="source">
+        <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_from">
+
+        <input type="submit"  class="form-control"  value="Wybierz" class="create_edit">
+        </form>
     </div>
 
     <div class="container py-2 border border-white rounded">

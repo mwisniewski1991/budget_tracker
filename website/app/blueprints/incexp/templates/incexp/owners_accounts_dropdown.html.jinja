@@ -1,12 +1,7 @@
-
-<form class="form">
-    <select class="form-select" aria-label="Default select example" id="owner-account-ids" name="owner-account-ids">
-        {% for owner in owners%}
-            {% for account in owner.accounts%}
-                <option value="{{ owner.id }}_{{ account.id }}" >{{ owner.name_pl }} - {{ account.name_pl }} </option>    
-            {% endfor %}
+<select class="form-select" aria-label="Default select example" id="owner-account-ids" name="owner-account-ids">
+    {% for owner in owners%}
+        {% for account in owner.accounts%}
+            <option value="{{ owner.id }}_{{ account.id }}" >{{ owner.name_pl }} - {{ account.name_pl }} </option>    
         {% endfor %}
-    </select>
-    <input type="submit" value="Wybierz" class="create_edit">
-</form>
-
+    {% endfor %}
+</select>
