@@ -20,10 +20,12 @@ def get_incexp():
     type_id = request.args.get('type-id', None)
     source = request.args.get('source',  None)
     created_date_from = request.args.get('created_date_from',  None)
+    comment = request.args.get('comment', None)
+    connection = request.args.get('connection', None)
 
     incexp_list = (INCEXP_header
                 .query
-                .filter_by(owner_id=owner_id, account_id=account_id)
+                .filter(and_(INCEXP_header.owner_id==owner_id, INCEXP_header.account_id==account_id))
                 )
     
     if type_id:
@@ -35,10 +37,16 @@ def get_incexp():
     if created_date_from:
         incexp_list = incexp_list.filter(INCEXP_header.date >= created_date_from)
 
+    if comment:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.comment.ilike(f"%{comment}%")))
+
+    if connection:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.connection.ilike(f"%{connection}%")))
+
 
     incexp_list = (incexp_list
                     .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
-                    .limit(5)
+                    .limit(20)
                    ).all()
     
     return render_template("incexp/home.html.jinja", incexp_list=incexp_list)
