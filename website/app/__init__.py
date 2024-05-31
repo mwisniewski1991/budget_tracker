@@ -26,9 +26,11 @@ def create_app():
     from .views import views
     from .blueprints.accounts_results.accounts_results import accounts_results
     from .blueprints.owners.owners import owners
+    from .blueprints.incexp.incexp import incexp
+
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(accounts_results, url_prefix='/accounts-results')
     app.register_blueprint(owners, url_prefix='/owners')
-
+    app.register_blueprint(incexp, url_prefix='/incexp')
 
     return app
