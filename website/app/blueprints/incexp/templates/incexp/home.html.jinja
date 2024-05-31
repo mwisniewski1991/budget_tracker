@@ -19,7 +19,7 @@
                 </div>
 
             {% for incexp_position in incexp.incexp_positions %}
-                <div class="container my-2 border-bottom border-white rounded">
+                <div class="container my-2">
 
                     <div class="row ">
                         <div class="col"><span>{{ incexp_position.position_id }} </span></div>
@@ -28,10 +28,10 @@
                         <div class="col "><span>{{ incexp_position.amount_absolute }} </span></div>
                     </div>
 
-                    <div class="row">
+                    <div class="row border-bottom border-black">
                         <div class="col">{{ incexp_position.comment }}</div>
                         <div class="col">{{ incexp_position.connection }}</div>
-                        <div class="col">{{ incexp_position.updated_at_cet }}</div>
+                        <div class="col">{{ incexp_position.updated_at_cet.strftime('%Y-%m-%d %H:%M') }}</div>
                     </div>
                     
                 </div>
@@ -41,7 +41,5 @@
             </div>
         {% endfor %}
     </div>
-
-
 
 {% endblock %}
