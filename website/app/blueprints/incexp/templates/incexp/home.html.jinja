@@ -14,7 +14,7 @@
                         <div class="col"><span>{{ incexp.type.name_pl }}</span></div>
                         <div class="col-4"><span>{{ incexp.date }}</span></div>
                         <div class="col-4"><span>{{ incexp.source }}</span></div>
-                        <div class="col"><span>{{ incexp.incexp_positions | sum(attribute='amount_absolute') | round(2) }}</span></div>
+                        <div class="col"><span>{{ incexp.incexp_positions | sum(attribute='amount_absolute') | round(2) }} PLN</span></div>
                     </div>
                 </div>
 
@@ -25,7 +25,7 @@
                         <div class="col"><span>{{ incexp_position.position_id }} </span></div>
                         <div class="col-4"><span>{{ incexp_position.category.name_pl }} </span></div>
                         <div class="col-4"><span>{{ incexp_position.subcategory.name_pl }} </span></div>
-                        <div class="col "><span>{{ incexp_position.amount_absolute }} </span></div>
+                        <div class="col "><span>{{ incexp_position.amount_absolute }} PLN </span></div>
                     </div>
 
                     <div class="row border-bottom border-black">
