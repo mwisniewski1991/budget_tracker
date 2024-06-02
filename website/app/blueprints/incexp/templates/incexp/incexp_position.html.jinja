@@ -1,0 +1,33 @@
+<div class="container my-2 border border-white rounded">
+    <div class="row my-2">
+
+        <div class="col">
+            <span>1</span>
+        </div>    
+
+        <div class="col">
+            <select class="form-select" id="addincepx-category" name="category-id_2" hx-get="/incexp/subcategories" hx-trigger="load delay:1s, change" hx-target="#addincepx-subcategory" hx-swap="innerHTML">
+            </select>
+        </div>    
+
+        <div class="col">
+            <select class="form-select" id="addincepx-subcategory" name="subcategory-id_2">
+            </select>
+            </div>    
+
+        <div class="col">
+            <input type="number" min="0.00" step="0.01" value=0.00 class="form-control" name="amount_2" >
+        </div>    
+        
+    </div>
+
+    <div class="row my-2">
+        <div class="col">
+            <input type="text"  class="form-control" placeholder="Komentarz" name="comment_2">
+        </div>    
+        <div class="col">
+            <input type="text"  class="form-control" placeholder="Powiązanie" name="connection_2">
+        </div>    
+
+    </div>
+</div>
