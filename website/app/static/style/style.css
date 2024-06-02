@@ -9,3 +9,7 @@
 .position {
     border: 1px dashed black;
 }
+
+.hidden{
+    display: none;
+}
