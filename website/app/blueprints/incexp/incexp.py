@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
 from sqlalchemy import text, and_, select, func, case, alias
 from ... import db
-from ...models import Owners, INCEXP_header, INCEXP_position, Type, Accounts
+from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
@@ -64,3 +64,19 @@ def get_incexp():
 def get_owners_accounts():
     owners = Owners.query.order_by(Owners.id).all()
     return render_template("incexp/owners_accounts_dropdown.html.jinja", owners=owners)
+
+@incexp.route("/categories",  methods=['GET'])
+def get_categories():
+    type_id = request.args.get('type-id', None)
+    if type_id:
+        categories = Category.query.filter_by(type_id= type_id).all()
+        return render_template("incexp/categories_select.html.jinja", categories=categories)
+    return 'Bad request! No parameters', 400
+
+@incexp.route("/subcategories",  methods=['GET'])
+def get_subcategories():
+    category_id = request.args.get('category-id', None)
+    if category_id:
+        subcategories = Subategory.query.filter_by(category_id=category_id).all()
+        return render_template("incexp/categories_select.html.jinja", categories=subcategories)
+    return 'Bad request! No parameters', 400
