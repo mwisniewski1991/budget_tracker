@@ -80,3 +80,7 @@ def get_subcategories():
         subcategories = Subategory.query.filter_by(category_id=category_id).all()
         return render_template("incexp/categories_select.html.jinja", categories=subcategories)
     return 'Bad request! No parameters', 400
+
+@incexp.route("/position",  methods=['GET'])
+def get_position_html():
+    return render_template("incexp/incexp_position.html.jinja")
