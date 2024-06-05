@@ -13,6 +13,7 @@ def create_app():
 
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI')
+    app.config['SECRET_KEY'] = environ.get('FLASK_SECRET_KEY')
 
     db.init_app(app)
     migrate = Migrate(app, db)
