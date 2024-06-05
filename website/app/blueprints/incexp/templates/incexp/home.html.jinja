@@ -81,25 +81,34 @@
         </form>
     </div>  
 
-
+    {# NEW INCEXP #}
     <div class="container my-2 border border-white rounded">
-        <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-form'), 'hidden');">
-            Dodaj rekord
-        </button>   
-        <form class="form" id="incexp-filters-form">
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-form'), 'hidden');">
+                    Dodaj rekord
+                </button>   
+            </div>
+        </div>
+
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_1'), 'hidden');">1</button>
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_2'), 'hidden');">2</button>
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_3'), 'hidden');">3</button>
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_4'), 'hidden');">4</button>
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_5'), 'hidden');">5</button>
+        <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
+
+        <form class="form hidden" id="incexp-add-form">
 
             <div class="row my-2">
                 <div class="col">
-                    <select class="form-select" name="type-id_1" hx-get="/incexp/categories" hx-trigger="load, change" hx-target="#addincepx-category" hx-swap="innerHTML">
-                        <option value=1 selected>Wydatek</option>   
-                        <option value=2>Dochód</option>    
-                    </select>
+                    {{ incexp_header_form.type(class = "form-select", **{'hx-get': 'positions', 'hx-trigger': 'load, change', 'hx-target':'#incexp-add-positions-box', 'hx-swap':'innerHTML'} ) }}
                 </div>
                 <div class="col">
-                    <input type="date"  class="form-control" placeholder="Wpisz datę" name="date_1">
+                    {{ incexp_header_form.date(class = "form-control") }}
                 </div>    
                 <div class="col">
-                    <input type="text"  class="form-control" placeholder="Źródło" name="source_1">
+                    {{ incexp_header_form.source(class = "form-control") }}
                 </div>    
                 <div class="col">
                     <strong>
@@ -108,52 +117,20 @@
                 </div>    
             </div>
             
-            {# POSITION #}
+            {# POSITIONS #}
             <div id="incexp-add-positions-box">
-                <div class="container my-2 border border-white rounded">
-                    <div class="row my-2">
-
-                        <div class="col">
-                            <span>1</span>
-                        </div>    
-
-                        <div class="col">
-                            <select class="form-select" id="addincepx-category" name="category-id_1" hx-get="/incexp/subcategories" hx-trigger="load delay:1s, change" hx-target="#addincepx-subcategory" hx-swap="innerHTML">
-                            </select>
-                        </div>    
-
-                        <div class="col">
-                            <select class="form-select" id="addincepx-subcategory" name="subcategory-id_1">
-                            </select>
-                            </div>    
-
-                        <div class="col">
-                            <input type="number" min="0.00" step="0.01" value=0.00 class="form-control" name="amount_1" >
-                        </div>    
-                        
-                    </div>
-
-                    <div class="row my-2">
-                        <div class="col">
-                            <input type="text"  class="form-control" placeholder="Komentarz" name="comment_1">
-                        </div>    
-                        <div class="col">
-                            <input type="text"  class="form-control" placeholder="Powiązanie" name="connection_1">
-                        </div>    
-
-                    </div>
-                </div>
             </div>
 
             <div class="row my-2">
                 <div class="col">
                     <button type="submit" class="btn btn-primary" >Prześlij</button>
-                    <button class="btn btn-secondary" type="button" hx-get="/incexp/position" hx-trigger="click" hx-target="#incexp-add-positions-box" hx-swap="beforeend">Dodaj pozycję</button>
-                    <button class="btn btn-secondary" type="button" >Usuń pozycję</button>
                 </div>   
             </div>
         </form>
+        
     </div>
+
+ 
 
     {# INCEXP LIST #}
     <div class="container py-2 border border-white rounded">
