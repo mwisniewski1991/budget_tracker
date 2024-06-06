@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, FieldList, FormField, DateField, SelectField, FloatField, DecimalField
+from datetime import datetime
 
 class Incexp_position_form(FlaskForm):
     category = SelectField('Kategoria', choices=[])
@@ -10,6 +11,6 @@ class Incexp_position_form(FlaskForm):
 
 class Incexp_header_form(FlaskForm):
     type = SelectField('Typ', name='type-id', choices=[(1, 'Wydatek'), (2, 'Dochód')], render_kw={})
-    date = DateField('Data')
+    date = DateField('Data', default=datetime.today())
     source = StringField('Source', render_kw={"placeholder": "Źródło"})
     positions = FieldList(FormField(Incexp_position_form), min_entries=6, max_entries=6)
