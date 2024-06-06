@@ -3,9 +3,11 @@ from sqlalchemy import text, and_, select, func, case, alias
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
+from .utils import category_subcategory_decrypt
 import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
+DEFAULT_EMPTY_CHOICE = '00_0000'
 
 incexp = Blueprint (
                     'incexp', 
@@ -62,6 +64,41 @@ def get_incexp():
     incexp_header_form = Incexp_header_form()
 
     return render_template("incexp/home.html.jinja", incexp_list=incexp_list, incexp_header_form=incexp_header_form)
+
+@incexp.route('/', methods=['POST'])
+def add_incexp():
+
+    incexp_header_form = Incexp_header_form()
+
+    new_incexp_header = INCEXP_header(
+        date  = incexp_header_form.date.data,
+        source = incexp_header_form.source.data,
+        owner_id = '1',
+        account_id = '05',
+        type_id = incexp_header_form.type.data,
+    )
+    db.session.add(new_incexp_header)
+    db.session.commit()
+
+    for index, position in enumerate(incexp_header_form.positions):
+        if position.category.data != DEFAULT_EMPTY_CHOICE: 
+
+            category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
+
+            new_incexp_position = INCEXP_position(
+                header_id = new_incexp_header.id,
+                position_id = index + 1,
+                category_id = category_id,
+                subcategory_id = subcategory_id,
+                amount = position.amount.data,
+                comment = position.comment.data,
+                connection = position.connection.data,
+            )
+            db.session.add(new_incexp_position)
+    db.session.commit()
+
+    return redirect("/incexp")
+
 
 @incexp.route('/owners-accounts', methods=['GET'])
 def get_owners_accounts():
