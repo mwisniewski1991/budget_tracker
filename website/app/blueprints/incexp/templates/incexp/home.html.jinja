@@ -98,7 +98,7 @@
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_5'), 'hidden');">5</button>
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
 
-        <form class="form hidden" id="incexp-add-form">
+        <form class="form" id="incexp-add-form" action="/incexp", method="POST">
 
             <div class="row my-2">
                 <div class="col">
