@@ -3,7 +3,7 @@ from sqlalchemy import text, and_, select, func, case, alias
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
-from .utils import category_subcategory_decrypt
+from .utils import category_subcategory_decrypt, category_subcategory_encrypt
 import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
@@ -133,8 +133,8 @@ def get_position_html():
                                     .join(Subategory, Category.id == Subategory.category_id)
                                     .filter(Category.type_id == type_id)
                                 ).all()
-    choices_list = [(f'{cat_sub[0]}_{cat_sub[2]}',  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
-    empty_choice = [('00_0000', '')]
+    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    empty_choice = [(category_subcategory_encrypt('00','0000'), '')]
     choices_list = [*empty_choice, *choices_list]
 
     incexp_header_form = Incexp_header_form()
