@@ -134,6 +134,8 @@ def get_position_html():
                                     .filter(Category.type_id == type_id)
                                 ).all()
     choices_list = [(f'{cat_sub[0]}_{cat_sub[2]}',  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    empty_choice = [('00_0000', '')]
+    choices_list = [*empty_choice, *choices_list]
 
     incexp_header_form = Incexp_header_form()
     for position in incexp_header_form.positions:
