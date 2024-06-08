@@ -112,19 +112,13 @@
 
         <form class="form" id="incexp-add-form" action="/incexp", method="POST">
             
-            <div class="row my-2">
-                <div class="col">
-                <select class="form-select" id="owner_accounts_ids" name="owner_accounts_ids">
-                    {% for owner in owners%}
-                        {% for account in owner.accounts%}
-                            <option value="{{ owner.id }}_{{ account.id }}" 
-                            {% if owner_account_ids == owner.id|string + '_' + account.id  %} selected {% endif %}
-                                >{{ owner.name_pl }} - {{ account.name_pl }} </option>   
-                        {% endfor %}
-                    {% endfor %}
-                </select>
-                </div>
-            </div>
+            {% for owner in owners%}
+                {% for account in owner.accounts%}
+                    {% if owner_account_ids == owner.id|string + '_' + account.id  %} 
+                        <input type="hidden" id="owner_accounts_ids" name="owner_accounts_ids" value={{ owner.id }}_{{account.id}}>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
 
             <div class="row my-2">
                 <div class="col">
