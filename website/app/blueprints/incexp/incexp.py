@@ -61,20 +61,35 @@ def get_incexp():
                     .limit(results_limit)
                    ).all()
 
-    incexp_header_form = Incexp_header_form()
+    owners = Owners.query.order_by(Owners.id).all()
 
-    return render_template("incexp/home.html.jinja", incexp_list=incexp_list, incexp_header_form=incexp_header_form)
+    choices_list = []
+    for owner in owners:
+        for account in owner.accounts:
+            choices_list.append(f'{owner.id}_{account.id}')
+
+    incexp_header_form = Incexp_header_form()
+    incexp_header_form.owner_accounts_ids.choices = choices_list
+
+    return render_template("incexp/home.html.jinja", 
+                            incexp_list=incexp_list, 
+                            incexp_header_form=incexp_header_form, 
+                            owners=owners,
+                            owner_account_ids=owner_account_ids)
 
 @incexp.route('/', methods=['POST'])
 def add_incexp():
 
+    owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
+
     incexp_header_form = Incexp_header_form()
+    owner_id, account_id =  category_subcategory_decrypt(incexp_header_form.owner_accounts_ids.data)
 
     new_incexp_header = INCEXP_header(
         date  = incexp_header_form.date.data,
         source = incexp_header_form.source.data,
-        owner_id = '1',
-        account_id = '05',
+        owner_id = owner_id,
+        account_id = account_id,
         type_id = incexp_header_form.type.data,
     )
     db.session.add(new_incexp_header)
