@@ -7,77 +7,89 @@
     <div  class="container my-2 border border-white rounded">
 
 
-        <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-filters-form'), 'hidden');">
+        <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-filters-details'), 'hidden');">
             Filtruj rekordy
         </button>
 
-        <form class="form hidden" hx-get="/incexp/owners-accounts" id="incexp-filters-form" hx-target="this" hx-swap="afterbegin"  hx-trigger="load">
+        {# <form class="form " hx-get="/incexp/owners-accounts" id="incexp-filters-form" hx-target="this" hx-swap="afterbegin"  hx-trigger="load"> #}
+        <form class="form">
+
+            <select class="form-select my-2" aria-label="Default select example" id="owner-account-ids" name="owner-account-ids">
+                {% for owner in owners%}
+                    {% for account in owner.accounts%}
+                        <option value="{{ owner.id }}_{{ account.id }}" 
+                        {% if owner_account_ids == owner.id|string + '_' + account.id  %} selected {% endif %}
+                            >{{ owner.name_pl }} - {{ account.name_pl }} </option>   
+                    {% endfor %}
+                {% endfor %}
+            </select>
+
+        <div id="incexp-filters-details" class="hidden">
+            <div class="row my-2">
+                <div class="col">
+                    <label for="limit">Ilość rekordów</label>
+                    <select class="form-select" name="limit">
+                        <option value=5>5</option>    
+                        <option value=10 selected>10</option>    
+                        <option value=50>50</option>
+                        <option value=100>100</option>    
+                    </select>
+                </div>
+            </div>
         
-        <div class="row my-2">
-            <div class="col">
-                <label for="limit">Ilość rekordów</label>
-                <select class="form-select" name="limit">
-                    <option value=5>5</option>    
-                    <option value=10 selected>10</option>    
-                    <option value=50>50</option>
-                    <option value=100>100</option>    
-                </select>
+            <div class="row my-2">
+                <div class="col">
+                    <label for="created_date_from">Data od</label>
+                    <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_from">
+                </div>
+                <div class="col">
+                    <label for="created_date_to">Data do</label>
+                    <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_to">
+                </div>
+                <div class="col">
+                    <label for="source">Źródło</label>
+                    <input type="text"  class="form-control" placeholder="Szukaj źródła" name="source">
+                </div>
             </div>
+
+            <div class="row my-2">
+                <div class="col">
+                    <label for="type-id">Typ</label>
+                    <select class="form-select" name="type-id" hx-get="/incexp/categories" hx-trigger="load, change" hx-target="#category" hx-swap="innerHTML">
+                        <option value=1 selected>Wydatek</option>   
+                        <option value=2>Dochód</option>    
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label for="type-id">Kategoria</label>
+                    <select class="form-select" id="category" name="category-id" hx-get="/incexp/subcategories" hx-trigger="change" hx-target="#subcategory" hx-swap="innerHTML">
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label for="type-id">Podkategoria</label>
+                    <select class="form-select" id="subcategory" name="subcategory-id">
+                    </select>
+                </div>
+
+            </div>
+            
+            <div class="row my-2">
+                <div class="col">
+                    <input type="text"  class="form-control" placeholder="Szukaj komentarza" name="comment">
+                </div>
+                <div class="col">
+                    <input type="text"  class="form-control" placeholder="Szukaj powiązania" name="connection">
+                </div>
+            </div>
+
         </div>
-    
-        <div class="row my-2">
-            <div class="col">
-                <label for="created_date_from">Data od</label>
-                <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_from">
+            <div class="row">
+                <div class="col">
+                    <input type="submit"  class="form-control my-2"  value="Wybierz" class="create_edit">
+                </div>
             </div>
-            <div class="col">
-                <label for="created_date_to">Data do</label>
-                <input type="date"  class="form-control" placeholder="Wpisz datę" name="created_date_to">
-            </div>
-            <div class="col">
-                <label for="source">Źródło</label>
-                <input type="text"  class="form-control" placeholder="Szukaj źródła" name="source">
-            </div>
-        </div>
-
-        <div class="row my-2">
-            <div class="col">
-                <label for="type-id">Typ</label>
-                <select class="form-select" name="type-id" hx-get="/incexp/categories" hx-trigger="load, change" hx-target="#category" hx-swap="innerHTML">
-                    <option value=1 selected>Wydatek</option>   
-                    <option value=2>Dochód</option>    
-                </select>
-            </div>
-
-            <div class="col">
-                <label for="type-id">Kategoria</label>
-                <select class="form-select" id="category" name="category-id" hx-get="/incexp/subcategories" hx-trigger="change" hx-target="#subcategory" hx-swap="innerHTML">
-                </select>
-            </div>
-
-            <div class="col">
-                <label for="type-id">Podkategoria</label>
-                <select class="form-select" id="subcategory" name="subcategory-id">
-                </select>
-            </div>
-
-        </div>
-        
-        <div class="row my-2">
-            <div class="col">
-                <input type="text"  class="form-control" placeholder="Szukaj komentarza" name="comment">
-            </div>
-            <div class="col">
-                <input type="text"  class="form-control" placeholder="Szukaj powiązania" name="connection">
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                <input type="submit"  class="form-control my-2"  value="Wybierz" class="create_edit">
-            </div>
-        </div>
-
         </form>
     </div>  
 
@@ -99,6 +111,20 @@
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
 
         <form class="form" id="incexp-add-form" action="/incexp", method="POST">
+            
+            <div class="row my-2">
+                <div class="col">
+                <select class="form-select" id="owner_accounts_ids" name="owner_accounts_ids">
+                    {% for owner in owners%}
+                        {% for account in owner.accounts%}
+                            <option value="{{ owner.id }}_{{ account.id }}" 
+                            {% if owner_account_ids == owner.id|string + '_' + account.id  %} selected {% endif %}
+                                >{{ owner.name_pl }} - {{ account.name_pl }} </option>   
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                </div>
+            </div>
 
             <div class="row my-2">
                 <div class="col">
