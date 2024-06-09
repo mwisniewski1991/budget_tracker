@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, send_from_directory, redirect, jsonify
+from flask import Blueprint, render_template, url_for, request, send_from_directory, redirect, jsonify
 from sqlalchemy import text, and_, select, func, case, alias
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
@@ -17,8 +17,9 @@ incexp = Blueprint (
 
 @incexp.route('/', methods=['GET'])
 def get_incexp():
+
     owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
-    owner_id, account_id = owner_account_ids.split('_')
+    owner_id, account_id = category_subcategory_decrypt(owner_account_ids)
 
     results_limit = request.args.get('limit', 50)
     type_id = request.args.get('type-id', None)
@@ -71,16 +72,16 @@ def get_incexp():
     incexp_header_form = Incexp_header_form()
     incexp_header_form.owner_accounts_ids.choices = choices_list
 
+    logging.warning(owner_account_ids)
     return render_template("incexp/home.html.jinja", 
                             incexp_list=incexp_list, 
                             incexp_header_form=incexp_header_form, 
                             owners=owners,
                             owner_account_ids=owner_account_ids)
 
+
 @incexp.route('/', methods=['POST'])
 def add_incexp():
-
-    owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
 
     incexp_header_form = Incexp_header_form()
     owner_id, account_id =  category_subcategory_decrypt(incexp_header_form.owner_accounts_ids.data)
@@ -112,7 +113,18 @@ def add_incexp():
             db.session.add(new_incexp_position)
     db.session.commit()
 
-    return redirect("/incexp")
+
+    results_limit = request.args.get('limit', 50)
+
+    incexp_list = (INCEXP_header
+                .query
+                .filter(and_(INCEXP_header.owner_id==owner_id, INCEXP_header.account_id==account_id))
+                .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
+                .limit(results_limit)
+                ).all()
+    
+
+    return render_template('incexp/incexp_position_post.html.jinja', incexp_list=incexp_list)
 
 
 @incexp.route('/owners-accounts', methods=['GET'])
