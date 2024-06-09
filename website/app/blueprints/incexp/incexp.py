@@ -124,7 +124,7 @@ def add_incexp():
                 ).all()
     
 
-    return render_template('incexp/incexp_position_post.html.jinja', incexp_list=incexp_list)
+    return render_template('incexp/incexp_list_existing.html.jinja', incexp_list=incexp_list)
 
 
 @incexp.route('/owners-accounts', methods=['GET'])
