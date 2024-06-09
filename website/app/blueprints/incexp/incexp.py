@@ -126,6 +126,12 @@ def add_incexp():
 
     return render_template('incexp/incexp_list_existing.html.jinja', incexp_list=incexp_list)
 
+@incexp.route('/<header_id>', methods=['DELETE'])
+def delete_incexp(header_id):
+    INCEXP_position.query.filter_by(header_id=header_id).delete()
+    INCEXP_header.query.filter_by(id=header_id).delete()
+    db.session.commit()
+    return ""
 
 @incexp.route('/owners-accounts', methods=['GET'])
 def get_owners_accounts():
