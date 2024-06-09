@@ -151,43 +151,11 @@
     </div>
 
  
-
     {# INCEXP LIST #}
     <div class="container py-2 border border-white rounded" id="incexp_list_existing">
-        {% for incexp in incexp_list %}
-            <div class="container my-2 py-2 border border-warning rounded"">
-                <div class="container border border-primary rounded">
-                    <div class="row">
-                        <div class="col"><span>{{ incexp.type.name_pl }}</span></div>
-                        <div class="col-4"><span>{{ incexp.date }}</span></div>
-                        <div class="col-4"><span>{{ incexp.source }}</span></div>
-                        <div class="col"><span>{{ incexp.incexp_positions | sum(attribute='amount_absolute') | round(2) }} PLN</span></div>
-                    </div>
-                </div>
-
-            {% for incexp_position in incexp.incexp_positions %}
-                <div class="container my-2">
-
-                    <div class="row ">
-                        <div class="col"><span>{{ incexp_position.position_id }} </span></div>
-                        <div class="col-4"><span>{{ incexp_position.category.name_pl }} </span></div>
-                        <div class="col-4"><span>{{ incexp_position.subcategory.name_pl }} </span></div>
-                        <div class="col "><span>{{ incexp_position.amount_absolute }} PLN </span></div>
-                    </div>
-
-                    <div class="row border-bottom border-black">
-                        <div class="col">{{ incexp_position.comment }}</div>
-                        <div class="col">{{ incexp_position.connection }}</div>
-                        <div class="col">{{ incexp_position.updated_at_cet.strftime('%Y-%m-%d %H:%M') }}</div>
-                    </div>
-                    
-                </div>
-
-
-            {% endfor %}
-            </div>
-        {% endfor %}
-
+        {% with incexp_list=incexp_list %}
+            {% include "incexp/incexp_list_existing.html.jinja" %}
+        {% endwith %}
     </div>
 
 {% endblock %}
