@@ -110,7 +110,7 @@
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_5'), 'hidden');">5</button>
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
 
-        <form class="form" id="incexp-add-form" action="/incexp", method="POST">
+        <form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit">
             
             {% for owner in owners%}
                 {% for account in owner.accounts%}
@@ -153,7 +153,7 @@
  
 
     {# INCEXP LIST #}
-    <div class="container py-2 border border-white rounded">
+    <div class="container py-2 border border-white rounded" id="incexp_list_existing">
         {% for incexp in incexp_list %}
             <div class="container my-2 py-2 border border-warning rounded"">
                 <div class="container border border-primary rounded">
