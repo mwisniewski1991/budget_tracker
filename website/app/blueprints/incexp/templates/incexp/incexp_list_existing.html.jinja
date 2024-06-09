@@ -1,5 +1,6 @@
 {% for incexp in incexp_list %}
-    <div class="container my-2 py-2 border border-warning rounded"">
+    <div class="container my-2 py-2 border border-warning rounded" id="incexp_{{ incexp.id }}">
+
         <div class="container border border-primary rounded">
             <div class="row">
                 <div class="col"><span>{{ incexp.type.name_pl }}</span></div>
@@ -27,7 +28,9 @@
             
         </div>
 
-
     {% endfor %}
+        <div class="container">
+            <button class="btn btn-danger" hx-delete="/incexp/{{ incexp.id }}" hx-confirm="Czy usunąć?" hx-target="#incexp_{{ incexp.id }}" hx-swap="outerHTML swap:1s">Usuń</button>
+        </div>
     </div>
 {% endfor %}
