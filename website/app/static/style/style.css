@@ -13,3 +13,9 @@
 .hidden{
     display: none;
 }
+
+div.htmx-swapping div {
+    opacity: 0;
+    transition: opacity .25s ease-out;
+}
+  
