@@ -1,10 +1,12 @@
+{% from "incexp/incexp_position_render_catsub.html.jinja" import render_field %}
+
 {% for position in incexp_header_form.positions %}
         <div class="container my-2 border border-white rounded {% if loop.index != 1 %} hidden {% endif %}" id="incexp-add-positions-box_{{loop.index}}">
             <div class="row my-2">
 
                 <div class="col-1"><span>{{ loop.index }}</span></div>    
 
-                <div class="col">{{ position.category(class = "form-select") }}</div>    
+                <div class="col"> {{ render_field(position.category, 1) }}</div>    
 
                 <div class="col">{{ position.amount(class = "form-control") }}</div>    
             </div>
