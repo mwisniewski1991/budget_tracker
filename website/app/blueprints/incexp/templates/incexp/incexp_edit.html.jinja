@@ -9,8 +9,7 @@
 
         <div class="row my-2">
             <div class="col">
-                {{ incexp_header_form.type(class = "form-select", **{'hx-get': '/incexp/categories', 'hx-trigger': 'change', 'hx-target':'#incexp-add-category-box', 'hx-swap':'innerHTML'} ) }}
-                {# {{ incexp_header_form.type(class = "form-select" ) }} #}
+                {{ incexp_header_form.type(class = "form-select", **{'hx-get': '/incexp/cat-sub-options', 'hx-trigger': 'change', 'hx-target':'#incexp-add-catsub-box-1', 'hx-swap':'innerHTML'} ) }}
             </div>
             <div class="col">
                 {{ incexp_header_form.date(class = "form-control") }}
