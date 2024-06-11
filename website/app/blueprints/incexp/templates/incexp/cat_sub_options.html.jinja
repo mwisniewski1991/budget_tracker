@@ -1,0 +1,12 @@
+{% for position in incexp_header_form.positions %}
+    <select id={{position.category.id}} name={{position.category.id}}>
+        {% for option in position.category  %}
+            {% if loop.index == 1%}
+                <option value="00_000" selected>{{option.label}}</option>  
+                {# {{ option(selected = True) }} #}
+            {% else %}
+                {{ option }}
+            {% endif %}
+        {% endfor %}
+    </select>
+{% endfor %}
