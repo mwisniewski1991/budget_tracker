@@ -133,6 +133,71 @@ def delete_incexp(header_id):
     db.session.commit()
     return ""
 
+@incexp.route('/<header_id>/edit', methods=['GET'])
+def get_incexp_edit(header_id):
+    incexp_header_form = Incexp_header_form()
+    incexp = (INCEXP_header
+            .query
+            .filter(INCEXP_header.id==header_id)
+            ).first()
+
+    categories_subcategories = (db.session
+                                .query(Category.id,
+                                        Category.name_pl,
+                                        Subategory.id,
+                                        Subategory.name_pl,
+                                        )
+                                .join(Subategory, Category.id == Subategory.category_id)
+                                .filter(Category.type_id == incexp.type_id)
+                            ).all()
+    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+
+    incexp_header_form.source.data = incexp.source
+    incexp_header_form.date.data = incexp.date
+    incexp_header_form.type.data= incexp.type_id
+
+
+    for position in incexp.incexp_positions:
+        incexp_header_form.positions[position.position_id].category.choices = choices_list
+        incexp_header_form.positions[position.position_id].category.data = category_subcategory_encrypt(position.category_id, position.subcategory_id)
+
+        incexp_header_form.positions[position.position_id].amount.data = position.amount_absolute
+        incexp_header_form.positions[position.position_id].comment.data = position.comment
+        incexp_header_form.positions[position.position_id].connection.data = position.connection
+
+
+    return render_template("incexp/incexp_edit.html.jinja", incexp=incexp, incexp_header_form=incexp_header_form)
+
+@incexp.route('/<header_id>/edit', methods=['POST'])
+def edit_incexp(header_id):
+    
+    incexp_header_form = Incexp_header_form()
+    incexp = (INCEXP_header
+        .query
+        .filter(INCEXP_header.id==header_id)
+        ).first()
+    
+    incexp.date  = incexp_header_form.date.data,
+    incexp.source = incexp_header_form.source.data,
+    incexp.type_id = incexp_header_form.type.data,
+
+    for index, position in enumerate(incexp_header_form.positions):
+        if not position.category.data is None: 
+            logging.warning(index)
+            logging.warning(position.category.data)
+
+            category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
+
+            incexp.incexp_positions[index].category_id = category_id,
+            incexp.incexp_positions[index].subcategory_id = subcategory_id,
+            incexp.incexp_positions[index].amount = position.amount.data,
+            incexp.incexp_positions[index].comment = position.comment.data,
+            incexp.incexp_positions[index].connection = position.connection.data,
+
+    db.session.commit()
+
+    return 'Zmieniono'
+
 @incexp.route('/owners-accounts', methods=['GET'])
 def get_owners_accounts():
     owners = Owners.query.order_by(Owners.id).all()
