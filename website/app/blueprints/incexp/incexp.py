@@ -241,3 +241,26 @@ def get_position_html():
 
 
     return render_template("incexp/incexp_position.html.jinja", incexp_header_form=incexp_header_form)
+
+@incexp.route('/cat-sub-options', methods=['GET'])
+def get_cat_sub_options():
+    type_id = request.args.get('type-id', None)
+    categories_subcategories = (db.session
+                                .query(Category.id,
+                                        Category.name_pl,
+                                        Subategory.id,
+                                        Subategory.name_pl,
+                                        )
+                                .join(Subategory, Category.id == Subategory.category_id)
+                                .filter(Category.type_id == type_id)
+                            ).all()
+
+    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    empty_choice = [(category_subcategory_encrypt('00','0000'), '')]
+    choices_list = [*empty_choice, *choices_list]
+
+    incexp_header_form = Incexp_header_form()
+    for position in incexp_header_form.positions:
+        position.category.choices = choices_list
+
+    return render_template('incexp/cat_sub_options.html.jinja', incexp_header_form=incexp_header_form)
