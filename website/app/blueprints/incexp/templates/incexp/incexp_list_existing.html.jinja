@@ -31,6 +31,7 @@
     {% endfor %}
         <div class="container">
             <button class="btn btn-danger" hx-delete="/incexp/{{ incexp.id }}" hx-confirm="Czy usunąć?" hx-target="#incexp_{{ incexp.id }}" hx-swap="outerHTML swap:1s">Usuń</button>
+            <button class="btn btn-info" onclick=" window.open('/incexp/{{ incexp.id }}/edit','_blank')" >Modifikuj</button>
         </div>
     </div>
 {% endfor %}
