@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="my-2">Wprowadź zmiany</h2>
+
+<div class="container my-2 border border-white rounded">
+
+    {# <form class="form" id="incexp-add-form" hx-post='/incexp/{{ incexp.id }}/edit' hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit"> #}
+    <form class="form" id="incexp-add-form" action='/incexp/{{ incexp.id }}/edit' method="POST">
+
+        <div class="row my-2">
+            <div class="col">
+                {{ incexp_header_form.type(class = "form-select", **{'hx-get': '/incexp/categories', 'hx-trigger': 'change', 'hx-target':'#incexp-add-category-box', 'hx-swap':'innerHTML'} ) }}
+                {# {{ incexp_header_form.type(class = "form-select" ) }} #}
+            </div>
+            <div class="col">
+                {{ incexp_header_form.date(class = "form-control") }}
+            </div>    
+            <div class="col">
+                {{ incexp_header_form.source(class = "form-control") }}
+            </div>    
+            <div class="col">
+                <strong>
+                    <span>PLN</span> 
+                </strong>
+            </div>    
+        </div>
+
+        {# POSITIONS #}
+
+        <div id="incexp-add-positions-box">
+            {% for position in incexp.incexp_positions %}
+
+                <div class="container my-2 border border-white rounded" id="incexp-add-positions-box_{{loop.index}}">
+                    <div class="row my-2">
+
+                        <div class="col-1"><span>{{ position.position_id }}</span></div>    
+
+                        <div class="col">{{ incexp_header_form.positions[position.position_id].category(class = "form-select", id="#incexp-add-category-box") }}</div>    
+
+                        <div class="col">
+                            {{ incexp_header_form.positions[position.position_id].amount(class = "form-control") }}
+                        </div>    
+                    </div>
+
+                    <div class="row my-2">
+                        <div class="col-1"><span></span></div>
+
+                        <div class="col">{{ incexp_header_form.positions[position.position_id].comment(class= "form-control")}}</div>
+
+                        <div class="col">{{ incexp_header_form.positions[position.position_id].connection(class= "form-control")}}</div>    
+
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+
+        <div class="row my-2">
+            <div class="col">
+                <button type="submit" class="btn btn-primary" >Prześlij</button>
+            </div>   
+        </div>
+        
+    </form>
+</div>
+{% endblock %}
