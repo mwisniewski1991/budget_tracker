@@ -122,7 +122,14 @@
 
             <div class="row my-2">
                 <div class="col">
-                    {{ incexp_header_form.type(class = "form-select", **{'hx-get': 'positions', 'hx-trigger': 'load, change', 'hx-target':'#incexp-add-positions-box', 'hx-swap':'innerHTML'} ) }}
+                    {{ incexp_header_form.type(class = "form-select", 
+                                                    **{'hx-get': '/incexp/cat-sub-options', 
+                                                       'hx-trigger': 'change', 
+                                                       'hx-swap':'multi:#positions-0-category:innerHTML,#positions-1-category:innerHTML,#positions-2-category:innerHTML,#positions-3-category:innerHTML,#positions-4-category:innerHTML,#positions-5-category:innerHTML',
+                                                       'hx-ext':"multi-swap",
+                                                       } ) 
+                    
+                    }}
                 </div>
                 <div class="col">
                     {{ incexp_header_form.date(class = "form-control") }}
@@ -138,7 +145,10 @@
             </div>
             
             {# POSITIONS #}
-            <div id="incexp-add-positions-box">
+            <div id="incexp-add-positions-box" >
+                {% with incexp_header_form=incexp_header_form %}
+                    {% include "incexp/incexp_position.html.jinja"%}
+                {% endwith %}
             </div>
 
             <div class="row my-2">
