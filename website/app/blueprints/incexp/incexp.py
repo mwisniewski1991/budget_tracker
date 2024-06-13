@@ -253,11 +253,12 @@ def get_cat_sub_options():
                                         )
                                 .join(Subategory, Category.id == Subategory.category_id)
                                 .filter(Category.type_id == type_id)
+                                .order_by()
                             ).all()
 
     choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
     empty_choice = [(category_subcategory_encrypt('00','0000'), '')]
-    choices_list = [*empty_choice, *choices_list]
+    choices_list = [*empty_choice, *choices_list, *empty_choice]
 
     incexp_header_form = Incexp_header_form()
     for position in incexp_header_form.positions:
