@@ -2,8 +2,7 @@
     <select id={{position.category.id}} name={{position.category.id}}>
         {% for option in position.category  %}
             {% if loop.index == 1%}
-                <option value="00_000" selected>{{option.label}}</option>  
-                {# {{ option(selected = True) }} #}
+                <option value="00_0000" selected="selected">{{option.label}}</option>  
             {% else %}
                 {{ option }}
             {% endif %}
