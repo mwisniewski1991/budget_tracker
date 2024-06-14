@@ -56,7 +56,8 @@
                 <div class="col">
                     <label for="type-id">Typ</label>
                     <select class="form-select" name="type-id" hx-get="/incexp/categories" hx-trigger="load, change" hx-target="#category" hx-swap="innerHTML">
-                        <option value=1 selected>Wydatek</option>   
+                        <option selected></option>
+                        <option value=1 >Wydatek</option>   
                         <option value=2>Dochód</option>    
                     </select>
                 </div>
