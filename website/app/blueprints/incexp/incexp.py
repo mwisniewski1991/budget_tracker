@@ -72,7 +72,6 @@ def get_incexp():
     incexp_header_form = Incexp_header_form()
     incexp_header_form.owner_accounts_ids.choices = choices_list
 
-    logging.warning(owner_account_ids)
     return render_template("incexp/home.html.jinja", 
                             incexp_list=incexp_list, 
                             incexp_header_form=incexp_header_form, 
@@ -183,9 +182,6 @@ def edit_incexp(header_id):
 
     for index, position in enumerate(incexp_header_form.positions):
         if not position.category.data is None: 
-            logging.warning(index)
-            logging.warning(position.category.data)
-
             category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
 
             incexp.incexp_positions[index].category_id = category_id,
