@@ -10,7 +10,15 @@
         <div class="card-group">
             
             {% for account in owner.accounts %}
-                <div class="card mb-3" + colorForOwner(owner.id) style="max-width: 18rem;">
+                <div class="card mb-3 
+                    {%if owner.id == 1 %} bg-success
+                    {%elif owner.id == 2 %} bg-danger
+                    {%elif owner.id == 3 %} bg-warning
+                    {%elif owner.id == 4 %} bg-info
+                    {%else%} bg-secondary
+                    {%endif%}
+                    "  
+                    style="max-width: 18rem;">
                     <div class="card-header"> {{ owner.name }} </div>
                     <div class="card-body">
                         <h5 class="card-title">{{ account.name }}</h5>
