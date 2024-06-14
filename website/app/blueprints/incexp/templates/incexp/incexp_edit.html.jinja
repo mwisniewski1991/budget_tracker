@@ -7,13 +7,10 @@
 
 <div class="container my-2 border border-white rounded">
 
-    {# <form class="form" id="incexp-add-form" hx-post='/incexp/{{ incexp.id }}/edit' hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit"> #}
     <form class="form" id="incexp-add-form" action='/incexp/{{ incexp.id }}/edit' method="POST">
 
         <div class="row my-2">
             <div class="col">
-                {# {{ incexp_header_form.type(class = "form-select", **{'hx-get': '/incexp/cat-sub-options', 'hx-trigger': 'change', 'hx-target':'#incexp-add-catsub-box-1', 'hx-swap':'innerHTML'} ) }} #}
-
                 {{ incexp_header_form.type(class = "form-select", 
                                                     **{'hx-get': '/incexp/cat-sub-options', 
                                                     'hx-trigger': 'change', 
@@ -22,8 +19,6 @@
                                                     } ) 
                 
                 }}
-        
-        
             </div>
             <div class="col">
                 {{ incexp_header_form.date(class = "form-control") }}
@@ -39,7 +34,6 @@
         </div>
 
         {# POSITIONS #}
-
         <div id="incexp-add-positions-box">
             {% for position in incexp.incexp_positions %}
 
