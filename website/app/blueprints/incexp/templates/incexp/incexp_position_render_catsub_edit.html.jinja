@@ -1,0 +1,7 @@
+{% macro render_field(field) %}
+    <select name={{field.id}} id={{field.id}} class="form-select">
+    {%for option in field%}
+        {{option}}
+    {% endfor %}
+    </select>
+{% endmacro %}
