@@ -86,32 +86,32 @@ def add_incexp():
     incexp_header_form = Incexp_header_form()
     owner_id, account_id =  category_subcategory_decrypt(incexp_header_form.owner_accounts_ids.data)
 
-    new_incexp_header = INCEXP_header(
-        date  = incexp_header_form.date.data,
-        source = incexp_header_form.source.data,
-        owner_id = owner_id,
-        account_id = account_id,
-        type_id = incexp_header_form.type.data,
-    )
-    db.session.add(new_incexp_header)
-    db.session.commit()
+    if any([position.amount.data for position in incexp_header_form.positions]):
+        new_incexp_header = INCEXP_header(
+            date  = incexp_header_form.date.data,
+            source = incexp_header_form.source.data,
+            owner_id = owner_id,
+            account_id = account_id,
+            type_id = incexp_header_form.type.data,
+        )
+        db.session.add(new_incexp_header)
+        db.session.commit()
 
-    for index, position in enumerate(incexp_header_form.positions):
-        if position.category.data != DEFAULT_EMPTY_CHOICE: 
+        for index, position in enumerate(incexp_header_form.positions):
+            if position.category.data != DEFAULT_EMPTY_CHOICE: 
+                category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
 
-            category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
-
-            new_incexp_position = INCEXP_position(
-                header_id = new_incexp_header.id,
-                position_id = index + 1,
-                category_id = category_id,
-                subcategory_id = subcategory_id,
-                amount = position.amount.data,
-                comment = position.comment.data,
-                connection = position.connection.data,
-            )
-            db.session.add(new_incexp_position)
-    db.session.commit()
+                new_incexp_position = INCEXP_position(
+                    header_id = new_incexp_header.id,
+                    position_id = index + 1,
+                    category_id = category_id,
+                    subcategory_id = subcategory_id,
+                    amount = position.amount.data,
+                    comment = position.comment.data,
+                    connection = position.connection.data,
+                )
+                db.session.add(new_incexp_position)
+        db.session.commit()
 
 
     results_limit = request.args.get('limit', 50)
