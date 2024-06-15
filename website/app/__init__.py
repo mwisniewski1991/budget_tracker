@@ -3,17 +3,14 @@ from sqlalchemy import text
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from os import environ
-from dotenv import load_dotenv
+import logging
 
 db = SQLAlchemy()
 
 def create_app():
-    # basedir = path.abspath(path.dirname(__file__))
-    # load_dotenv(path.join(basedir, ".env"))
 
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = environ.get('SQLALCHEMY_DATABASE_URI')
-    app.config['SECRET_KEY'] = environ.get('FLASK_SECRET_KEY')
+    app.config.from_prefixed_env()
 
     db.init_app(app)
     migrate = Migrate(app, db)
