@@ -36,6 +36,20 @@ def incexp_query_existings(
                     comment:str = None,
                     connection:str = None,
                 ) -> list:
+    '''
+    Function for query Incomes and Expensed models in complex way.
+
+    :param results_limit: how many records will be return
+    :param owners_id: integer with id of one of owners
+    :param account_id: string with account id from models (e.b '01')
+    :param type_id: id for income (value: 1) or expenses (value 2)
+    :param created_date_from: from which date results will be return
+    :param created_date_to: to which date results will be return
+    :param source: text with source information
+    :param comment: text to filter comment column in model
+    :param connection: text to filter connection column in model
+    :return list: list if app.models class
+    '''
                     
     incexp_list = (INCEXP_header
             .query
