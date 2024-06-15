@@ -11,7 +11,6 @@
             Filtruj rekordy
         </button>
 
-        {# <form class="form " hx-get="/incexp/owners-accounts" id="incexp-filters-form" hx-target="this" hx-swap="afterbegin"  hx-trigger="load"> #}
         <form class="form">
 
             <select class="form-select my-2" aria-label="Default select example" id="owner-account-ids" name="owner-account-ids">
@@ -99,7 +98,7 @@
         <div class="row">
             <div class="col">
                 <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-form'), 'hidden');">
-                    Dodaj rekord
+                    Pokaż/ukryj nowy paragon 
                 </button>   
             </div>
         </div>
