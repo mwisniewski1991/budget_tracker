@@ -3,7 +3,7 @@ from sqlalchemy import text, and_, select, func, case, alias
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
-from .utils import category_subcategory_decrypt, category_subcategory_encrypt
+from .utils import master_slave_decrypt, master_slave_encrypt
 import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
@@ -19,7 +19,7 @@ incexp = Blueprint (
 def get_incexp():
 
     owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
-    owner_id, account_id = category_subcategory_decrypt(owner_account_ids)
+    owner_id, account_id = master_slave_decrypt(owner_account_ids)
 
     results_limit = request.args.get('limit', 50)
     type_id = request.args.get('type-id', None)
@@ -83,7 +83,7 @@ def get_incexp():
 def add_incexp():
 
     incexp_header_form = Incexp_header_form()
-    owner_id, account_id =  category_subcategory_decrypt(incexp_header_form.owner_accounts_ids.data)
+    owner_id, account_id =  master_slave_decrypt(incexp_header_form.owner_accounts_ids.data)
 
     if any([position.amount.data for position in incexp_header_form.positions]):
         new_incexp_header = INCEXP_header(
@@ -98,7 +98,7 @@ def add_incexp():
 
         for index, position in enumerate(incexp_header_form.positions):
             if position.category.data != DEFAULT_EMPTY_CHOICE: 
-                category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
+                category_id, subcategory_id = master_slave_decrypt(position.category.data)    
 
                 new_incexp_position = INCEXP_position(
                     header_id = new_incexp_header.id,
@@ -149,7 +149,7 @@ def get_incexp_edit(header_id):
                                 .join(Subategory, Category.id == Subategory.category_id)
                                 .filter(Category.type_id == incexp.type_id)
                             ).all()
-    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
 
     incexp_header_form.source.data = incexp.source
     incexp_header_form.date.data = incexp.date
@@ -158,7 +158,7 @@ def get_incexp_edit(header_id):
 
     for position in incexp.incexp_positions:
         incexp_header_form.positions[position.position_id].category.choices = choices_list
-        incexp_header_form.positions[position.position_id].category.data = category_subcategory_encrypt(position.category_id, position.subcategory_id)
+        incexp_header_form.positions[position.position_id].category.data = master_slave_encrypt(position.category_id, position.subcategory_id)
 
         incexp_header_form.positions[position.position_id].amount.data = position.amount_absolute
         incexp_header_form.positions[position.position_id].comment.data = position.comment
@@ -182,7 +182,7 @@ def edit_incexp(header_id):
 
     for index, position in enumerate(incexp_header_form.positions):
         if not position.category.data is None: 
-            category_id, subcategory_id = category_subcategory_decrypt(position.category.data)    
+            category_id, subcategory_id = master_slave_decrypt(position.category.data)    
 
             incexp.incexp_positions[index].category_id = category_id,
             incexp.incexp_positions[index].subcategory_id = subcategory_id,
@@ -227,8 +227,8 @@ def get_position_html():
                                     .join(Subategory, Category.id == Subategory.category_id)
                                     .filter(Category.type_id == type_id)
                                 ).all()
-    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
-    empty_choice = [(category_subcategory_encrypt('00','0000'), '')]
+    choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    empty_choice = [(master_slave_encrypt('00','0000'), '')]
     choices_list = [*empty_choice, *choices_list]
 
     incexp_header_form = Incexp_header_form()
@@ -252,8 +252,8 @@ def get_cat_sub_options():
                                 .order_by()
                             ).all()
 
-    choices_list = [(category_subcategory_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
-    empty_choice = [(category_subcategory_encrypt('00','0000'), '')]
+    choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
+    empty_choice = [(master_slave_encrypt('00','0000'), '')]
     choices_list = [*empty_choice, *choices_list, *empty_choice]
 
     incexp_header_form = Incexp_header_form()
