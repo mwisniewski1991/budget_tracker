@@ -154,7 +154,7 @@ def get_categories():
     type_id = request.args.get('type-id', None)
     if type_id:
         categories = Category.query.filter_by(type_id= type_id).all()
-        return render_template("incexp/categories_select.html.jinja", categories=categories)
+        return render_template("incexp/options_select.html.jinja", options=categories)
     return ''
 
 @incexp.route("/subcategories",  methods=['GET'])
@@ -162,7 +162,7 @@ def get_subcategories():
     category_id = request.args.get('category-id', None)
     if category_id:
         subcategories = Subategory.query.filter_by(category_id=category_id).all()
-        return render_template("incexp/categories_select.html.jinja", categories=subcategories)
+        return render_template("incexp/options_select.html.jinja", options=subcategories)
     return 'Bad request! No parameters', 400
 
 @incexp.route("/positions",  methods=['GET'])
