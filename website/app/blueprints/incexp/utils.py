@@ -1,3 +1,4 @@
+from ... import db
 from ...models import INCEXP_header, INCEXP_position
 from sqlalchemy import and_
 
@@ -12,7 +13,7 @@ def master_slave_decrypt(value: str) -> list:
     '''
     return value.split('_')
 
-def master_slave_encrypt(master_value: str, slave_value:str) -> list:
+def master_slave_encrypt(master_value: str, slave_value:str) -> str:
     '''Function encrypt master value (e.g. '01') and slave value (e.g. '0001') into format '01_0001'. 
     Functions use for 
         - category and subcategory (e.g. '01_0001')
@@ -82,3 +83,28 @@ def incexp_query_existings(
                     .limit(results_limit)
                    ).all()
 
+def incexp_modify_new(
+        incexp_header_id: int,
+        incexp_forms: dict,
+    ) -> None:
+
+    incexp = (INCEXP_header
+                .query
+                .filter(INCEXP_header.id==incexp_header_id)
+            ).first()
+
+    incexp.date  = incexp_forms.date.data,
+    incexp.source = incexp_forms.source.data,
+    incexp.type_id = incexp_forms.type.data,
+
+    for index, position in enumerate(incexp_forms.positions):
+        if not position.category.data is None: 
+            category_id, subcategory_id = master_slave_decrypt(position.category.data)    
+
+            incexp.incexp_positions[index].category_id = category_id,
+            incexp.incexp_positions[index].subcategory_id = subcategory_id,
+            incexp.incexp_positions[index].amount = position.amount.data,
+            incexp.incexp_positions[index].comment = position.comment.data,
+            incexp.incexp_positions[index].connection = position.connection.data,
+
+    db.session.commit()
