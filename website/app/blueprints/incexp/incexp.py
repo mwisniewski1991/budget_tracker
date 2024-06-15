@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
-from .utils import master_slave_decrypt, master_slave_encrypt, incexp_query_existings
+from .utils import master_slave_decrypt, master_slave_encrypt, incexp_query_existings, incexp_modify_new
 import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
@@ -141,29 +141,8 @@ def get_incexp_edit(header_id):
 
 @incexp.route('/<header_id>/edit', methods=['POST'])
 def edit_incexp(header_id):
-    
     incexp_header_form = Incexp_header_form()
-    incexp = (INCEXP_header
-        .query
-        .filter(INCEXP_header.id==header_id)
-        ).first()
-    
-    incexp.date  = incexp_header_form.date.data,
-    incexp.source = incexp_header_form.source.data,
-    incexp.type_id = incexp_header_form.type.data,
-
-    for index, position in enumerate(incexp_header_form.positions):
-        if not position.category.data is None: 
-            category_id, subcategory_id = master_slave_decrypt(position.category.data)    
-
-            incexp.incexp_positions[index].category_id = category_id,
-            incexp.incexp_positions[index].subcategory_id = subcategory_id,
-            incexp.incexp_positions[index].amount = position.amount.data,
-            incexp.incexp_positions[index].comment = position.comment.data,
-            incexp.incexp_positions[index].connection = position.connection.data,
-
-    db.session.commit()
-
+    incexp_modify_new(header_id, incexp_header_form)
     return 'Zmieniono'
 
 @incexp.route('/owners-accounts', methods=['GET'])
