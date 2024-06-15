@@ -14,15 +14,7 @@ views = Blueprint ('views', __name__)
 
 @views.route("/", methods=['GET', 'POST'])
 def base():
-    return send_from_directory('../frontend/public', 'index.html')
-
-@views.route("/<path:path>")
-def home(path):
-    return send_from_directory('../frontend/public', path)
-
-@views.route('/aboutme', methods=['GET'])
-def about_me():
-    return render_template("about_me.html")
+    return redirect('/incexp')
 
 @views.route('/api/v1/owners', methods=['GET'])
 def get_owners():
