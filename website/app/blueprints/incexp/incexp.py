@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, current_app
 from ... import db
 from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
@@ -7,7 +7,6 @@ import logging
 
 DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
 DEFAULT_EMPTY_CHOICE = '00_0000'
-DEFAULT_RESULTS_LIMIT  = 50
 
 incexp = Blueprint (
                     'incexp', 
@@ -21,7 +20,7 @@ def get_incexp():
     owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
     owner_id, account_id = master_slave_decrypt(owner_account_ids)
 
-    results_limit = request.args.get('limit', DEFAULT_RESULTS_LIMIT)
+    results_limit = request.args.get('limit', current_app.config['DEFAULT_RESULTS_LIMIT'])
     type_id = request.args.get('type-id', None)
     source = request.args.get('source',  None)
     created_date_from = request.args.get('created_date_from',  None)
@@ -91,7 +90,7 @@ def add_incexp():
                 db.session.add(new_incexp_position)
         db.session.commit()
 
-    results_limit = request.args.get('limit', DEFAULT_RESULTS_LIMIT)
+    results_limit = request.args.get('limit', current_app.config['DEFAULT_RESULTS_LIMIT'])
 
     incexp_list = incexp_query_existings(results_limit, owner_id, account_id)
 
