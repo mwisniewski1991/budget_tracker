@@ -1,4 +1,4 @@
-{% from "incexp/incexp_position_render_catsub.html.jinja" import render_field %}
+{% from "incexp/utils/incexp_position_render_catsub.html.jinja" import render_field %}
 
 {% for position in incexp_header_form.positions %}
         <div class="container my-2 border border-white rounded {% if loop.index != 1 %} hidden {% endif %}" id="incexp-add-positions-box_{{loop.index}}">

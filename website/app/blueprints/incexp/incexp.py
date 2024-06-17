@@ -94,7 +94,7 @@ def add_incexp():
 
     incexp_list = incexp_query_existings(results_limit, owner_id, account_id)
 
-    return render_template('incexp/incexp_list_existing.html.jinja', incexp_list=incexp_list)
+    return render_template('incexp/utils/incexp_list_existing.html.jinja', incexp_list=incexp_list)
 
 @incexp.route('/<header_id>', methods=['DELETE'])
 def delete_incexp(header_id):
@@ -154,7 +154,7 @@ def get_categories():
     type_id = request.args.get('type-id', None)
     if type_id:
         categories = Category.query.filter_by(type_id= type_id).all()
-        return render_template("incexp/options_select.html.jinja", options=categories)
+        return render_template("incexp/utils/options_select.html.jinja", options=categories)
     return ''
 
 @incexp.route("/subcategories",  methods=['GET'])
@@ -162,7 +162,7 @@ def get_subcategories():
     category_id = request.args.get('category-id', None)
     if category_id:
         subcategories = Subategory.query.filter_by(category_id=category_id).all()
-        return render_template("incexp/options_select.html.jinja", options=subcategories)
+        return render_template("incexp/utils/options_select.html.jinja", options=subcategories)
     return ''
 
 @incexp.route("/positions",  methods=['GET'])
@@ -186,7 +186,7 @@ def get_position_html():
         position.category.choices = choices_list
 
 
-    return render_template("incexp/incexp_position.html.jinja", incexp_header_form=incexp_header_form)
+    return render_template("incexp/utils/incexp_position.html.jinja", incexp_header_form=incexp_header_form)
 
 @incexp.route('/cat-sub-options', methods=['GET'])
 def get_cat_sub_options():
@@ -210,4 +210,4 @@ def get_cat_sub_options():
     for position in incexp_header_form.positions:
         position.category.choices = choices_list
 
-    return render_template('incexp/cat_sub_options.html.jinja', incexp_header_form=incexp_header_form)
+    return render_template('incexp/utils/cat_sub_options.html.jinja', incexp_header_form=incexp_header_form)
