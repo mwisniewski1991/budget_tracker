@@ -79,7 +79,7 @@ def incexp_query_existings(
         incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.connection.ilike(f"%{connection}%")))
 
     return (incexp_list
-                    .order_by(INCEXP_header.date.desc(), INCEXP_header.id)
+                    .order_by(INCEXP_header.date.desc(), INCEXP_header.id.desc())
                     .limit(results_limit)
                    ).all()
 
