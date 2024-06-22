@@ -1,4 +1,14 @@
 services:
+  proxy:
+    build: nginx
+    ports:
+      - 81:81
+    depends_on:
+      - website
+    networks:
+      - budget_tracker_network
+
+
   website:
     build: ./website
     env_file:
@@ -10,3 +20,8 @@ services:
       - ./website/app:/website/app
       - ./website/frontend:/website/frontend
     restart: always
+    networks:
+      - budget_tracker_network
+
+networks:
+  budget_tracker_network:
