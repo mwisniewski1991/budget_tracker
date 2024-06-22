@@ -1,5 +1,6 @@
 services:
   proxy:
+    container_name: budget_tracker_nginx
     build: nginx
     ports:
       - 81:81
@@ -10,12 +11,12 @@ services:
 
 
   website:
+    container_name: budget_tracker_website
     build: ./website
     env_file:
       - website/.env
     ports:
       - 5000:5001
-    container_name: budget_tracker_website
     volumes:
       - ./website/app:/website/app
       - ./website/frontend:/website/frontend
