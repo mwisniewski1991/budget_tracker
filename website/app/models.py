@@ -29,6 +29,7 @@ class Category(db.Model):
     id = db.Column(db.String(2), nullable=False, primary_key=True)
     name_pl = db.Column(db.String(100), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'))
+    subcategories = db.relationship("Subategory", backref="category", single_parent=True, order_by="asc(Subategory.id)")
     
 class Subategory(db.Model):
     __tablename__ = 'subcategory'
