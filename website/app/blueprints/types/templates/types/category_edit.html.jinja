@@ -4,7 +4,7 @@
 </head>
 
 
-<form hx-put="{{ '/incomes-categories/%s' %category.id }} " hx-target="this" hx-swap="outerHTML" >
+<form hx-put="{{ '/type/%s/category/%s' %(type_id, category.id) }} " hx-target="this" hx-swap="outerHTML" >
 
     <div class="row border p-2 border-white rounded">
 
@@ -17,7 +17,7 @@
         <div class="col-2">
             <div class="row">
                 <div class="col"><button class="btn btn-primary">Submit</button></div>
-                <div class="col"><button class="btn btn-danger" hx-get="{{ '/incomes-categories/%s/confirmed' %category.id }} " >Cancel</button></div>
+                <div class="col"><button class="btn btn-danger" hx-get="{{ '/type/%s/category/%s/read' %(type_id, category.id) }} " >Cancel</button></div>
             </div>
         </div>
 

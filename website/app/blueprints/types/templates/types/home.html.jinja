@@ -3,7 +3,7 @@
 
     <div class="container py-2 border border-warning rounded">
         <h6>Dodaj nową kategorię dochodów</h6>  
-         <form action='/incomes-categories' method="POST"> 
+         <form action='/type/{{ type_id }}/category' method="POST"> 
             <div class="row">
                 <div class="col-6">
                     <input type="text" id="category_name_pl" name="category_name_pl" placeholder="Wpisz nazwę">
@@ -23,7 +23,7 @@
             <div class="row border p-2 border-primary rounded">
                 <div class="col"><span>{{ category.id }}</span></div>    
                 <div class="col"><span>{{ category.name_pl }}</span></div>    
-                <div class="col"><button hx-get="{{ '/incomes-categories/%s/edit' %category.id }} " class="btn btn-warning">Zmień</button></div>
+                <div class="col"><button hx-get="{{ '/type/%s/category/%s/edit' %(type_id, category.id) }} " class="btn btn-warning">Zmień</button></div>
             </div> 
         </div>   
 
@@ -33,7 +33,7 @@
                     <div class="row p-2 border-bottom border-white" >
                         <div class="col"><span>{{ subcategory.id }}</span></div>    
                         <div class="col"><span>{{ subcategory.name_pl }}</span></div>    
-                        <div class="col"><button hx-get="{{ '/incomes-categories/%s/subcategory/%s/edit' %(category.id, subcategory.id) }} " class="btn btn-warning">Zmień</button></div>
+                        <div class="col"><button hx-get="{{ '/type/%s/category/%s/subcategory/%s/edit' %(type_id, category.id, subcategory.id) }} " class="btn btn-warning">Zmień</button></div>
                     </div> 
                 </div>   
             {% endfor %}
@@ -41,11 +41,11 @@
                             
                 <div class="container py-2 my-2 border border-warning rounded">
                     <h6>Dodaj konto</h4>
-                    <form action="{{ '/incomes-categories/%s/subcategory' %category.id }} " method="POST"> 
+                    <form action="{{ '/type/%s/category/%s/subcategory' %(type_id, category.id) }} " method="POST"> 
 
                         <div class="row">
                             <div class="col-6">
-                                <input type="text" id="account_name_pl" name="account_name_pl" placeholder="Wpisz nazwę">
+                                <input type="text" id="new_subcategory_name" name="new_subcategory_name" placeholder="Wpisz nazwę">
                             </div>
                             <div class="col-2">
                                 <button type="submit" class="btn btn-primary">Prześlij</button>

@@ -7,6 +7,6 @@
   <div class="row border p-2 border-white rounded" hx-target="this" hx-swap="outerHTML">
       <div class="col"><span>{{ subcategory.id }}</span></div>    
       <div class="col"><span>{{ subcategory.name_pl }}</span></div>    
-      <div class="col"><button hx-get="{{ '/incomes-categories/%s/subcategory/%s/edit' %(subcategory.category_id, subcategory.id) }} "  class="btn btn-warning">Zmień</button>
+      <div class="col"><button hx-get="{{ '/type/%s/category/%s/subcategory/%s/edit' %(type_id, subcategory.category_id, subcategory.id) }} "  class="btn btn-warning">Zmień</button>
       </div>
   </div> 

@@ -11,49 +11,63 @@ types = Blueprint (
                     static_folder="static")
 
 @types.route("/<type_id>/category", methods=['GET'])
-def incomes_categories_home(type_id):
+def types_home(type_id):
     categories = Category.query.filter_by(type_id=type_id).order_by(Category.id).all()
-    return render_template("types/home.html.jinja", categories=categories)
+    return render_template("types/home.html.jinja", type_id=type_id, categories=categories)
 
-@types.route('/', methods=['POST'])
-def add_category():
+@types.route('/<type_id>/category', methods=['POST'])
+def add_category(type_id):
     new_category_name = request.form.get('category_name_pl', None)
-    new_category = Category(name_pl=new_category_name, type_id=DEFAULT_TYPE_ID)
+    new_category = Category(name_pl=new_category_name, type_id=type_id)
     db.session.add(new_category)
     db.session.commit()
     return redirect('/incomes-categories')
 
-@types.route('/<category_id>', methods=['PUT'])
-def edit_owners(owner_id):
-    new_owner_name = request.form.get('owner_name_pl', None)
-    owner_existing = Category.query.filter_by(id = owner_id).one()
-    owner_existing.name_pl = new_owner_name
+@types.route('/<type_id>/category/<category_id>', methods=['PUT'])
+def edit_category(type_id, category_id):
+    new_category_name = request.form.get('category_name_pl', None)
+    category = Category.query.filter_by(id = category_id).one()
+    category.name_pl = new_category_name
 
     db.session.commit()
-    return render_template("owners/owners_read.html.jinja", owner=owner_existing)
+    return render_template("types/category_read.html.jinja", type_id=type_id, category=category)
 
-
-@types.route('/<category_id>/edit', methods=['GET'])
-def edit_owners_html(category_id):
+@types.route('/<type_id>/category/<category_id>/edit', methods=['GET'])
+def edit_category_html(type_id, category_id):
     category = Category.query.filter_by(id = category_id).one()
-    return render_template("types/category_edit.html.jinja", category=category)
+    return render_template("types/category_edit.html.jinja", type_id=type_id, category=category)
 
-@types.route('/<category_id>/confirmed', methods=['GET'])
-def confirmed_owners_html(category_id):
+@types.route('/<type_id>/category/<category_id>/read', methods=['GET'])
+def read_category_html(type_id, category_id):
     category = Category.query.filter_by(id = category_id).one()
-    return render_template("types/category_read.html.jinja", category=category)
-
-
+    return render_template("types/category_read.html.jinja", type_id=type_id, category=category)
 
 
 # SUBCATEGORY
+@types.route('/<type_id>/category/<category_id>/subcategory', methods=['POST'])
+def add_subcategory(type_id, category_id):
+    new_subcategory_name = request.form.get('new_subcategory_name', None)
+    new_subcategory = Subategory(category_id=category_id, name_pl=new_subcategory_name)
+    db.session.add(new_subcategory)
+    db.session.commit()
+    return redirect('/incomes-categories')
 
-@types.route('/<category_id>/subcategory/<subcategory_id>/edit', methods=['GET'])
-def edit_accounts_html(category_id, subcategory_id):
+@types.route('/<type_id>/category/<category_id>/subcategory/<subcategory_id>', methods=['PUT'])
+def edit_subcategory(type_id, category_id, subcategory_id):
+    new_subcategory_name = request.form.get('subcategory_name_pl', None)
     subcategory = Subategory.query.filter_by(id=subcategory_id, category_id=category_id).one()
-    return render_template('types/subcategory_edit.html.jinja', subcategory=subcategory)
+    subcategory.name_pl = new_subcategory_name
 
-@types.route('/<category_id>/subcategory/<subcategory_id>/read', methods=['GET'])
-def read_account_html(category_id, subcategory_id):
+    db.session.commit()
+    return render_template('types/subcategory_read.html.jinja', type_id=type_id, subcategory=subcategory)
+
+
+@types.route('/<type_id>/category/<category_id>/subcategory/<subcategory_id>/edit', methods=['GET'])
+def edit_subcategory_html(type_id, category_id, subcategory_id):
     subcategory = Subategory.query.filter_by(id=subcategory_id, category_id=category_id).one()
-    return render_template('types/subcategory_read.html.jinja', subcategory=subcategory)
+    return render_template('types/subcategory_edit.html.jinja', type_id=type_id, subcategory=subcategory)
+
+@types.route('/<type_id>/category/<category_id>/subcategory/<subcategory_id>/read', methods=['GET'])
+def read_subcategory_html(type_id, category_id, subcategory_id):
+    subcategory = Subategory.query.filter_by(id=subcategory_id, category_id=category_id).one()
+    return render_template('types/subcategory_read.html.jinja', type_id=type_id, subcategory=subcategory)
