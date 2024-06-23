@@ -30,13 +30,13 @@ def create_app():
     from .blueprints.accounts_results.accounts_results import accounts_results
     from .blueprints.owners.owners import owners
     from .blueprints.incexp.incexp import incexp
-    from .blueprints.incomes_categories.incomes_categories import incomes_categories
+    from .blueprints.types.types import types
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(accounts_results, url_prefix='/accounts-results')
     app.register_blueprint(owners, url_prefix='/owners')
     app.register_blueprint(incexp, url_prefix='/incexp')
-    app.register_blueprint(incomes_categories, url_prefix='/incomes-categories')
+    app.register_blueprint(types, url_prefix='/type')
 
 
     return app
