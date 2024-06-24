@@ -12,7 +12,7 @@ class Owners(db.Model):
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
-    id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('accounts_id_seq_custom')::text, 2, '0')"))
+    id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('accounts_id_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(50))
     owner_id =db.Column(db.Integer, db.ForeignKey('owners.id'))
 
@@ -26,7 +26,7 @@ class Type(db.Model):
 class Category(db.Model):
     __tablename__ = 'category'
 
-    id = db.Column(db.String(2), nullable=False, primary_key=True)
+    id = db.Column(db.String(2), nullable=False, primary_key=True, server_default=text("lpad(nextval('category_id_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(100), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'))
     subcategories = db.relationship("Subategory", backref="category", single_parent=True, order_by="asc(Subategory.id)")
@@ -34,10 +34,10 @@ class Category(db.Model):
 class Subategory(db.Model):
     __tablename__ = 'subcategory'
 
-    id = db.Column(db.String(4), nullable=False, primary_key=True)
+    id = db.Column(db.String(4), nullable=False, primary_key=True, server_default=text("lpad(nextval('subcategory_id_seq')::text, 4, '0')"))
     name_pl = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.String(2), db.ForeignKey('category.id'), nullable=False)
-    is_fixed_cost = db.Column(db.Integer, nullable=False)
+    is_fixed_cost = db.Column(db.Integer, nullable=False, default=0)
 
 class INCEXP_header(db.Model):
     __tablename__ = 'incexp_header'
