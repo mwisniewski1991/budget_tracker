@@ -58,7 +58,7 @@ class INCEXP_position(db.Model):
     header_id = db.Column(db.Integer, db.ForeignKey('incexp_header.id'), primary_key=True, )
     position_id = db.Column(db.Integer, primary_key=True)
     category_id = db.Column(db.String(2), db.ForeignKey(Category.id), nullable=False)
-    subcategory_id = db.Column(db.String(2), db.ForeignKey(Subategory.id), nullable=False)
+    subcategory_id = db.Column(db.String(4), db.ForeignKey(Subategory.id), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     amount_absolute = db.Column(db.Float, db.Computed("abs(amount)"))
     amount_full = db.Column(db.Integer, db.Computed("amount * 100"), nullable=False)
