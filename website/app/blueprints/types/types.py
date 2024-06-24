@@ -21,7 +21,7 @@ def add_category(type_id):
     new_category = Category(name_pl=new_category_name, type_id=type_id)
     db.session.add(new_category)
     db.session.commit()
-    return redirect('/incomes-categories')
+    return redirect(f'/type/{type_id}/category')
 
 @types.route('/<type_id>/category/<category_id>', methods=['PUT'])
 def edit_category(type_id, category_id):
@@ -50,7 +50,7 @@ def add_subcategory(type_id, category_id):
     new_subcategory = Subategory(category_id=category_id, name_pl=new_subcategory_name)
     db.session.add(new_subcategory)
     db.session.commit()
-    return redirect('/incomes-categories')
+    return redirect(f'/type/{type_id}/category')
 
 @types.route('/<type_id>/category/<category_id>/subcategory/<subcategory_id>', methods=['PUT'])
 def edit_subcategory(type_id, category_id, subcategory_id):
