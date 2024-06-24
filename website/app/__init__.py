@@ -12,19 +12,24 @@ def create_app():
     app = Flask(__name__)
     app.config.from_prefixed_env()
 
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://budget_user:KY]bU)km+}VMV#4,fm@192.168.0.142:5432/budget_tracker'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://mw:mw@192.168.0.101:5432/budget_tracker_test'
-    # app.config['SECRET_KEY'] = '123_456_789'
-    # app.config['DEFAULT_RESULTS_LIMIT'] = 50
-
     db.init_app(app)
     migrate = Migrate(app, db)
 
     from .models import Owners, Accounts, Type, Category, Subategory, INCEXP_header, INCEXP_position
     from .custom_sql import accounts_id_seq_custom, insert_types
+    from .custom_sql import accounts_id_seq_custom, category_id_seq, subcategory_id_seq, insert_types
 
     with app.app_context():
+        
+        db.session.execute(text(accounts_id_seq_custom))
+        db.session.execute(text(category_id_seq))
+        db.session.execute(text(subcategory_id_seq))
+        db.session.commit()
+        
         db.create_all()
+        db.session.execute(text(insert_types))
+
+        db.session.commit()
 
     from .views import views
     from .blueprints.accounts_results.accounts_results import accounts_results
@@ -40,3 +45,6 @@ def create_app():
 
 
     return app
+
+def initital_database_objects():
+    pass
