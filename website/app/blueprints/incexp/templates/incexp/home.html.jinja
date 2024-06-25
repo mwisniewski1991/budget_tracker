@@ -125,6 +125,7 @@
                     {{ incexp_header_form.type(class = "form-select", 
                                                     **{'hx-get': '/incexp/cat-sub-options', 
                                                        'hx-trigger': 'load, change', 
+                                                       'hx-on::after-request': "if(event.target.id == 'incexp-add-form') console.log(event)",
                                                        'hx-swap':'multi:#positions-0-category:innerHTML,#positions-1-category:innerHTML,#positions-2-category:innerHTML,#positions-3-category:innerHTML,#positions-4-category:innerHTML,#positions-5-category:innerHTML',
                                                        'hx-ext':"multi-swap",
                                                        } ) 
@@ -139,7 +140,7 @@
                 </div>    
                 <div class="col">
                     <strong>
-                        <span>PLN</span> 
+                        <span id="incexp-total-amount">PLN</span> 
                     </strong>
                 </div>    
             </div>
@@ -167,5 +168,33 @@
             {% include "incexp/utils/incexp_list_existing.html.jinja" %}
         {% endwith %}
     </div>
+
+<script>
+
+    function sumPositions(){
+        const positionsAmount = document.querySelectorAll(".position-amount");
+        const incexpTotalSpan = document.querySelector("#incexp-total-amount")
+        
+        let sum = 0;
+        positionsAmount.forEach( position => {
+            if (parseFloat(position.value)){
+                sum += parseFloat(position.value);
+            }
+        });
+
+        incexpTotalSpan.innerHTML = `${sum} PLN`;
+    }
+
+    sumPositions()
+
+    const positions = document.querySelectorAll(".position-amount");
+    positions.forEach( position => {
+        position.addEventListener("change", (event) => {
+            sumPositions()
+        })
+    })
+
+
+</script>
 
 {% endblock %}
