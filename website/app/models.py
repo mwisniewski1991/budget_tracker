@@ -43,13 +43,17 @@ class INCEXP_header(db.Model):
     __tablename__ = 'incexp_header'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.DateTime(timezone=True), nullable=False)
+    date = db.Column(db.Date, nullable=False)
     source = db.Column(db.String(100))
     type_id = db.Column(db.Integer, db.ForeignKey(Type.id), nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('owners.id'), nullable=False)
     account_id = db.Column(db.String(2), db.ForeignKey('accounts.id'), nullable=False)
     incexp_positions = db.relationship("INCEXP_position", backref="incexp_header", single_parent=True, order_by="asc(INCEXP_position.position_id)")
-    
+    created_at_cet = db.Column(db.DateTime(), server_default=func.now())
+    created_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
+    updated_at_cet = db.Column(db.DateTime(), server_default=func.now())
+    updated_at_utc = db.Column(db.DateTime(), server_default=text("(now() at time zone 'utc')"))
+
     type = db.relationship('Type', foreign_keys='INCEXP_header.type_id')
 
 class INCEXP_position(db.Model):
