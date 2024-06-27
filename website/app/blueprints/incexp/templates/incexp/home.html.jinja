@@ -110,7 +110,7 @@
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_5'), 'hidden');">5</button>
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
 
-        <form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') this.reset()">
+        <form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); }">
             
             {% for owner in owners%}
                 {% for account in owner.accounts%}
@@ -122,10 +122,9 @@
 
             <div class="row my-2">
                 <div class="col">
-                    {{ incexp_header_form.type(class = "form-select", 
+                    {{ incexp_header_form.type(class = "form-select", id="incexp-type-select",
                                                     **{'hx-get': '/incexp/cat-sub-options', 
                                                        'hx-trigger': 'load, change', 
-                                                       'hx-on::after-request': "if(event.target.id == 'incexp-add-form') console.log(event)",
                                                        'hx-swap':'multi:#positions-0-category:innerHTML,#positions-1-category:innerHTML,#positions-2-category:innerHTML,#positions-3-category:innerHTML,#positions-4-category:innerHTML,#positions-5-category:innerHTML',
                                                        'hx-ext':"multi-swap",
                                                        } ) 
