@@ -24,5 +24,15 @@ services:
     networks:
       - budget_tracker_network
 
+  database:
+    container_name: budget_tracker_db
+    image: postgres:14.12-alpine
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=budget_tracker
+    networks:
+      - budget_tracker_network
+
 networks:
   budget_tracker_network:
