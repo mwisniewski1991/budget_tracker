@@ -1,8 +1,7 @@
 # Budget Tracker
 
 ## Goal
-Create web app for entering income and expenses.
-
+Web app for tracking househole income and expenses.
 
 ## Stack
 - Python
@@ -11,5 +10,13 @@ Create web app for entering income and expenses.
     - WTForms
 - DB
     - PostgreSQL
+- Others:
+    - Docker
+    - Nginx
 
 ## Project Details
+
+
+
+## What I learnt
+- Proper desing of the database schema is very, very, very importany. After start project changes are difficult to implement.
