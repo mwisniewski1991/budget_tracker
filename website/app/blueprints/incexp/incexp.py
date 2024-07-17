@@ -5,7 +5,6 @@ from .forms import Incexp_header_form
 from .utils import master_slave_decrypt, master_slave_encrypt, incexp_query_existings, incexp_modify_new
 import logging
 
-DEFAULT_OWNER_ACCOUNT_IDS = '1_05'
 DEFAULT_EMPTY_CHOICE = '00_0000'
 
 incexp = Blueprint (
@@ -17,7 +16,7 @@ incexp = Blueprint (
 @incexp.route('/', methods=['GET'])
 def get_incexp():
 
-    owner_account_ids = request.args.get('owner-account-ids', DEFAULT_OWNER_ACCOUNT_IDS)
+    owner_account_ids = request.args.get('owner-account-ids', current_app.config['DEFAULT_OWNER_ACCOUNT_IDS'])
     owner_id, account_id = master_slave_decrypt(owner_account_ids)
 
     results_limit = request.args.get('limit', current_app.config['DEFAULT_RESULTS_LIMIT'])
