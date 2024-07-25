@@ -13,14 +13,25 @@
             <input type="text" id="subcategory_name_pl" name="subcategory_name_pl" value="{{subcategory.name_pl}}">
         </div>
 
-        <div class="col-2">
+        <div class="col-3">
             <select name="subcategory_fixed_cost">
-                {% if subcategory.is_fixed_cost == 0 %}
-                    <option selected value="0">Koszt zmienny</option>
-                    <option value="1">Koszt stały</option>
+                {% if type_id == "1" %}
+                    {% if subcategory.is_fixed_cost == 0 %}
+                        <option selected value="0">Koszt zmienny</option>
+                        <option value="1">Koszt stały</option>
+                    {% else %}
+                        <option value="0">Koszt zmienny</option>
+                        <option selected value="1">Koszt stały</option>
+                    {% endif %}
                 {% else %}
-                    <option value="0">Koszt zmienny</option>
-                    <option selected value="1">Koszt stały</option>
+                    {% if subcategory.is_fixed_cost == 0 %}
+                        <option selected value="0">Dochód zmienny</option>
+                        <option value="1">Dochód stały</option>
+                    {% else %}
+                        <option value="0">Dochód zmienny</option>
+                        <option selected value="1">Dochód stały</option>
+                    {% endif %}
+
                 {% endif %}
             </select>
         </div>

@@ -30,36 +30,26 @@
         <div class="container mt-2 border border-white rounded">
             {% for subcategory in category.subcategories %}
                 <div class="container my-2" hx-target="this" hx-swap="innerHTML">
-                    <div class="row p-2 border-bottom border-white" >
-                        <div class="col-2"><span>{{ subcategory.id }}</span></div>    
-                        <div class="col-4"><span>{{ subcategory.name_pl }}</span></div>    
-                        <div class="col-2">
-                            {% if subcategory.is_fixed_cost == 0 %}
-                                <span>Koszt zmienny</span>
-                            {% else %}
-                                <span>Koszt stały</span>
-                            {% endif %}
-                        </div>    
-                        <div class="col-2"><button hx-get="{{ '/type/%s/category/%s/subcategory/%s/edit' %(type_id, category.id, subcategory.id) }} " class="btn btn-warning">Zmień</button></div>
-                    </div> 
+                    {% with subcategory=subcategory %}
+                        {% include "types/subcategory_read.html.jinja" %}
+                    {% endwith %}
                 </div>   
             {% endfor %}
-                
                             
-                <div class="container py-2 my-2 border border-warning rounded">
-                    <h6>Dodaj podkategorię</h4>
-                    <form action="{{ '/type/%s/category/%s/subcategory' %(type_id, category.id) }} " method="POST"> 
+            <div class="container py-2 my-2 border border-warning rounded">
+                <h6>Dodaj podkategorię</h4>
+                <form action="{{ '/type/%s/category/%s/subcategory' %(type_id, category.id) }} " method="POST"> 
 
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" id="new_subcategory_name" name="new_subcategory_name" placeholder="Wpisz nazwę">
-                            </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn btn-primary">Prześlij</button>
-                            </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <input type="text" id="new_subcategory_name" name="new_subcategory_name" placeholder="Wpisz nazwę">
                         </div>
-                    </form>
-                </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-primary">Prześlij</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     {% endfor %}
