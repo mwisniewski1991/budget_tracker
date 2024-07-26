@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 
+    <h2>Kategorie i podkategorie</h2>
+
+
     <div class="container py-2 border border-warning rounded">
-        <h6>Dodaj kategorię</h6>  
-         <form action='/type/{{ type_id }}/category' method="POST"> 
-            <div class="row">
-                <div class="col-6">
-                    <input type="text" id="category_name_pl" name="category_name_pl" placeholder="Wpisz nazwę">
+        <div class="container">
+            <h6>Dodaj kategorię</h6>  
+            <form action='/type/{{ type_id }}/category' method="POST"> 
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" id="category_name_pl" name="category_name_pl" placeholder="Wpisz nazwę">
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary">Prześlij</button>
+                    </div>
                 </div>
-                <div class="col-2">
-                    <button type="submit" class="btn btn-primary">Prześlij</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
 
