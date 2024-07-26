@@ -5,6 +5,8 @@
     <h2>Właściciele i konta</h2>
 
     <div class="container py-2 border border-warning rounded">
+        <div class="container">
+
         <h6>Dodaj nowego właściciela</h6>  
          <form action='/owners' method="POST"> 
             <div class="row">
@@ -15,9 +17,9 @@
                     <button type="submit" class="btn btn-primary">Prześlij</button>
                 </div>
             </div>
-
         </form>
-  
+
+      </div>
     </div>
 
 
@@ -26,21 +28,19 @@
     <div class="container mt-2 py-2 border border-warning rounded">
 
         <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
-            <div class="row border p-2 border-primary rounded">
-                <div class="col"><span>{{ owner.id }}</span></div>    
-                <div class="col"><span>{{ owner.name_pl }}</span></div>    
-                <div class="col"><button hx-get="{{ '/owners/%s/edit' %owner.id }} " class="btn btn-warning">Zmień</button></div>
-            </div> 
+            <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
+            {% with owner=owner %}
+                {% include "owners/owners_read.html.jinja" %}
+            {% endwith %}
+            </div>   
         </div>   
 
         <div class="container mt-2 border border-white rounded">
             {% for account in owner.accounts %}
                 <div class="container my-2" hx-target="this" hx-swap="innerHTML">
-                    <div class="row p-2 border-bottom border-white" >
-                        <div class="col"><span>{{ account.id }}</span></div>    
-                        <div class="col"><span>{{ account.name_pl }}</span></div>    
-                        <div class="col"><button hx-get="{{ '/owners/%s/accounts/%s/edit' %(owner.id, account.id) }} " class="btn btn-warning">Zmień</button></div>
-                    </div> 
+                    {% with account=account %}
+                        {% include "owners/account_read.html.jinja" %}
+                    {% endwith %}
                 </div>   
             {% endfor %}
                 
