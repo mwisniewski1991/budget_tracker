@@ -60,10 +60,14 @@ def add_accounts(owner_id):
 @owners.route('/<owner_id>/accounts/<account_id>', methods=['PUT'])
 def edit_account(owner_id, account_id):
     new_account_name = request.form.get('account_name_pl', None)
+    new_account_is_active = request.form.get('account_is_active', None)
+
     account = Accounts.query.filter_by(id=account_id, owner_id=owner_id).one()
     account.name_pl = new_account_name
+    account.is_active = new_account_is_active
     
     db.session.commit()
+    
     return render_template('owners/account_read.html.jinja', account=account)
 
 @owners.route('/<owner_id>/accounts/<account_id>/edit', methods=['GET'])
