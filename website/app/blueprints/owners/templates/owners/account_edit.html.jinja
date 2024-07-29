@@ -8,7 +8,17 @@
             <input type="text" id="account_name_pl" name="account_name_pl" value="{{account.name_pl}}">
         </div>
 
-        <div class="col-3"></div>
+        <div class="col-3">
+                <select name="account_is_active">
+                    {% if account.is_active == 1 %}
+                        <option selected value="1">Aktywne</option>
+                        <option value="0">Zawieszone</option>
+                    {% else %}
+                        <option value="1">Aktywne</option>
+                        <option selected value="0">Zawieszone</option>
+                    {% endif %}
+                </select>
+            </div>
 
         <div class="col-1 me-2">
             <div class="col"><button class="btn btn-danger" hx-get="{{ '/owners/%s/accounts/%s/read' %(account.owner_id, account.id) }} " >Cancel</button></div>
