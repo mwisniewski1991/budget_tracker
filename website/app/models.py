@@ -15,6 +15,7 @@ class Accounts(db.Model):
     id = db.Column(db.String(2), primary_key=True, server_default=text("lpad(nextval('accounts_id_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(50))
     owner_id =db.Column(db.Integer, db.ForeignKey('owners.id'))
+    is_active = db.Column(db.Integer, server_default=text('1'), nullable=False)
 
 class Type(db.Model):
     __tablename__ = 'type_dict'
@@ -63,8 +64,8 @@ class INCEXP_position(db.Model):
     position_id = db.Column(db.Integer, primary_key=True)
     category_id = db.Column(db.String(2), db.ForeignKey(Category.id), nullable=False)
     subcategory_id = db.Column(db.String(4), db.ForeignKey(Subategory.id), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    amount_absolute = db.Column(db.Float, db.Computed("abs(amount)"))
+    amount = db.Column(db.NUMERIC, nullable=False)
+    amount_absolute = db.Column(db.NUMERIC, db.Computed("abs(amount)"))
     amount_full = db.Column(db.Integer, db.Computed("amount * 100"), nullable=False)
     comment = db.Column(db.String(200))
     connection = db.Column(db.String(100))
