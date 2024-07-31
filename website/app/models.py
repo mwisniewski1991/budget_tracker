@@ -8,7 +8,7 @@ class Owners(db.Model):
     __tablename__ = 'owners'
     id = db.Column(db.Integer, primary_key=True)
     name_pl = db.Column(db.String(50))
-    accounts = db.relationship("Accounts", backref="owners", single_parent=True, order_by="asc(Accounts.id)")
+    accounts = db.relationship("Accounts", backref="owner", single_parent=True, order_by="asc(Accounts.id)")
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
