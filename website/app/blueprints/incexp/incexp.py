@@ -39,12 +39,9 @@ def get_incexp():
         connection,
     )
 
-    # owners = Owners.query.filter(Owners.accounts.any(Accounts.is_active == 1)).order_by(Owners.id).all()
-    
     accounts = Accounts.query.filter(Accounts.is_active == 1).order_by(Accounts.owner_id, Accounts.id).all()
 
     choices_list = [f'{account.owner_id}_{account.id}' for account in accounts]
-
     incexp_header_form = Incexp_header_form()
     incexp_header_form.owner_accounts_ids.choices = choices_list
 
