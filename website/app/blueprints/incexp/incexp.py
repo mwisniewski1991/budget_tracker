@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, current_app
 from ... import db
-from ...models import Owners, INCEXP_header, INCEXP_position, Category, Subategory
+from ...models import Owners, Accounts, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
 from .utils import master_slave_decrypt, master_slave_encrypt, incexp_query_existings, incexp_modify_new
 import logging
@@ -39,13 +39,11 @@ def get_incexp():
         connection,
     )
 
+    # owners = Owners.query.filter(Owners.accounts.any(Accounts.is_active == 1)).order_by(Owners.id).all()
+    
+    accounts = Accounts.query.filter(Accounts.is_active == 1).order_by(Accounts.owner_id, Accounts.id).all()
 
-    owners = Owners.query.order_by(Owners.id).all()
-
-    choices_list = []
-    for owner in owners:
-        for account in owner.accounts:
-            choices_list.append(f'{owner.id}_{account.id}')
+    choices_list = [f'{account.owner_id}_{account.id}' for account in accounts]
 
     incexp_header_form = Incexp_header_form()
     incexp_header_form.owner_accounts_ids.choices = choices_list
@@ -53,7 +51,7 @@ def get_incexp():
     return render_template("incexp/home.html.jinja", 
                             incexp_list=incexp_list, 
                             incexp_header_form=incexp_header_form, 
-                            owners=owners,
+                            accounts=accounts,
                             owner_account_ids=owner_account_ids)
 
 @incexp.route('/', methods=['POST'])
