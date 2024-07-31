@@ -14,12 +14,10 @@
         <form class="form">
 
             <select class="form-select my-2" aria-label="Default select example" id="owner-account-ids" name="owner-account-ids">
-                {% for owner in owners%}
-                    {% for account in owner.accounts%}
-                        <option value="{{ owner.id }}_{{ account.id }}" 
-                        {% if owner_account_ids == owner.id|string + '_' + account.id  %} selected {% endif %}
-                            >{{ owner.name_pl }} - {{ account.name_pl }} </option>   
-                    {% endfor %}
+                {% for account in accounts%}
+                    <option value="{{ account.owner_id }}_{{ account.id }}" 
+                    {% if owner_account_ids == account.owner_id|string + '_' + account.id  %} selected {% endif %}
+                        >{{ account.owner.name_pl }} - {{ account.name_pl }} </option>   
                 {% endfor %}
             </select>
 
@@ -111,13 +109,11 @@
         <button class="btn btn-primary" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-positions-box_6'), 'hidden');">6</button>
 
         <form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); }">
-            
-            {% for owner in owners%}
-                {% for account in owner.accounts%}
-                    {% if owner_account_ids == owner.id|string + '_' + account.id  %} 
-                        <input type="hidden" id="owner_accounts_ids" name="owner_accounts_ids" value={{ owner.id }}_{{account.id}}>
-                    {% endif %}
-                {% endfor %}
+
+            {% for account in accounts%}
+                {% if owner_account_ids == account.owner.id|string + '_' + account.id  %} 
+                    <input type="hidden" id="owner_accounts_ids" name="owner_accounts_ids" value={{ account.owner.id }}_{{account.id}}>
+                {% endif %}
             {% endfor %}
 
             <div class="row my-2">
