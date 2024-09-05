@@ -23,6 +23,7 @@ def get_incexp():
     type_id = request.args.get('type-id', None)
     category_id = request.args.get('category-id', None)
     subcategory_id = request.args.get('subcategory-id', None)
+    amount = request.args.get('amount', None)
     source = request.args.get('source',  None)
     created_date_from = request.args.get('created_date_from',  None)
     created_date_to = request.args.get('created_date_to',  None)
@@ -36,6 +37,7 @@ def get_incexp():
         type_id,
         category_id,
         subcategory_id,
+        amount,
         created_date_from,
         created_date_to,
         source,

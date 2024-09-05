@@ -33,6 +33,7 @@ def incexp_query_existings(
                     type_id:int = None,
                     category_id:str = None,
                     subcategory_id:str = None,
+                    amount: float = None,
                     created_date_from:str = None,
                     created_date_to:str = None,
                     source:str = None,
@@ -48,6 +49,7 @@ def incexp_query_existings(
     :param type_id: id for income (value: 1) or expenses (value 2)
     :param category_id: id for income or expense category (value example: '01')
     :param subcategory_id: id for income or expense subcategory (value example: '0001') 
+    :param amoung: value to filter on position
     :param created_date_from: from which date results will be return
     :param created_date_to: to which date results will be return
     :param source: text with source information
@@ -76,6 +78,9 @@ def incexp_query_existings(
     if created_date_to:
         incexp_list = incexp_list.filter(INCEXP_header.date <= created_date_to)
     
+    if amount:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.amount_absolute == amount))
+
     if source:
         incexp_list = incexp_list.filter(INCEXP_header.source.ilike(f'%{source}%'))
 
