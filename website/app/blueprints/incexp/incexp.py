@@ -118,8 +118,7 @@ def get_incexp_edit(header_id):
 
     incexp_header_form.source.data = incexp.source
     incexp_header_form.date.data = incexp.date
-    incexp_header_form.type.data= incexp.type_id
-
+    incexp_header_form.type.data = str(incexp.type_id)
 
     for position in incexp.incexp_positions:
         incexp_header_form.positions[position.position_id].category.choices = choices_list
