@@ -3,7 +3,13 @@
 
         <div class="container border border-primary rounded">
             <div class="row">
-                <div class="col"><span>{{ incexp.type.name_pl }}</span></div>
+                <div class="col">
+                    {% if incexp.type.id == 1  %}
+                        <span class="type_expense">{{ incexp.type.name_pl }}</span>
+                    {% else %}
+                        <span class="type_income">{{ incexp.type.name_pl }}</span>
+                    {% endif %}
+                </div>
                 <div class="col-4"><span>{{ incexp.date }}</span></div>
                 <div class="col-4"><span>{{ incexp.source }}</span></div>
                 <div class="col"><span>{{ incexp.incexp_positions | sum(attribute='amount_absolute') | round(2) }} PLN</span></div>

@@ -18,4 +18,11 @@ div.htmx-swapping div {
     opacity: 0;
     transition: opacity .25s ease-out;
 }
-  
+
+.type_expense{
+    color: #ff3e00;
+}
+
+.type_income{
+    color: #207407;
+}
