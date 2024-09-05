@@ -21,6 +21,8 @@ def get_incexp():
 
     results_limit = request.args.get('limit', current_app.config['DEFAULT_RESULTS_LIMIT'])
     type_id = request.args.get('type-id', None)
+    category_id = request.args.get('category-id', None)
+    subcategory_id = request.args.get('subcategory-id', None)
     source = request.args.get('source',  None)
     created_date_from = request.args.get('created_date_from',  None)
     created_date_to = request.args.get('created_date_to',  None)
@@ -32,6 +34,8 @@ def get_incexp():
         owner_id,
         account_id,
         type_id,
+        category_id,
+        subcategory_id,
         created_date_from,
         created_date_to,
         source,

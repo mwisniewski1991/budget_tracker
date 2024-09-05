@@ -31,6 +31,8 @@ def incexp_query_existings(
                     owner_id:int, 
                     account_id:str, 
                     type_id:int = None,
+                    category_id:str = None,
+                    subcategory_id:str = None,
                     created_date_from:str = None,
                     created_date_to:str = None,
                     source:str = None,
@@ -44,6 +46,8 @@ def incexp_query_existings(
     :param owners_id: integer with id of one of owners
     :param account_id: string with account id from models (e.b '01')
     :param type_id: id for income (value: 1) or expenses (value 2)
+    :param category_id: id for income or expense category (value example: '01')
+    :param subcategory_id: id for income or expense subcategory (value example: '0001') 
     :param created_date_from: from which date results will be return
     :param created_date_to: to which date results will be return
     :param source: text with source information
@@ -59,6 +63,12 @@ def incexp_query_existings(
 
     if type_id:
         incexp_list = incexp_list.filter(INCEXP_header.type_id == type_id)
+
+    if category_id:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.category_id == category_id))
+
+    if subcategory_id:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.subcategory_id == subcategory_id))
 
     if created_date_from:
         incexp_list = incexp_list.filter(INCEXP_header.date >= created_date_from)
