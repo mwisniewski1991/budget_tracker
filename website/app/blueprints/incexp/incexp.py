@@ -175,6 +175,7 @@ def get_position_html():
                                            )
                                     .join(Subategory, Category.id == Subategory.category_id)
                                     .filter(Category.type_id == type_id)
+                                    # .order_by(Category.id, Subategory.id)
                                 ).all()
     choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
     empty_choice = [(master_slave_encrypt('00','0000'), '')]
@@ -198,7 +199,7 @@ def get_cat_sub_options():
                                         )
                                 .join(Subategory, Category.id == Subategory.category_id)
                                 .filter(Category.type_id == type_id)
-                                .order_by()
+                                .order_by(Category.id, Subategory.id)
                             ).all()
 
     choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
