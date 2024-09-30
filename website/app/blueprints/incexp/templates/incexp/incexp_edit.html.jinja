@@ -28,7 +28,7 @@
             </div>    
             <div class="col">
                 <strong>
-                    <span>PLN</span> 
+                    <span id="incexp-total-amount">PLN</span> 
                 </strong>
             </div>    
         </div>
@@ -47,7 +47,7 @@
                         </div>    
 
                         <div class="col">
-                            {{ incexp_header_form.positions[position.position_id].amount(class = "form-control") }}
+                            {{ incexp_header_form.positions[position.position_id].amount(class = "form-control position-amount") }}
                         </div>    
                     </div>
 
@@ -72,4 +72,33 @@
         
     </form>
 </div>
+
+<script>
+
+    function sumPositions(){
+        const positionsAmount = document.querySelectorAll(".position-amount");
+        const incexpTotalSpan = document.querySelector("#incexp-total-amount")
+        
+        let sum = 0;
+        positionsAmount.forEach( position => {
+            if (parseFloat(position.value)){
+                sum += parseFloat(position.value);
+            }
+        });
+
+        incexpTotalSpan.innerHTML = `${sum} PLN`;
+    }
+
+    sumPositions()
+
+    const positions = document.querySelectorAll(".position-amount");
+    positions.forEach( position => {
+        position.addEventListener("change", (event) => {
+            sumPositions()
+        })
+    })
+
+
+</script>
+
 {% endblock %}
