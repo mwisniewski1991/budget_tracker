@@ -1,0 +1,94 @@
+<div class="row">
+    <div class="col">
+        <button class="btn btn-primary my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-add-form'), 'hidden');">
+            Pokaż/ukryj nowy paragon 
+        </button>   
+    </div>
+</div>
+
+<form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); }">
+
+    {% for account in accounts%}
+        {% if owner_account_ids == account.owner.id|string + '_' + account.id  %} 
+            <input type="hidden" id="owner_accounts_ids" name="owner_accounts_ids" value={{ account.owner.id }}_{{account.id}}>
+        {% endif %}
+    {% endfor %}
+
+    <div class="row my-2">
+        <div class="col">
+            {{ incexp_header_form.date(class = "form-control") }}
+        </div>  
+        <div class="col">
+            {{ incexp_header_form.type(class = "form-select", id="incexp-type-select",
+                                            **{'hx-get': '/incexp/cat-sub-options', 
+                                                'hx-trigger': 'load, change', 
+                                                'hx-swap':'multi:#positions-0-category:innerHTML,#positions-1-category:innerHTML,#positions-2-category:innerHTML,#positions-3-category:innerHTML,#positions-4-category:innerHTML,#positions-5-category:innerHTML',
+                                                'hx-ext':"multi-swap",
+                                                } ) 
+            
+            }}
+        </div>
+        <div class="col">
+            {{ incexp_header_form.source(class = "form-control") }}
+        </div>    
+        <div class="col">
+            <strong>
+                <span id="incexp-total-amount">PLN</span> 
+            </strong>
+        </div>    
+    </div>
+    
+    {# POSITIONS #}
+    <div id="incexp-add-positions-box" >
+        {% with incexp_header_form=incexp_header_form %}
+            {% include "incexp/utils/incexp_position.html.jinja"%}
+        {% endwith %}
+    </div>
+
+
+    <div class="row my-2">
+        <div class="col">
+            <button type="submit" class="btn btn-success" >Prześlij</button>
+        </div>   
+    </div>
+
+    <div class="row my-2">
+        <div class="col">
+            <button id="add-position-btn" class="btn btn-success">Add Position</button>
+            <button id="remove-position-btn" class="btn btn-danger">Remove Position</button>
+        </div>
+    </div>
+
+</form>
+
+<script> 
+    document.addEventListener('DOMContentLoaded', function() {
+        const addPositionBtn = document.getElementById('add-position-btn');
+        const removePositionBtn = document.getElementById('remove-position-btn');
+        let currentPosition = 1;
+
+        addPositionBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const nextPosition = currentPosition + 1;
+            const nextElement = document.getElementById(`incexp-add-positions-box_${nextPosition}`);
+            if (nextElement && nextElement.classList.contains('hidden')) {
+                nextElement.classList.remove('hidden');
+                currentPosition = nextPosition;
+                // Focus on the newly created component
+                nextElement.querySelector('input, select').focus();
+            }
+        });
+
+        removePositionBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (currentPosition > 1) {
+                const currentElement = document.getElementById(`incexp-add-positions-box_${currentPosition}`);
+                currentElement.classList.add('hidden');
+                currentPosition--;
+                // Focus on the previous component after removal
+                const previousElement = document.getElementById(`incexp-add-positions-box_${currentPosition}`);
+                previousElement.querySelector('input, select').focus();
+            }
+        });
+    });
+</script>
