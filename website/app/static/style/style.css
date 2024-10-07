@@ -26,3 +26,16 @@ div.htmx-swapping div {
 .type_income{
     color: #207407;
 }
+
+.header-main-info{
+    font-size: 1.05em;
+    font-weight: bold;
+}
+
+.position-main-info{
+    font-size: 1.05em;
+}
+
+.position-additional-info{
+    font-style: italic;
+}
