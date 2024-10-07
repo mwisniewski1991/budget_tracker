@@ -124,6 +124,9 @@
 
             <div class="row my-2">
                 <div class="col">
+                    {{ incexp_header_form.date(class = "form-control") }}
+                </div>  
+                <div class="col">
                     {{ incexp_header_form.type(class = "form-select", id="incexp-type-select",
                                                     **{'hx-get': '/incexp/cat-sub-options', 
                                                        'hx-trigger': 'load, change', 
@@ -133,9 +136,6 @@
                     
                     }}
                 </div>
-                <div class="col">
-                    {{ incexp_header_form.date(class = "form-control") }}
-                </div>    
                 <div class="col">
                     {{ incexp_header_form.source(class = "form-control") }}
                 </div>    
