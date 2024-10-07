@@ -1,6 +1,6 @@
 from ... import db
 from ...models import INCEXP_header, INCEXP_position
-from sqlalchemy import and_
+from sqlalchemy import and_, func
 
 def master_slave_decrypt(value: str) -> list:
     '''Function decrypt master value (e.g. '01') and slave value (e.g. '0001') from format '01_0001'. 
@@ -39,6 +39,7 @@ def incexp_query_existings(
                     source:str = None,
                     comment:str = None,
                     connection:str = None,
+                    updated_date:str = None,
                 ) -> list:
     '''
     Function for query Incomes and Expensed models in complex way.
@@ -55,6 +56,7 @@ def incexp_query_existings(
     :param source: text with source information
     :param comment: text to filter comment column in model
     :param connection: text to filter connection column in model
+    :param updated_date: text to filter updated_date column in model
     :return list: list if app.models class
     '''
                     
@@ -92,6 +94,9 @@ def incexp_query_existings(
 
     if connection:
         incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(INCEXP_position.connection.ilike(f"%{connection}%")))
+
+    if updated_date:
+        incexp_list = incexp_list.filter(INCEXP_header.incexp_positions.any(func.date(INCEXP_position.updated_at_cet) == updated_date))
 
     return (incexp_list
                     .order_by(INCEXP_header.date.desc(), INCEXP_header.id.desc())
