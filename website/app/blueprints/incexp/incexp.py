@@ -29,7 +29,8 @@ def get_incexp():
     created_date_to = request.args.get('created_date_to',  None)
     comment = request.args.get('comment', None)
     connection = request.args.get('connection', None)
-
+    updated_date = request.args.get('updated_date', None)
+    
     incexp_list = incexp_query_existings(
         results_limit,
         owner_id,
@@ -43,6 +44,7 @@ def get_incexp():
         source,
         comment,
         connection,
+        updated_date,
     )
 
     accounts = Accounts.query.filter(Accounts.is_active == 1).order_by(Accounts.owner_id, Accounts.id).all()
