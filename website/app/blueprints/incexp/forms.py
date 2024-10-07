@@ -12,6 +12,6 @@ class Incexp_position_form(FlaskForm):
 class Incexp_header_form(FlaskForm):
     owner_accounts_ids = SelectField('owner_accounts_ids', choices=[])
     type = SelectField('Typ', name='type-id', choices=[(1, 'Wydatek'), (2, 'Dochód')], render_kw={})
-    date = DateField('Data', default=datetime.today())
+    date = DateField('Data', default=datetime.today)
     source = StringField('Source', render_kw={"placeholder": "Źródło"})
     positions = FieldList(FormField(Incexp_position_form), min_entries=6, max_entries=6)
