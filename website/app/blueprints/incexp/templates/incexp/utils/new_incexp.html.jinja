@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); }">
+<form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); document.getElementById('incexp-date-input').focus();}">
 
     {% for account in accounts%}
         {% if owner_account_ids == account.owner.id|string + '_' + account.id  %} 
@@ -16,7 +16,7 @@
 
     <div class="row my-2">
         <div class="col">
-            {{ incexp_header_form.date(class = "form-control") }}
+            {{ incexp_header_form.date(class = "form-control", id="incexp-date-input") }}
         </div>  
         <div class="col">
             {{ incexp_header_form.type(class = "form-select", id="incexp-type-select",
@@ -90,5 +90,12 @@
                 previousElement.querySelector('input, select').focus();
             }
         });
+    });
+
+    // Add focus on date input after form submission
+    document.getElementById('incexp-add-form').addEventListener('htmx:afterRequest', function(event) {
+        if (event.detail.successful) {
+            document.getElementById('incexp-date-input').focus();
+        }
     });
 </script>
