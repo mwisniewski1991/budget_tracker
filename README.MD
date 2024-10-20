@@ -1,7 +1,7 @@
 # Budget Tracker
 
 ## Goal
-Create and maintain web app for tracking househole income and expenses.
+Create and maintain a web app for tracking household income and expenses.
 
 ## Description
 From many years I track my income and expenses in Excel. It's time to automate this process.\
@@ -22,7 +22,7 @@ I decided to create simple web app where I input my income and expenses and see 
 ## Project Details
 
 ### Web App
-![alt text](readme_utils/webapp_gui1.png)
+![webapp gui](readme_utils/webapp_gui1.png)
 
 
 ### Database
