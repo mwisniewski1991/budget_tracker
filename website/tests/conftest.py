@@ -1,12 +1,13 @@
 import pytest
 import os 
-from website.app import create_app, db
+# from website.app import create_app, db
+from app import create_app, db
 from dotenv import load_dotenv
 
 @pytest.fixture
 def app():
     # Load test environment variables
-    load_dotenv('tests/.env.test')
+    load_dotenv('website/tests/.env.test')
     
     app = create_app()
 
