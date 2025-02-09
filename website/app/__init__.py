@@ -16,13 +16,11 @@ def create_app():
     migrate = Migrate(app, db)
 
     from .models import Owners, Accounts, Type, Category, Subategory, INCEXP_header, INCEXP_position
-    from .custom_sql import accounts_id_seq_custom, insert_types
-    from .custom_sql import accounts_id_seq_custom, category_id_seq, subcategory_id_seq, insert_types
+    from .custom_sql import insert_types
 
     with app.app_context():       
         db.create_all()
         db.session.execute(text(insert_types))
-
         db.session.commit()
 
     from .views import views
