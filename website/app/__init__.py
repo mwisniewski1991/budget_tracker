@@ -19,13 +19,7 @@ def create_app():
     from .custom_sql import accounts_id_seq_custom, insert_types
     from .custom_sql import accounts_id_seq_custom, category_id_seq, subcategory_id_seq, insert_types
 
-    with app.app_context():
-        
-        db.session.execute(text(accounts_id_seq_custom))
-        db.session.execute(text(category_id_seq))
-        db.session.execute(text(subcategory_id_seq))
-        db.session.commit()
-        
+    with app.app_context():       
         db.create_all()
         db.session.execute(text(insert_types))
 
