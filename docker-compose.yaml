@@ -21,12 +21,14 @@ services:
       - ./website/app:/website/app
       - ./website/frontend:/website/frontend
     restart: always
+    depends_on:
+      - database
     networks:
       - budget_tracker_network
 
   database:
     container_name: budget_tracker_db
-    image: postgres:14.12-alpine
+    image: postgres:16.6
     environment:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=user
