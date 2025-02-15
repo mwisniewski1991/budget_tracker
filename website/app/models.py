@@ -1,5 +1,7 @@
 from . import db 
 from sqlalchemy.sql import func, text
+from sqlalchemy import event
+from sqlalchemy.schema import DDL
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 import marshmallow as ma
 from datetime import datetime
@@ -12,20 +14,10 @@ class Owners(db.Model):
 
 class Accounts(db.Model):
     __tablename__ = 'accounts'
-    id = db.Column(db.String(2), primary_key=True)
+    id = db.Column(db.String(2), primary_key=True, server_default=db.text("lpad(nextval('accounts_id_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(50))
     owner_id =db.Column(db.Integer, db.ForeignKey('owners.id'))
     is_active = db.Column(db.Integer, server_default=text('1'), nullable=False)
-
-    # Create sequence if it doesn't exist
-    __table_args__ = (
-        db.DDL(
-            "CREATE SEQUENCE IF NOT EXISTS accounts_id_seq START 1;"
-        ),
-        db.DDL(
-            "ALTER TABLE accounts ALTER COLUMN id SET DEFAULT lpad(nextval('accounts_id_seq')::text, 2, '0');"
-        ),
-    )
 
 class Type(db.Model):
     __tablename__ = 'type_dict'
@@ -36,39 +28,18 @@ class Type(db.Model):
     
 class Category(db.Model):
     __tablename__ = 'category'
-
-    id = db.Column(db.String(2), nullable=False, primary_key=True)
+    id = db.Column(db.String(2), nullable=False, primary_key=True, server_default=db.text("lpad(nextval('category_id_seq')::text, 2, '0')"))
     name_pl = db.Column(db.String(100), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('type_dict.id'))
     subcategories = db.relationship("Subategory", backref="category", single_parent=True, order_by="asc(Subategory.id)")
 
-    # Create sequence if it doesn't exist
-    __table_args__ = (
-        db.DDL(
-            "CREATE SEQUENCE IF NOT EXISTS category_id_seq START 1;"
-        ),
-        db.DDL(
-            "ALTER TABLE category ALTER COLUMN id SET DEFAULT lpad(nextval('category_id_seq')::text, 2, '0');"
-        ),
-    )
-    
 class Subategory(db.Model):
     __tablename__ = 'subcategory'
-
-    id = db.Column(db.String(4), nullable=False, primary_key=True)
+    id = db.Column(db.String(4), nullable=False, primary_key=True, server_default=db.text("lpad(nextval('subcategory_id_seq')::text, 4, '0')"))
     name_pl = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.String(2), db.ForeignKey('category.id'), nullable=False)
     is_fixed_cost = db.Column(db.Integer, nullable=False, default=0)
 
-    # Create sequence if it doesn't exist
-    __table_args__ = (
-        db.DDL(
-            "CREATE SEQUENCE IF NOT EXISTS subcategory_id_seq START 1;"
-        ),
-        db.DDL(
-            "ALTER TABLE subcategory ALTER COLUMN id SET DEFAULT lpad(nextval('subcategory_id_seq')::text, 4, '0');"
-        ),
-    )
 
 class INCEXP_header(db.Model):
     __tablename__ = 'incexp_header'
