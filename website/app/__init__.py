@@ -1,11 +1,16 @@
 from flask import Flask
 from sqlalchemy import text
+# from sqlalchemy.schema import DDL
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from os import environ
 import logging
 
 db = SQLAlchemy()
+
+# Move models import to global level
+from .models import (Owners, Accounts, Type, Category, 
+                    Subategory, INCEXP_header, INCEXP_position)
 
 def create_app():
 
@@ -15,11 +20,16 @@ def create_app():
     db.init_app(app)
     migrate = Migrate(app, db)
 
-    from .models import Owners, Accounts, Type, Category, Subategory, INCEXP_header, INCEXP_position
     from .custom_sql import insert_types
 
     with app.app_context():       
+        db.session.execute(text("CREATE SEQUENCE IF NOT EXISTS accounts_id_seq;"))
+        db.session.execute(text("CREATE SEQUENCE IF NOT EXISTS category_id_seq;"))
+        db.session.execute(text("CREATE SEQUENCE IF NOT EXISTS subcategory_id_seq;"))
+        db.session.commit()
+
         db.create_all()
+        
         db.session.execute(text(insert_types))
         db.session.commit()
 
