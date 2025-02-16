@@ -16,8 +16,10 @@ I decided to create simple web app where I input my income and expenses and see 
 - DB
     - PostgreSQL
 - Others:
+    - Pytest
     - Docker
     - Nginx
+    - Github Actions
 
 ## Project Details
 
