@@ -6,7 +6,7 @@
     </div>
 </div>
 
-<form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit" hx-on::after-request="if(event.target.id == 'incexp-add-form') {this.reset(); htmx.trigger('#incexp-type-select', 'change'); document.getElementById('incexp-date-input').focus();}">
+<form class="form" id="incexp-add-form" hx-post="/incexp" hx-target="#incexp_list_existing" hx-swap="innerHTML" hx-trigger="submit">
 
     {% for account in accounts%}
         {% if owner_account_ids == account.owner.id|string + '_' + account.id  %} 
@@ -65,7 +65,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const addPositionBtn = document.getElementById('add-position-btn');
         const removePositionBtn = document.getElementById('remove-position-btn');
-        let currentPosition = 1;
+        window.currentPosition = 1;  // Make currentPosition global
 
         addPositionBtn.addEventListener('click', function(event) {
             event.preventDefault();
@@ -90,12 +90,21 @@
                 previousElement.querySelector('input, select').focus();
             }
         });
-    });
 
-    // Add focus on date input after form submission
-    document.getElementById('incexp-add-form').addEventListener('htmx:afterRequest', function(event) {
-        if (event.detail.successful) {
-            document.getElementById('incexp-date-input').focus();
-        }
+        // Add form reset handler
+        document.getElementById('incexp-add-form').addEventListener('htmx:afterRequest', function(event) {
+            if (event.target.id === 'incexp-add-form') {
+                this.reset();
+                htmx.trigger('#incexp-type-select', 'change');
+                document.getElementById('incexp-date-input').focus();
+                // Reset all position boxes except first one
+                for(let i = 2; i <= 6; i++) {
+                    const posBox = document.getElementById(`incexp-add-positions-box_${i}`);
+                    if(posBox) posBox.classList.add('hidden');
+                }
+                // Reset currentPosition counter
+                window.currentPosition = 1;
+            }
+        });
     });
 </script>
