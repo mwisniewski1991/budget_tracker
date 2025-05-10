@@ -1,0 +1,5 @@
+# Wydzielić stałe do osobnego pliku
+DEFAULT_RESULTS_LIMIT = 50
+DEFAULT_EMPTY_CHOICE = '00_0000'
+EXPENSE_TYPE_ID = 1
+INCOME_TYPE_ID = 2 

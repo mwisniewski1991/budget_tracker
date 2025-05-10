@@ -3,9 +3,7 @@ from ... import db
 from ...models import Owners, Accounts, INCEXP_header, INCEXP_position, Category, Subategory
 from .forms import Incexp_header_form
 from .utils import master_slave_decrypt, master_slave_encrypt, incexp_query_existings, incexp_modify_new
-import logging
-
-DEFAULT_EMPTY_CHOICE = '00_0000'
+from .constants import DEFAULT_EMPTY_CHOICE, EXPENSE_TYPE_ID, INCOME_TYPE_ID
 
 incexp = Blueprint (
                     'incexp', 
