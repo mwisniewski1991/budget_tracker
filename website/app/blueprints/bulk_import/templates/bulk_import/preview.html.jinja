@@ -112,10 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const formIndex = form.querySelector('.add-position-btn').dataset.formIndex;
         let currentPosition = 1;
 
-        console.log(form);
-        console.log(formIndex);
-        console.log(currentPosition);
-
         // Nasłuchuj zmian w select'ach
         form.addEventListener('change', function(event) {
             if (event.target.classList.contains('form-select')) {
@@ -132,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
             event.preventDefault();
             const nextPosition = currentPosition + 1;
             const nextElement = document.getElementById(`position-box-${formIndex}-${nextPosition}`);
-            console.log(`position-box-${formIndex}-${nextPosition}`);
             
             if (nextElement && nextElement.classList.contains('d-none')) {
                 nextElement.classList.remove('d-none');
