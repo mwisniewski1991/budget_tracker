@@ -7,3 +7,4 @@ python-dotenv==1.0.0
 marshmallow==3.21.2
 marshmallow-sqlalchemy==1.0.0
 Flask-WTF==1.2.1
+pydantic==2.11.4
