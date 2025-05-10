@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="my-2">Import transakcji z CSV</h2>
+
+<div class="container my-2 border border-white rounded">
+    <form action="{{ url_for('bulk_import.preview_bulk_import') }}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="csv_file" class="form-label">Wybierz plik CSV</label>
+            <input class="form-control" type="file" id="csv_file" name="csv_file" accept=".csv">
+        </div>
+
+        <div class="mb-3">
+            <label for="owner-account-ids" class="form-label">Wybierz konto</label>
+            <select class="form-select" id="owner-account-ids" name="owner-account-ids">
+                {% for account in accounts %}
+                    <option value="{{ account.owner_id }}_{{ account.id }}">
+                        {{ account.owner.name_pl }} - {{ account.name_pl }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Podgląd importu</button>
+    </form>
+</div>
+{% endblock %}

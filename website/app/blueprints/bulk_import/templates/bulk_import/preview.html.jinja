@@ -1,0 +1,175 @@
+{% from "bulk_import/utils/incexp_position_render_catsub_preview.html.jinja" import render_field %}
+
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="my-2">Podgląd importowanych transakcji</h2>
+
+<div class="container my-2">
+    {% for form in forms %}
+    {% set form_index = loop.index %}
+    <div class="card mb-3">
+        <div class="card-body">
+
+            <form class="form" 
+                  hx-post="{{ url_for('bulk_import.add_incexp') }}" 
+                  hx-swap="outerHTML"
+                  hx-validate="true">
+                <div class="alert alert-danger validation-message" style="display: none;" role="alert">
+                    Nie wybrano kategorii
+                </div>
+                <input type="hidden" name="owner_accounts_ids" value="{{ request.form['owner-account-ids'] }}">
+                
+                <div class="row">
+                    <div class="col">
+                        {{ form.date(class="form-control") }}
+                    </div>
+                    <div class="col">
+                        {{ form.type(class="form-select",
+                            **{'hx-get': '/incexp/cat-sub-options',
+                            'hx-trigger': 'change',
+                            'hx-swap': 'multi:#categories-' + loop.index|string + '-1:innerHTML,#categories-' + loop.index|string + '-2:innerHTML,#categories-' + loop.index|string + '-3:innerHTML,#categories-' + loop.index|string + '-4:innerHTML,#categories-' + loop.index|string + '-5:innerHTML,#categories-' + loop.index|string + '-6:innerHTML',
+                            'hx-ext': 'multi-swap'
+                            })
+                        }}
+                    </div>
+                    <div class="col">
+                        {{ form.source(class="form-control") }}
+                    </div>
+                </div>
+
+                {# POSITIONS #}
+                <div id="positions-container-{{ loop.index }}">
+                    {% for position in form.positions %}
+                    <div class="container my-2 border border-white rounded position-box {% if loop.index != 1 %} d-none {% endif %}" 
+                         id="position-box-{{ form_index}}-{{ loop.index }}">
+
+                        <div class="row mt-2">
+                            <div class="col-1"><span>{{ loop.index }}</span></div>
+                            
+                            <div class="col" id="categories-{{ form_index}}-{{ loop.index }}">
+                                <select name="{{ position.category.id }}" id="{{ position.category.id }}" class="form-select">
+                                    {% for option in position.category %}
+                                        <option value="{{ option.data }}" {% if option.selected %}selected{% endif %}>{{ option.label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>    
+                            <div class="col">
+                                {{ position.amount(class="form-control position-amount") }}
+                            </div>
+                        </div>
+
+                        <div class="row mt-2">
+                            <div class="col-1"></div>
+                            <div class="col">
+                                {{ position.comment(class="form-control") }}
+                            </div>
+                            <div class="col">
+                                {{ position.connection(class="form-control") }}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <button type="submit" class="btn btn-success submit-btn" disabled>Prześlij</button>
+                    </div>   
+                </div>
+
+                <div class="row my-2">
+                    <div class="col">
+                        <button type="button" class="btn btn-success add-position-btn" data-form-index="{{ loop.index }}">Dodaj pozycję</button>
+                        <button type="button" class="btn btn-danger remove-position-btn" data-form-index="{{ loop.index }}">Usuń pozycję</button>
+                    </div>
+                </div>
+
+            </form>
+            
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Funkcja sprawdzająca czy wszystkie widoczne kategorie są poprawnie wybrane
+    function validateCategories(form) {
+        const selects = form.querySelectorAll('.form-select');
+        for (const select of selects) {
+            if (!select.closest('.d-none') && select.value === '00_0000') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Główna funkcja inicjalizująca listenery
+    function initializeFormListeners(form) {
+
+        const submitBtn = form.querySelector('.submit-btn');
+        const formIndex = form.querySelector('.add-position-btn').dataset.formIndex;
+        let currentPosition = 1;
+
+        console.log(form);
+        console.log(formIndex);
+        console.log(currentPosition);
+
+        // Nasłuchuj zmian w select'ach
+        form.addEventListener('change', function(event) {
+            if (event.target.classList.contains('form-select')) {
+                submitBtn.disabled = !validateCategories(form);
+            }
+        });
+
+        // Inicjalna walidacja
+        submitBtn.disabled = !validateCategories(form);
+
+        // Obsługa dodawania pozycji
+        const addPositionBtn = form.querySelector('.add-position-btn');
+        addPositionBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            const nextPosition = currentPosition + 1;
+            const nextElement = document.getElementById(`position-box-${formIndex}-${nextPosition}`);
+            console.log(`position-box-${formIndex}-${nextPosition}`);
+            
+            if (nextElement && nextElement.classList.contains('d-none')) {
+                nextElement.classList.remove('d-none');
+                currentPosition = nextPosition;
+                const firstInput = nextElement.querySelector('input, select');
+                if (firstInput) firstInput.focus();
+                submitBtn.disabled = true;
+            }
+        });
+
+        // Obsługa usuwania pozycji
+        const removePositionBtn = form.querySelector('.remove-position-btn');
+        removePositionBtn.addEventListener('click', function(event) {
+            event.preventDefault();
+            if (currentPosition > 1) {
+                const currentElement = document.getElementById(`position-box-${formIndex}-${currentPosition}`);
+                currentElement.classList.add('d-none');
+                currentPosition--;
+                const previousElement = document.getElementById(`position-box-${formIndex}-${currentPosition}`);
+                const firstInput = previousElement.querySelector('input, select');
+                if (firstInput) firstInput.focus();
+            }
+        });
+    }
+
+    // Inicjalizacja przy załadowaniu strony
+    document.querySelectorAll('form').forEach(form => {
+        initializeFormListeners(form);
+    });
+
+    // Inicjalizacja po operacjach HTMX
+    document.addEventListener('htmx:afterSwap', function(event) {
+        const form = event.detail.target.querySelector('form');
+        if (form) {
+            initializeFormListeners(form);
+        }
+    });
+});
+</script>
+{% endblock %}
