@@ -12,6 +12,7 @@ db = SQLAlchemy()
 from .models import (Owners, Accounts, Type, Category, 
                     Subategory, INCEXP_header, INCEXP_position)
 
+
 def create_app():
 
     app = Flask(__name__)
@@ -38,13 +39,14 @@ def create_app():
     from .blueprints.owners.owners import owners
     from .blueprints.incexp.incexp import incexp
     from .blueprints.types.types import types
+    from .blueprints.bulk_import.bulk_import import bulk_import
 
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(accounts_results, url_prefix='/accounts-results')
     app.register_blueprint(owners, url_prefix='/owners')
     app.register_blueprint(incexp, url_prefix='/incexp')
     app.register_blueprint(types, url_prefix='/type')
-
+    app.register_blueprint(bulk_import, url_prefix='/bulk-import')
 
     return app
 
