@@ -94,7 +94,7 @@ def add_incexp():
 
     incexp_list = incexp_query_existings(results_limit, owner_id, account_id)
 
-    return render_template('incexp/utils/incexp_list_existing.html.jinja', incexp_list=incexp_list)
+    return render_template('incexp/utils/existing/incexp_list_existing.html.jinja', incexp_list=incexp_list)
 
 @incexp.route('/<header_id>', methods=['DELETE'])
 def delete_incexp(header_id):
