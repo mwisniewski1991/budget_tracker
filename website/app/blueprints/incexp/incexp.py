@@ -143,11 +143,6 @@ def edit_incexp(header_id):
     incexp_modify_new(header_id, incexp_header_form)
     return 'Zmieniono'
 
-@incexp.route('/owners-accounts', methods=['GET'])
-def get_owners_accounts():
-    owners = Owners.query.order_by(Owners.id).all()
-    return render_template("incexp/owners_accounts_dropdown.html.jinja", owners=owners)
-
 @incexp.route("/categories",  methods=['GET'])
 def get_categories():
     type_id = request.args.get('type-id', None)
