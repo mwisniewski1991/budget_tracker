@@ -36,6 +36,11 @@
                     <div class="col">
                         {{ form.source(class="form-control") }}
                     </div>
+                    <div class="col">
+                        <strong>
+                            <span class="incexp-total-amount">0 PLN</span>
+                        </strong>
+                    </div>
                 </div>
 
                 {# POSITIONS #}
@@ -105,6 +110,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
+    // Add sumPositions function
+    function sumPositions(form) {
+        const positionsAmount = form.querySelectorAll(".position-amount");
+        const incexpTotalSpan = form.querySelector(".incexp-total-amount");
+        
+        let sum = 0;
+        positionsAmount.forEach(position => {
+            if (parseFloat(position.value)) {
+                sum += parseFloat(position.value);
+            }
+        });
+
+        incexpTotalSpan.innerHTML = `${sum} PLN`;
+    }
+
     // Główna funkcja inicjalizująca listenery
     function initializeFormListeners(form) {
 
@@ -151,6 +171,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (firstInput) firstInput.focus();
             }
         });
+
+        // Add listener for amount changes
+        form.addEventListener('input', function(event) {
+            if (event.target.classList.contains('position-amount')) {
+                sumPositions(form);
+            }
+        });
+
+        // Initial sum calculation
+        sumPositions(form);
     }
 
     // Inicjalizacja przy załadowaniu strony
