@@ -135,7 +135,7 @@ def get_incexp_edit(header_id):
         incexp_header_form.positions[position.position_id].connection.data = position.connection
 
 
-    return render_template("incexp/incexp_edit.html.jinja", incexp=incexp, incexp_header_form=incexp_header_form)
+    return render_template("incexp/utils/edit_incexp/incexp_edit.html.jinja", incexp=incexp, incexp_header_form=incexp_header_form)
 
 @incexp.route('/<header_id>/edit', methods=['POST'])
 def edit_incexp(header_id):
