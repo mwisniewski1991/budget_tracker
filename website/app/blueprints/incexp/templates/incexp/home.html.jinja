@@ -124,16 +124,21 @@
         const positionsAmount = document.querySelectorAll(".position-amount");
         const incexpTotalSpan = document.querySelector("#incexp-total-amount")
         
-        let sum = 0;
+        // Sumuj w groszach (liczby całkowite) aby uniknąć błędów precyzji zmiennoprzecinkowej
+        let sumInCents = 0;
         positionsAmount.forEach( position => {
             // Konwertuj przecinek na kropkę przed parsowaniem
             let value = position.value.replace(',', '.');
-            if (parseFloat(value)){
-                sum += parseFloat(value);
+            const numValue = parseFloat(value);
+            if (!isNaN(numValue) && numValue !== 0){
+                // Zaokrąglij do grosza (2 miejsca po przecinku) i konwertuj na grosze
+                sumInCents += Math.round(numValue * 100);
             }
         });
 
-        incexpTotalSpan.innerHTML = `${sum} PLN`;
+        // Konwertuj z groszy z powrotem na złotówki
+        const sum = sumInCents / 100;
+        incexpTotalSpan.innerHTML = `${sum.toFixed(2)} PLN`;
     }
 
     sumPositions()
