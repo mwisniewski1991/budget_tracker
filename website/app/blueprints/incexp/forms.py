@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Incexp_position_form(FlaskForm):
     category = SelectField('Kategoria', choices=[])
-    amount = DecimalField('amount', places=2,  render_kw={'step': '0.01', 'min': '0.00', })
+    amount = DecimalField('amount', places=2,  render_kw={'step': '0.01', 'min': '0.00', 'type': 'text', 'inputmode': 'decimal', 'pattern': '[0-9]*[,.]?[0-9]*'})
     comment = StringField('comment', render_kw={"placeholder": "Komentarz"})
     connection = StringField('connection', render_kw={"placeholder": "Powiązanie",})
 

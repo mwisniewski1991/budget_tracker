@@ -126,8 +126,10 @@
         
         let sum = 0;
         positionsAmount.forEach( position => {
-            if (parseFloat(position.value)){
-                sum += parseFloat(position.value);
+            // Konwertuj przecinek na kropkę przed parsowaniem
+            let value = position.value.replace(',', '.');
+            if (parseFloat(value)){
+                sum += parseFloat(value);
             }
         });
 

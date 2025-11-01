@@ -8,7 +8,7 @@
 
                 <div class="col"> {{ render_field(position.category, 1) }}</div>    
 
-                <div class="col">{{ position.amount(class = "form-control position-amount") }}</div>    
+                <div class="col">{{ position.amount(class = "form-control position-amount", **{'data-allow-comma': 'true'}) }}</div>     
             </div>
 
             <div class="row my-2">
@@ -21,3 +21,15 @@
             </div>
         </div>
 {% endfor %}
+
+<script>
+    // Konwertuj przecinek na kropkę przed wysłaniem formularza
+    document.querySelectorAll('.position-amount').forEach(input => {
+        input.addEventListener('blur', function() {
+            // Zostaw przecinek w wartości wyświetlanej, ale zapisz jako kropka w value
+            if (this.value.includes(',')) {
+                this.value = this.value.replace(',', '.');
+            }
+        });
+    });
+</script>
