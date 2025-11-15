@@ -179,6 +179,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+        // Konwertuj przecinek na kropkę przed wysłaniem formularza
+        form.querySelectorAll('.position-amount').forEach(input => {
+            input.addEventListener('blur', function() {
+                // Zostaw przecinek w wartości wyświetlanej, ale zapisz jako kropka w value
+                if (this.value.includes(',')) {
+                    this.value = this.value.replace(',', '.');
+                }
+            });
+        });
+
         // Initial sum calculation
         sumPositions(form);
     }
