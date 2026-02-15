@@ -46,6 +46,15 @@ The application uses the following database tables:
 - **incexp_header** - Main information about transactions (date, type, owner, account, source)
 - **incexp_position** - Detailed transaction information (category, subcategory, amount, comment, connection)
 
+### Dashboard
+
+A Streamlit-based analytics dashboard for visualizing budget data. Provides interactive charts and analysis of income and expenses:
+
+- **Category Analysis** - Monthly spending trends by category
+- **Subcategory Analysis** - Detailed spending breakdown by subcategory
+- **Income vs Expenses** - Comparative analysis and cumulative balance
+- **Month Details** - Detailed transaction view for selected periods
+
 ## Getting Started
 
 ### Prerequisites
