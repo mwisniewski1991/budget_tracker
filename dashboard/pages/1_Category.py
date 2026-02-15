@@ -8,11 +8,11 @@ st.title("In time expenses - Category")
 
 filters = render_sidebar_filters(page="category")
 
-# --- Section 1: All expenses monthly (owner/category filters do NOT affect this) ---
+# --- Section 1: All expenses monthly (category filter does NOT affect this) ---
 st.header("Total monthly expenses")
 
 params_all = {
-    "owner": -1,
+    "owner": filters["owner"],
     "date_from": filters["date_from"],
     "date_to": filters["date_to"],
     "fixed_variable": filters["fixed_variable"],

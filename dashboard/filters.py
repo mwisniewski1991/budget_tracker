@@ -39,14 +39,6 @@ def render_sidebar_filters(page: str) -> dict:
         date_from = st.date_input("Date from", value=default_from)
         date_to = st.date_input("Date to", value=default_to)
 
-        st.subheader("Cost type")
-        fixed_variable = st.radio(
-            "Fixed / Variable",
-            options=["All", "Fixed only", "Variable only"],
-            index=0,
-        )
-
-        # --- Owner filter ---
         st.subheader("Owner")
         owners = _load_owners()
         owner_options = [(-1, "All")] + [(oid, name) for oid, name in owners]
@@ -58,7 +50,14 @@ def render_sidebar_filters(page: str) -> dict:
         )
         owner = owner_options[owner_idx][0]
 
-        # --- Category filter ---
+        st.subheader("Cost type")
+        fixed_variable = st.radio(
+            "Fixed / Variable",
+            options=["All", "Fixed only", "Variable only"],
+            index=0,
+        )
+
+        # --- Page filters ---
         categories = _load_categories()
 
         if page == "category":

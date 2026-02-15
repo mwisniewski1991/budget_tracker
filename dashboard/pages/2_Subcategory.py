@@ -11,11 +11,11 @@ filters = render_sidebar_filters(page="subcategory")
 if filters is None:
     st.stop()
 
-# --- Section 1: All expenses for selected category (owner/subcategory filters do NOT affect this) ---
+# --- Section 1: All expenses for selected category (subcategory filter does NOT affect this) ---
 st.header("Total monthly expenses for category")
 
 params_all = {
-    "owner": -1,
+    "owner": filters["owner"],
     "category": filters["category"],
     "date_from": filters["date_from"],
     "date_to": filters["date_to"],
