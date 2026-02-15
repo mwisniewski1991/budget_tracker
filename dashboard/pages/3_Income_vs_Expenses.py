@@ -13,7 +13,8 @@ params = {
     "date_from": filters["date_from"],
     "date_to": filters["date_to"],
     "fixed_variable": filters["fixed_variable"],
-    "income_expense_categories": filters["income_expense_categories"] if filters["income_expense_categories"] else None,
+    "income_categories": filters["income_categories"] if filters["income_categories"] else None,
+    "expense_categories": filters["expense_categories"] if filters["expense_categories"] else None,
 }
 
 # --- Chart 1: Cumulative balance ---

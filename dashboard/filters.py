@@ -66,25 +66,39 @@ def render_sidebar_filters(page: str) -> dict:
         # --- Page filters ---
         category = None
         subcategory = None
-        income_expense_categories = None
+        income_categories = None
+        expense_categories = None
 
         if page == "income_vs_expenses":
             all_categories = _load_all_categories()
-            st.subheader("Categories")
-            category_options = [(cid, name) for cid, name, _ in all_categories]
-            category_labels = [name for _, name, _ in all_categories]
             
-            # Default: all categories selected
-            default_selected = list(range(len(category_options)))
+            # Separate income and expense categories
+            income_cat_options = [(cid, name) for cid, name, tid in all_categories if tid == 2]
+            expense_cat_options = [(cid, name) for cid, name, tid in all_categories if tid == 1]
             
-            selected_indices = st.multiselect(
-                "Income & Expense Categories",
-                range(len(category_options)),
-                default=default_selected,
-                format_func=lambda i: category_options[i][1],
+            # Income Categories
+            st.subheader("Income Categories")
+            income_default_selected = list(range(len(income_cat_options)))
+            income_selected_indices = st.multiselect(
+                "Income Categories",
+                range(len(income_cat_options)),
+                default=income_default_selected,
+                format_func=lambda i: income_cat_options[i][1],
                 label_visibility="collapsed",
             )
-            income_expense_categories = [category_options[i][0] for i in selected_indices] if selected_indices else []
+            income_categories = [income_cat_options[i][0] for i in income_selected_indices] if income_selected_indices else []
+            
+            # Expense Categories
+            st.subheader("Expense Categories")
+            expense_default_selected = list(range(len(expense_cat_options)))
+            expense_selected_indices = st.multiselect(
+                "Expense Categories",
+                range(len(expense_cat_options)),
+                default=expense_default_selected,
+                format_func=lambda i: expense_cat_options[i][1],
+                label_visibility="collapsed",
+            )
+            expense_categories = [expense_cat_options[i][0] for i in expense_selected_indices] if expense_selected_indices else []
 
         elif page == "category":
             categories = _load_categories()
@@ -132,5 +146,6 @@ def render_sidebar_filters(page: str) -> dict:
         "owner": owner,
         "category": category,
         "subcategory": subcategory,
-        "income_expense_categories": income_expense_categories,
+        "income_categories": income_categories,
+        "expense_categories": expense_categories,
     }

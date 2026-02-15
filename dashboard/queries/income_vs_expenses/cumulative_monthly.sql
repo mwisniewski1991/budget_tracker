@@ -28,9 +28,16 @@ with basic as(
 		OR (%(fixed_variable)s = 'Variable only' AND subcategory.is_fixed_cost = 0)
 	)
 	and (
-		%(income_expense_categories)s IS NULL
-		OR array_length(%(income_expense_categories)s::text[], 1) IS NULL
-		OR incexp_position.category_id = ANY(%(income_expense_categories)s::text[])
+		(incexp_header.type_id = 2 AND (
+			%(income_categories)s IS NULL
+			OR array_length(%(income_categories)s::text[], 1) IS NULL
+			OR incexp_position.category_id = ANY(%(income_categories)s::text[])
+		))
+		OR (incexp_header.type_id = 1 AND (
+			%(expense_categories)s IS NULL
+			OR array_length(%(expense_categories)s::text[], 1) IS NULL
+			OR incexp_position.category_id = ANY(%(expense_categories)s::text[])
+		))
 	)
 )
 ,basic_grouped as (
