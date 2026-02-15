@@ -41,35 +41,35 @@ def render_sidebar_filters(page: str) -> dict:
     page: "category" or "subcategory"
     """
     with st.sidebar:
-        st.header("Filters")
+        st.header("Filtry")
 
         # --- Global filters (not for month_details page) ---
         if page != "month_details":
-            st.subheader("Date range")
+            st.subheader("Zakres dat")
             default_to = date.today().replace(day=1) + relativedelta(months=1)
             default_from = default_to - relativedelta(months=12)
 
-            date_from = st.date_input("Date from", value=default_from)
-            date_to = st.date_input("Date to", value=default_to)
+            date_from = st.date_input("Data od", value=default_from)
+            date_to = st.date_input("Data do", value=default_to)
         else:
             date_from = None
             date_to = None
 
-        st.subheader("Owner")
+        st.subheader("Właściciel")
         owners = _load_owners()
-        owner_options = [(-1, "All")] + [(oid, name) for oid, name in owners]
+        owner_options = [(-1, "Wszystkie")] + [(oid, name) for oid, name in owners]
         owner_idx = st.selectbox(
-            "Owner",
+            "Właściciel",
             range(len(owner_options)),
             format_func=lambda i: owner_options[i][1],
             label_visibility="collapsed",
         )
         owner = owner_options[owner_idx][0]
 
-        st.subheader("Cost type")
+        st.subheader("Typ kosztu")
         fixed_variable = st.radio(
-            "Fixed / Variable",
-            options=["All", "Fixed only", "Variable only"],
+            "Stałe / Zmienne",
+            options=["Wszystkie", "Tylko stałe", "Tylko zmienne"],
             index=0,
         )
 
@@ -88,16 +88,16 @@ def render_sidebar_filters(page: str) -> dict:
             current_year = date.today().year
             current_month = date.today().month
             
-            st.subheader("Year")
+            st.subheader("Rok")
             if not years:
-                st.warning("No years found.")
+                st.warning("Nie znaleziono lat.")
                 return None
             # Find current year index or default to first
             year_idx = 0
             if current_year in years:
                 year_idx = years.index(current_year)
             year = st.selectbox(
-                "Year",
+                "Rok",
                 range(len(years)),
                 index=year_idx,
                 format_func=lambda i: str(years[i]),
@@ -105,11 +105,11 @@ def render_sidebar_filters(page: str) -> dict:
             )
             year = str(years[year])
             
-            st.subheader("Month")
-            month_options = [(-1, "All")] + [(i, str(i)) for i in range(1, 13)]
+            st.subheader("Miesiąc")
+            month_options = [(-1, "Wszystkie")] + [(i, str(i)) for i in range(1, 13)]
             month_idx = current_month  # Index in month_options (0=All, 1=Jan, 2=Feb, etc.)
             month = st.selectbox(
-                "Month",
+                "Miesiąc",
                 range(len(month_options)),
                 index=month_idx,
                 format_func=lambda i: month_options[i][1],
@@ -117,11 +117,11 @@ def render_sidebar_filters(page: str) -> dict:
             )
             month = month_options[month][0]
             
-            st.subheader("Owner")
+            st.subheader("Właściciel")
             owners = _load_owners()
-            owner_options = [(-1, "All")] + [(oid, name) for oid, name in owners]
+            owner_options = [(-1, "Wszystkie")] + [(oid, name) for oid, name in owners]
             owner_idx = st.selectbox(
-                "Owner",
+                "Właściciel",
                 range(len(owner_options)),
                 format_func=lambda i: owner_options[i][1],
                 label_visibility="collapsed",
@@ -129,10 +129,10 @@ def render_sidebar_filters(page: str) -> dict:
             )
             owner = owner_options[owner_idx][0]
             
-            st.subheader("Income or Expenses")
-            type_options = [(1, "Expenses"), (2, "Income")]
+            st.subheader("Przychody lub Wydatki")
+            type_options = [(1, "Wydatki"), (2, "Przychody")]
             type_idx = st.selectbox(
-                "Income or Expenses",
+                "Przychody lub Wydatki",
                 range(len(type_options)),
                 index=0,  # Default to Expenses
                 format_func=lambda i: type_options[i][1],
@@ -140,7 +140,7 @@ def render_sidebar_filters(page: str) -> dict:
             )
             type_id = type_options[type_idx][0]
             
-            st.subheader("Category")
+            st.subheader("Kategoria")
             all_categories = _load_all_categories()
             # Filter categories based on selected type_id
             if type_id == 1:  # Expenses
@@ -148,23 +148,23 @@ def render_sidebar_filters(page: str) -> dict:
             else:  # Income
                 cat_options_list = [(cid, name) for cid, name, tid in all_categories if tid == 2]
             
-            cat_options = [("All", "All")] + cat_options_list
+            cat_options = [("All", "Wszystkie")] + cat_options_list
             cat_idx = st.selectbox(
-                "Category",
+                "Kategoria",
                 range(len(cat_options)),
                 format_func=lambda i: cat_options[i][1],
                 label_visibility="collapsed",
             )
             category = cat_options[cat_idx][0]
             
-            st.subheader("Subcategory")
+            st.subheader("Podkategoria")
             if category != "All":
                 subcategories = _load_subcategories(category)
-                sub_options = [("All", "All")] + [(sid, name) for sid, name in subcategories]
+                sub_options = [("All", "Wszystkie")] + [(sid, name) for sid, name in subcategories]
             else:
-                sub_options = [("All", "All")]
+                sub_options = [("All", "Wszystkie")]
             sub_idx = st.selectbox(
-                "Subcategory",
+                "Podkategoria",
                 range(len(sub_options)),
                 format_func=lambda i: sub_options[i][1],
                 label_visibility="collapsed",
@@ -179,10 +179,10 @@ def render_sidebar_filters(page: str) -> dict:
             expense_cat_options = [(cid, name) for cid, name, tid in all_categories if tid == 1]
             
             # Income Categories
-            st.subheader("Income Categories")
+            st.subheader("Kategorie przychodów")
             income_default_selected = list(range(len(income_cat_options)))
             income_selected_indices = st.multiselect(
-                "Income Categories",
+                "Kategorie przychodów",
                 range(len(income_cat_options)),
                 default=income_default_selected,
                 format_func=lambda i: income_cat_options[i][1],
@@ -191,10 +191,10 @@ def render_sidebar_filters(page: str) -> dict:
             income_categories = [income_cat_options[i][0] for i in income_selected_indices] if income_selected_indices else []
             
             # Expense Categories
-            st.subheader("Expense Categories")
+            st.subheader("Kategorie wydatków")
             expense_default_selected = list(range(len(expense_cat_options)))
             expense_selected_indices = st.multiselect(
-                "Expense Categories",
+                "Kategorie wydatków",
                 range(len(expense_cat_options)),
                 default=expense_default_selected,
                 format_func=lambda i: expense_cat_options[i][1],
@@ -204,10 +204,10 @@ def render_sidebar_filters(page: str) -> dict:
 
         elif page == "category":
             categories = _load_categories()
-            st.subheader("Category")
-            cat_options = [("-1", "All")] + [(cid, name) for cid, name in categories]
+            st.subheader("Kategoria")
+            cat_options = [("-1", "Wszystkie")] + [(cid, name) for cid, name in categories]
             cat_idx = st.selectbox(
-                "Category",
+                "Kategoria",
                 range(len(cat_options)),
                 format_func=lambda i: cat_options[i][1],
                 label_visibility="collapsed",
@@ -217,34 +217,42 @@ def render_sidebar_filters(page: str) -> dict:
 
         elif page == "subcategory":
             categories = _load_categories()
-            st.subheader("Category")
+            st.subheader("Kategoria")
             cat_options = [(cid, name) for cid, name in categories]
             if not cat_options:
-                st.warning("No categories found.")
+                st.warning("Nie znaleziono kategorii.")
                 return None
             cat_idx = st.selectbox(
-                "Category",
+                "Kategoria",
                 range(len(cat_options)),
                 format_func=lambda i: cat_options[i][1],
                 label_visibility="collapsed",
             )
             category = cat_options[cat_idx][0]
 
-            st.subheader("Subcategory")
+            st.subheader("Podkategoria")
             subcategories = _load_subcategories(category)
-            sub_options = [("-1", "All")] + [(sid, name) for sid, name in subcategories]
+            sub_options = [("-1", "Wszystkie")] + [(sid, name) for sid, name in subcategories]
             sub_idx = st.selectbox(
-                "Subcategory",
+                "Podkategoria",
                 range(len(sub_options)),
                 format_func=lambda i: sub_options[i][1],
                 label_visibility="collapsed",
             )
             subcategory = sub_options[sub_idx][0]
 
+    # Map Polish fixed_variable values to English for SQL queries
+    fixed_variable_mapping = {
+        "Wszystkie": "All",
+        "Tylko stałe": "Fixed only",
+        "Tylko zmienne": "Variable only"
+    }
+    fixed_variable_value = fixed_variable_mapping.get(fixed_variable, fixed_variable) if fixed_variable else None
+    
     result = {
         "date_from": date_from if page != "month_details" else None,
         "date_to": date_to if page != "month_details" else None,
-        "fixed_variable": fixed_variable if page != "month_details" else None,
+        "fixed_variable": fixed_variable_value if page != "month_details" else None,
         "owner": owner,
         "category": category,
         "subcategory": subcategory,

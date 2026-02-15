@@ -1,12 +1,12 @@
 import streamlit as st
 
 st.set_page_config(
-    page_title="Budget Dashboard",
+    page_title="Budżet",
     layout="wide",
 )
 
-st.title("Budget Dashboard")
-st.markdown("Select a page from the sidebar to view expense charts.")
+st.title("Panel Budżetowy")
+st.markdown("Wybierz stronę z menu bocznego, aby zobaczyć wykresy wydatków.")
 
 st.header("📋 Spis treści")
 

@@ -3,8 +3,8 @@ import plotly.express as px
 from filters import render_sidebar_filters, _load_subcategories
 from db import run_query
 
-st.set_page_config(page_title="Expenses - Subcategory", layout="wide")
-st.title("In time expenses - Subcategory")
+st.set_page_config(page_title="Wydatki - Podkategoria", layout="wide")
+st.title("Wydatki w czasie - Podkategoria")
 
 filters = render_sidebar_filters(page="subcategory")
 
@@ -12,7 +12,7 @@ if filters is None:
     st.stop()
 
 # --- Section 1: All expenses for selected category (subcategory filter does NOT affect this) ---
-st.header("Total monthly expenses for category")
+st.header("Całkowite miesięczne wydatki dla kategorii")
 
 params_all = {
     "owner": filters["owner"],
@@ -43,15 +43,15 @@ with col_chart:
         fig.update_layout(xaxis_type="category")
         st.plotly_chart(fig, use_container_width=True)
     else:
-        st.info("No data for selected date range.")
+        st.info("Brak danych dla wybranego zakresu dat.")
 
 with col_metric:
     if not df_all_bullet.empty and df_all_bullet.iloc[0, 0] is not None:
         avg_val = float(df_all_bullet.iloc[0, 0])
-        st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
+        st.metric("Średnie miesięczne wydatki", f"{avg_val:,.0f} PLN")
 
 # --- Section 2: Per-subcategory charts ---
-st.header("Expenses by subcategory")
+st.header("Wydatki według podkategorii")
 
 if filters["subcategory"] == "-1":
     subcategories = _load_subcategories(filters["category"])
@@ -99,4 +99,4 @@ for sub_id, sub_display in subcategories:
     with col_metric:
         if not df_bullet.empty:
             avg_val = float(df_bullet["Średnia wartość wydatków [PLN]"].iloc[0])
-            st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
+            st.metric("Średnie miesięczne wydatki", f"{avg_val:,.0f} PLN")

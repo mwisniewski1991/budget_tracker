@@ -3,8 +3,8 @@ import plotly.express as px
 from filters import render_sidebar_filters
 from db import run_query
 
-st.set_page_config(page_title="Month Details", layout="wide")
-st.title("Month Details")
+st.set_page_config(page_title="Szczegóły miesiąca", layout="wide")
+st.title("Szczegóły miesiąca")
 
 filters = render_sidebar_filters(page="month_details")
 
@@ -25,7 +25,7 @@ params = {
 chart_color = "#DC3545" if filters["type_id"] == 1 else "#28A745"  # Red for expenses, Green for income
 
 # --- Section 1: Category Details and Category Sum ---
-st.header("Category Details")
+st.header("Szczegóły kategorii")
 
 df_category_details = run_query("monthly_details/category_details.sql", params)
 df_category_sum = run_query("monthly_details/category_sum.sql", params)
@@ -44,25 +44,25 @@ with col_chart:
             opacity=0.75,
         )
         fig.update_layout(
-            xaxis_title="Amount [PLN]",
-            yaxis_title="Category",
+            xaxis_title="Kwota [PLN]",
+            yaxis_title="Kategoria",
             yaxis_type="category",
         )
         st.plotly_chart(fig, use_container_width=True, key="category_details_chart")
     else:
-        st.info("No data for selected filters.")
+        st.info("Brak danych dla wybranych filtrów.")
 
 with col_metric:
     if not df_total_sum.empty and df_total_sum.iloc[0, 0] is not None:
         total_sum = float(df_total_sum.iloc[0, 0])
-        type_label = "Expenses" if filters["type_id"] == 1 else "Income"
-        st.metric(f"Total {type_label}", f"{total_sum:,.2f} PLN")
+        type_label = "Wydatki" if filters["type_id"] == 1 else "Przychody"
+        st.metric(f"Całkowite {type_label}", f"{total_sum:,.2f} PLN")
     else:
-        st.info("No data.")
+        st.info("Brak danych.")
 
 # --- Section 3: Subcategories Details ---
 if filters["category"] != "All":
-    st.header("Subcategories Details")
+    st.header("Szczegóły podkategorii")
 
     df_subcategory_details = run_query("monthly_details/subcategory_details.sql", params)
 
@@ -84,18 +84,18 @@ if filters["category"] != "All":
                 opacity=0.75,
             )
             fig.update_layout(
-                xaxis_title="Amount [PLN]",
-                yaxis_title="Subcategory",
+                xaxis_title="Kwota [PLN]",
+                yaxis_title="Podkategoria",
                 yaxis_type="category",
             )
             st.plotly_chart(fig, use_container_width=True, key="subcategory_details_chart")
         else:
-            st.info("No data for selected filters.")
+            st.info("Brak danych dla wybranych filtrów.")
 else:
-    st.info("Select a specific category to view subcategory details.")
+    st.info("Wybierz konkretną kategorię, aby zobaczyć szczegóły podkategorii.")
 
 # --- Section 4: Operation Details ---
-st.header("Operation Details")
+st.header("Szczegóły operacji")
 
 df_operations = run_query("monthly_details/operations_table.sql", params)
 
