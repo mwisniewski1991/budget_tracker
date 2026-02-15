@@ -33,6 +33,7 @@ with col_chart:
             df_all_chart,
             x="Rok miesiąc",
             y="Wydatki [PLN]",
+            color_discrete_sequence=["#DC3545"],
         )
         fig.update_layout(xaxis_type="category")
         st.plotly_chart(fig, use_container_width=True)
@@ -82,6 +83,7 @@ for cat_id, cat_display in categories:
             df_chart,
             x="Rok miesiąc",
             y="Wydatki [PLN]",
+            color_discrete_sequence=["#DC3545"],
         )
         fig.update_layout(xaxis_type="category")
         st.plotly_chart(fig, use_container_width=True, key=f"cat_chart_{cat_id}")
