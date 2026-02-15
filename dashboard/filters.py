@@ -22,6 +22,12 @@ def _load_subcategories(category_id: str):
     return list(zip(df["id"].tolist(), df["display_name"].tolist()))
 
 
+@st.cache_data(ttl=600)
+def _load_all_categories():
+    df = run_query("filter_options/categories_all.sql", {})
+    return list(zip(df["id"].tolist(), df["display_name"].tolist(), df["type_id"].tolist()))
+
+
 def render_sidebar_filters(page: str) -> dict:
     """
     Render sidebar filters and return selected values.
@@ -60,9 +66,25 @@ def render_sidebar_filters(page: str) -> dict:
         # --- Page filters ---
         category = None
         subcategory = None
+        income_expense_categories = None
 
         if page == "income_vs_expenses":
-            pass
+            all_categories = _load_all_categories()
+            st.subheader("Categories")
+            category_options = [(cid, name) for cid, name, _ in all_categories]
+            category_labels = [name for _, name, _ in all_categories]
+            
+            # Default: all categories selected
+            default_selected = list(range(len(category_options)))
+            
+            selected_indices = st.multiselect(
+                "Income & Expense Categories",
+                range(len(category_options)),
+                default=default_selected,
+                format_func=lambda i: category_options[i][1],
+                label_visibility="collapsed",
+            )
+            income_expense_categories = [category_options[i][0] for i in selected_indices] if selected_indices else []
 
         elif page == "category":
             categories = _load_categories()
@@ -110,4 +132,5 @@ def render_sidebar_filters(page: str) -> dict:
         "owner": owner,
         "category": category,
         "subcategory": subcategory,
+        "income_expense_categories": income_expense_categories,
     }

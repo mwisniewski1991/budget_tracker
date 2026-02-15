@@ -14,6 +14,9 @@ with basic as(
 	left join subcategory
 		on incexp_position.subcategory_id = subcategory.id
 
+	left join category
+		on incexp_position.category_id = category.id
+
 	where 1=1
 	and (incexp_header.owner_id = %(owner)s  OR %(owner)s = -1)
 	and incexp_header.type_id in (1, 2)
@@ -23,6 +26,11 @@ with basic as(
 		%(fixed_variable)s = 'All'
 		OR (%(fixed_variable)s = 'Fixed only' AND subcategory.is_fixed_cost = 1)
 		OR (%(fixed_variable)s = 'Variable only' AND subcategory.is_fixed_cost = 0)
+	)
+	and (
+		%(income_expense_categories)s IS NULL
+		OR array_length(%(income_expense_categories)s::text[], 1) IS NULL
+		OR incexp_position.category_id = ANY(%(income_expense_categories)s::text[])
 	)
 )
 ,basic_grouped as (
