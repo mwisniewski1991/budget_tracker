@@ -25,25 +25,28 @@ params_all = {
 df_all_chart = run_query(
     "monthly_subcategories/monthly_subcategories_all_chart.sql", params_all
 )
-
-if not df_all_chart.empty:
-    fig = px.bar(
-        df_all_chart,
-        x="Rok miesiąc",
-        y="Wydatki [PLN]",
-    )
-    fig.update_layout(xaxis_type="category")
-    st.plotly_chart(fig, use_container_width=True)
-else:
-    st.info("No data for selected date range.")
-
 df_all_bullet = run_query(
     "monthly_subcategories/monthly_subcategories_all_bullet.sql", params_all
 )
 
-if not df_all_bullet.empty and df_all_bullet.iloc[0, 0] is not None:
-    avg_val = float(df_all_bullet.iloc[0, 0])
-    st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
+col_chart, col_metric = st.columns([4, 1])
+
+with col_chart:
+    if not df_all_chart.empty:
+        fig = px.bar(
+            df_all_chart,
+            x="Rok miesiąc",
+            y="Wydatki [PLN]",
+        )
+        fig.update_layout(xaxis_type="category")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("No data for selected date range.")
+
+with col_metric:
+    if not df_all_bullet.empty and df_all_bullet.iloc[0, 0] is not None:
+        avg_val = float(df_all_bullet.iloc[0, 0])
+        st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
 
 # --- Section 2: Per-subcategory charts ---
 st.header("Expenses by subcategory")
@@ -73,17 +76,22 @@ for sub_id, sub_display in subcategories:
     chart_title = df_chart["Podkategoria"].iloc[0] if "Podkategoria" in df_chart.columns else sub_display
     st.subheader(chart_title)
 
-    fig = px.bar(
-        df_chart,
-        x="Rok miesiąc",
-        y="Wydatki [PLN]",
-    )
-    fig.update_layout(xaxis_type="category")
-    st.plotly_chart(fig, use_container_width=True, key=f"sub_chart_{sub_id}")
-
     df_bullet = run_query(
         "monthly_subcategories/monthly_subcategories_one_bullet.sql", params_one
     )
-    if not df_bullet.empty:
-        avg_val = float(df_bullet["Średnia wartość wydatków [PLN]"].iloc[0])
-        st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN", label_visibility="visible")
+
+    col_chart, col_metric = st.columns([4, 1])
+
+    with col_chart:
+        fig = px.bar(
+            df_chart,
+            x="Rok miesiąc",
+            y="Wydatki [PLN]",
+        )
+        fig.update_layout(xaxis_type="category")
+        st.plotly_chart(fig, use_container_width=True, key=f"sub_chart_{sub_id}")
+
+    with col_metric:
+        if not df_bullet.empty:
+            avg_val = float(df_bullet["Średnia wartość wydatków [PLN]"].iloc[0])
+            st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
