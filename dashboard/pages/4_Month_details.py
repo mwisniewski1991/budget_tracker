@@ -69,8 +69,13 @@ if filters["category"] != "All":
 
     with col_chart:
         if not df_subcategory_details.empty:
+            # Aggregate by subcategory_name to sum all transactions per subcategory
+            df_aggregated = df_subcategory_details.groupby("subcategory_name", as_index=False)["amount"].sum()
+            # Sort by amount descending for better visualization
+            df_aggregated = df_aggregated.sort_values("amount", ascending=True)
+            
             fig = px.bar(
-                df_subcategory_details,
+                df_aggregated,
                 x="amount",
                 y="subcategory_name",
                 orientation="h",
