@@ -43,13 +43,17 @@ def render_sidebar_filters(page: str) -> dict:
     with st.sidebar:
         st.header("Filters")
 
-        # --- Global filters ---
-        st.subheader("Date range")
-        default_to = date.today().replace(day=1) + relativedelta(months=1)
-        default_from = default_to - relativedelta(months=12)
+        # --- Global filters (not for month_details page) ---
+        if page != "month_details":
+            st.subheader("Date range")
+            default_to = date.today().replace(day=1) + relativedelta(months=1)
+            default_from = default_to - relativedelta(months=12)
 
-        date_from = st.date_input("Date from", value=default_from)
-        date_to = st.date_input("Date to", value=default_to)
+            date_from = st.date_input("Date from", value=default_from)
+            date_to = st.date_input("Date to", value=default_to)
+        else:
+            date_from = None
+            date_to = None
 
         st.subheader("Owner")
         owners = _load_owners()
