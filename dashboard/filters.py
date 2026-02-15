@@ -58,9 +58,14 @@ def render_sidebar_filters(page: str) -> dict:
         )
 
         # --- Page filters ---
-        categories = _load_categories()
+        category = None
+        subcategory = None
 
-        if page == "category":
+        if page == "income_vs_expenses":
+            pass
+
+        elif page == "category":
+            categories = _load_categories()
             st.subheader("Category")
             cat_options = [("-1", "All")] + [(cid, name) for cid, name in categories]
             cat_idx = st.selectbox(
@@ -73,6 +78,7 @@ def render_sidebar_filters(page: str) -> dict:
             subcategory = None
 
         elif page == "subcategory":
+            categories = _load_categories()
             st.subheader("Category")
             cat_options = [(cid, name) for cid, name in categories]
             if not cat_options:
@@ -103,5 +109,5 @@ def render_sidebar_filters(page: str) -> dict:
         "fixed_variable": fixed_variable,
         "owner": owner,
         "category": category,
-        "subcategory": subcategory if page == "subcategory" else None,
+        "subcategory": subcategory,
     }
