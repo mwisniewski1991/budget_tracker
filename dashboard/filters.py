@@ -28,6 +28,12 @@ def _load_all_categories():
     return list(zip(df["id"].tolist(), df["display_name"].tolist(), df["type_id"].tolist()))
 
 
+@st.cache_data(ttl=600)
+def _load_years():
+    df = run_query("filter_options/years.sql", {})
+    return df["year"].tolist()
+
+
 def render_sidebar_filters(page: str) -> dict:
     """
     Render sidebar filters and return selected values.
@@ -68,8 +74,100 @@ def render_sidebar_filters(page: str) -> dict:
         subcategory = None
         income_categories = None
         expense_categories = None
+        year = None
+        month = None
+        type_id = None
 
-        if page == "income_vs_expenses":
+        if page == "month_details":
+            # Month details page has different filters
+            years = _load_years()
+            current_year = date.today().year
+            current_month = date.today().month
+            
+            st.subheader("Year")
+            if not years:
+                st.warning("No years found.")
+                return None
+            # Find current year index or default to first
+            year_idx = 0
+            if current_year in years:
+                year_idx = years.index(current_year)
+            year = st.selectbox(
+                "Year",
+                range(len(years)),
+                index=year_idx,
+                format_func=lambda i: str(years[i]),
+                label_visibility="collapsed",
+            )
+            year = str(years[year])
+            
+            st.subheader("Month")
+            month_options = [(-1, "All")] + [(i, str(i)) for i in range(1, 13)]
+            month_idx = current_month  # Index in month_options (0=All, 1=Jan, 2=Feb, etc.)
+            month = st.selectbox(
+                "Month",
+                range(len(month_options)),
+                index=month_idx,
+                format_func=lambda i: month_options[i][1],
+                label_visibility="collapsed",
+            )
+            month = month_options[month][0]
+            
+            st.subheader("Owner")
+            owners = _load_owners()
+            owner_options = [(-1, "All")] + [(oid, name) for oid, name in owners]
+            owner_idx = st.selectbox(
+                "Owner",
+                range(len(owner_options)),
+                format_func=lambda i: owner_options[i][1],
+                label_visibility="collapsed",
+                key="month_details_owner",
+            )
+            owner = owner_options[owner_idx][0]
+            
+            st.subheader("Income or Expenses")
+            type_options = [(1, "Expenses"), (2, "Income")]
+            type_idx = st.selectbox(
+                "Income or Expenses",
+                range(len(type_options)),
+                index=0,  # Default to Expenses
+                format_func=lambda i: type_options[i][1],
+                label_visibility="collapsed",
+            )
+            type_id = type_options[type_idx][0]
+            
+            st.subheader("Category")
+            all_categories = _load_all_categories()
+            # Filter categories based on selected type_id
+            if type_id == 1:  # Expenses
+                cat_options_list = [(cid, name) for cid, name, tid in all_categories if tid == 1]
+            else:  # Income
+                cat_options_list = [(cid, name) for cid, name, tid in all_categories if tid == 2]
+            
+            cat_options = [("All", "All")] + cat_options_list
+            cat_idx = st.selectbox(
+                "Category",
+                range(len(cat_options)),
+                format_func=lambda i: cat_options[i][1],
+                label_visibility="collapsed",
+            )
+            category = cat_options[cat_idx][0]
+            
+            st.subheader("Subcategory")
+            if category != "All":
+                subcategories = _load_subcategories(category)
+                sub_options = [("All", "All")] + [(sid, name) for sid, name in subcategories]
+            else:
+                sub_options = [("All", "All")]
+            sub_idx = st.selectbox(
+                "Subcategory",
+                range(len(sub_options)),
+                format_func=lambda i: sub_options[i][1],
+                label_visibility="collapsed",
+            )
+            subcategory = sub_options[sub_idx][0]
+
+        elif page == "income_vs_expenses":
             all_categories = _load_all_categories()
             
             # Separate income and expense categories
@@ -139,13 +237,22 @@ def render_sidebar_filters(page: str) -> dict:
             )
             subcategory = sub_options[sub_idx][0]
 
-    return {
-        "date_from": date_from,
-        "date_to": date_to,
-        "fixed_variable": fixed_variable,
+    result = {
+        "date_from": date_from if page != "month_details" else None,
+        "date_to": date_to if page != "month_details" else None,
+        "fixed_variable": fixed_variable if page != "month_details" else None,
         "owner": owner,
         "category": category,
         "subcategory": subcategory,
         "income_categories": income_categories,
         "expense_categories": expense_categories,
     }
+    
+    if page == "month_details":
+        result.update({
+            "year": year,
+            "month": month,
+            "type_id": type_id,
+        })
+    
+    return result
