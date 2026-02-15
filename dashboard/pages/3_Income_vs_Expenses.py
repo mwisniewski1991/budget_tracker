@@ -26,6 +26,7 @@ if not df_cumulative.empty:
         x="Rok miesiąc",
         y="Bilans kumulacyjny [PLN]",
         color_discrete_sequence=["#007BFF"],
+        opacity=0.75,
     )
     fig.update_layout(xaxis_type="category")
     st.plotly_chart(fig, use_container_width=True, key="cumulative_chart")
@@ -43,6 +44,7 @@ if not df_income.empty:
         x="Rok miesiąc",
         y="Przychody [PLN]",
         color_discrete_sequence=["#28A745"],
+        opacity=0.75,
     )
     fig.update_layout(
         xaxis_type="category",
@@ -63,6 +65,7 @@ if not df_expenses.empty:
         x="Rok miesiąc",
         y="Wydatki [PLN]",
         color_discrete_sequence=["#DC3545"],
+        opacity=0.75,
     )
     fig.update_layout(
         xaxis_type="category",

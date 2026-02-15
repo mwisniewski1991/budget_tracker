@@ -38,6 +38,7 @@ with col_chart:
             x="Rok miesiąc",
             y="Wydatki [PLN]",
             color_discrete_sequence=["#DC3545"],
+            opacity=0.75,
         )
         fig.update_layout(xaxis_type="category")
         st.plotly_chart(fig, use_container_width=True)
@@ -89,7 +90,9 @@ for sub_id, sub_display in subcategories:
             x="Rok miesiąc",
             y="Wydatki [PLN]",
             color_discrete_sequence=["#DC3545"],
+            opacity=0.75,
         )
+        fig.update_traces(marker_line_color="#DC3545", marker_line_width=1)
         fig.update_layout(xaxis_type="category")
         st.plotly_chart(fig, use_container_width=True, key=f"sub_chart_{sub_id}")
 
