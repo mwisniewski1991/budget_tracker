@@ -6,6 +6,7 @@ services:
       - 81:81
     depends_on:
       - website
+      - dashboard
     networks:
       - budget_tracker_network
 
@@ -20,6 +21,21 @@ services:
     volumes:
       - ./website/app:/website/app
       - ./website/frontend:/website/frontend
+    restart: always
+    depends_on:
+      - database
+    networks:
+      - budget_tracker_network
+
+  dashboard:
+    container_name: budget_tracker_dashboard
+    build: ./dashboard
+    env_file:
+      - dashboard/.env
+    ports:
+      - 8501:8501
+    volumes:
+      - ./dashboard:/dashboard
     restart: always
     depends_on:
       - database
