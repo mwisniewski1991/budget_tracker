@@ -65,22 +65,26 @@ if filters["category"] != "All":
 
     df_subcategory_details = run_query("monthly_details/subcategory_details.sql", params)
 
-    if not df_subcategory_details.empty:
-        fig = px.bar(
-            df_subcategory_details,
-            x="subcategory_name",
-            y="amount",
-            color_discrete_sequence=[chart_color],
-            opacity=0.75,
-        )
-        fig.update_layout(
-            xaxis_title="Subcategory",
-            yaxis_title="Amount [PLN]",
-            xaxis_type="category",
-        )
-        st.plotly_chart(fig, use_container_width=True, key="subcategory_details_chart")
-    else:
-        st.info("No data for selected filters.")
+    col_chart, col_empty = st.columns([4, 1])
+
+    with col_chart:
+        if not df_subcategory_details.empty:
+            fig = px.bar(
+                df_subcategory_details,
+                x="amount",
+                y="subcategory_name",
+                orientation="h",
+                color_discrete_sequence=[chart_color],
+                opacity=0.75,
+            )
+            fig.update_layout(
+                xaxis_title="Amount [PLN]",
+                yaxis_title="Subcategory",
+                yaxis_type="category",
+            )
+            st.plotly_chart(fig, use_container_width=True, key="subcategory_details_chart")
+        else:
+            st.info("No data for selected filters.")
 else:
     st.info("Select a specific category to view subcategory details.")
 
