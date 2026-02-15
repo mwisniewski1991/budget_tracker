@@ -32,15 +32,16 @@ df_category_details = run_query("monthly_details/category_details.sql", params)
 if not df_category_details.empty:
     fig = px.bar(
         df_category_details,
-        x="category_name",
-        y="amount",
+        x="amount",
+        y="category_name",
+        orientation="h",
         color_discrete_sequence=[chart_color],
         opacity=0.75,
     )
     fig.update_layout(
-        xaxis_title="Category",
-        yaxis_title="Amount [PLN]",
-        xaxis_type="category",
+        xaxis_title="Amount [PLN]",
+        yaxis_title="Category",
+        yaxis_type="category",
     )
     st.plotly_chart(fig, use_container_width=True, key="category_details_chart")
 else:
