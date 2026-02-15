@@ -79,11 +79,11 @@ for sub_id, sub_display in subcategories:
         y="Wydatki [PLN]",
     )
     fig.update_layout(xaxis_type="category")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True, key=f"sub_chart_{sub_id}")
 
     df_bullet = run_query(
         "monthly_subcategories/monthly_subcategories_one_bullet.sql", params_one
     )
     if not df_bullet.empty:
         avg_val = float(df_bullet["Średnia wartość wydatków [PLN]"].iloc[0])
-        st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN")
+        st.metric("Average monthly expenses", f"{avg_val:,.0f} PLN", label_visibility="visible")
