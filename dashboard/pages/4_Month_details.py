@@ -29,6 +29,7 @@ st.header("Category Details")
 
 df_category_details = run_query("monthly_details/category_details.sql", params)
 df_category_sum = run_query("monthly_details/category_sum.sql", params)
+df_total_sum = run_query("monthly_details/total_sum.sql", params)
 
 col_chart, col_metric = st.columns([4, 1])
 
@@ -52,8 +53,8 @@ with col_chart:
         st.info("No data for selected filters.")
 
 with col_metric:
-    if not df_category_sum.empty and df_category_sum.iloc[0, 0] is not None:
-        total_sum = float(df_category_sum.iloc[0, 0])
+    if not df_total_sum.empty and df_total_sum.iloc[0, 0] is not None:
+        total_sum = float(df_total_sum.iloc[0, 0])
         type_label = "Expenses" if filters["type_id"] == 1 else "Income"
         st.metric(f"Total {type_label}", f"{total_sum:,.2f} PLN")
     else:
