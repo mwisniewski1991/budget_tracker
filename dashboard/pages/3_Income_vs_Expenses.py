@@ -25,7 +25,7 @@ if not df_cumulative.empty:
         df_cumulative,
         x="Rok miesiąc",
         y="Bilans kumulacyjny [PLN]",
-        color_discrete_sequence=["#28A745"],
+        color_discrete_sequence=["#007BFF"],
     )
     fig.update_layout(xaxis_type="category")
     st.plotly_chart(fig, use_container_width=True, key="cumulative_chart")
