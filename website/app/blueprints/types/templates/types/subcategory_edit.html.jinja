@@ -36,6 +36,18 @@
             </select>
         </div>
 
+        <div class="col-2">
+            <select name="subcategory_is_active">
+                {% if subcategory.is_active == 1 %}
+                    <option selected value="1">Aktywna</option>
+                    <option value="0">Zawieszona</option>
+                {% else %}
+                    <option value="1">Aktywna</option>
+                    <option selected value="0">Zawieszona</option>
+                {% endif %}
+            </select>
+        </div>
+
         <div class="col-1 me-2">
             <div class="col"><button class="btn btn-danger" hx-get="{{ '/type/%s/category/%s/subcategory/%s/read' %(type_id, subcategory.category_id, subcategory.id) }} " >Cancel</button></div>
         </div>

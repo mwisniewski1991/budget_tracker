@@ -86,6 +86,7 @@ Podkategorie — szczegółowa klasyfikacja w ramach kategorii głównej, np dla
 | `name_pl` | Nazwa podkategorii po polsku. |
 | `category_id` | Powiązanie z kategorią nadrzędną (`category.id`). |
 | `is_fixed_cost` | Flaga kosztu stałego. `1` = koszt stały (np. czynsz, abonament), `0` = koszt zmienny (domyślnie). Używana w filtrach dashboardu do analizy stałych vs zmiennych wydatków. |
+| `is_active` | Czy podkategoria jest aktywna. `1` — aktywna (domyślnie), `0` — nieaktywna; nieaktywne podkategorie można ukryć z formularzy bez usuwania historii transakcji. |
 
 ---
 

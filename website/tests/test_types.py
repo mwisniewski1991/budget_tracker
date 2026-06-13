@@ -67,7 +67,8 @@ def test_edit_subcategory(client):
 
     response = client.put(f'/type/2/category/{category.id}/subcategory/{subcategory.id}', data={
         'subcategory_name_pl': 'Updated Test Subcategory',
-        'subcategory_fixed_cost': 1
+        'subcategory_fixed_cost': 1,
+        'subcategory_is_active': 0
     })
     assert response.status_code == 200
     with client.application.app_context():
@@ -75,3 +76,4 @@ def test_edit_subcategory(client):
         assert subcategory is not None
         assert subcategory.name_pl == 'Updated Test Subcategory'
         assert subcategory.is_fixed_cost == 1
+        assert subcategory.is_active == 0

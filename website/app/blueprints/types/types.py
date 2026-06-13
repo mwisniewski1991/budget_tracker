@@ -56,10 +56,12 @@ def add_subcategory(type_id, category_id):
 def edit_subcategory(type_id, category_id, subcategory_id):
     new_subcategory_name = request.form.get('subcategory_name_pl', None)
     new_subcategory_is_fixed_cost = request.form.get('subcategory_fixed_cost', None)
+    new_subcategory_is_active = request.form.get('subcategory_is_active', None)
 
     subcategory = Subategory.query.filter_by(id=subcategory_id, category_id=category_id).one()
     subcategory.name_pl = new_subcategory_name
     subcategory.is_fixed_cost = new_subcategory_is_fixed_cost
+    subcategory.is_active = new_subcategory_is_active
 
     db.session.commit()
     return render_template('types/subcategory_read.html.jinja', type_id=type_id, subcategory=subcategory)

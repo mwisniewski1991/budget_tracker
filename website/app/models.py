@@ -39,6 +39,7 @@ class Subategory(db.Model):
     name_pl = db.Column(db.String(100), nullable=False)
     category_id = db.Column(db.String(2), db.ForeignKey('category.id'), nullable=False)
     is_fixed_cost = db.Column(db.Integer, nullable=False, default=0)
+    is_active = db.Column(db.Integer, server_default=text('1'), nullable=False)
 
 
 class INCEXP_header(db.Model):

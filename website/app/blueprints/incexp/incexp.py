@@ -118,7 +118,7 @@ def get_incexp_edit(header_id):
                                         Subategory.name_pl,
                                         )
                                 .join(Subategory, Category.id == Subategory.category_id)
-                                .filter(Category.type_id == incexp.type_id)
+                                .filter(Category.type_id == incexp.type_id, Subategory.is_active == 1)
                             ).all()
     choices_list = [(master_slave_encrypt(cat_sub[0], cat_sub[2]),  f'{cat_sub[1].strip()} : {cat_sub[3].strip()}') for cat_sub in categories_subcategories]
 
@@ -127,8 +127,19 @@ def get_incexp_edit(header_id):
     incexp_header_form.type.data = str(incexp.type_id)
 
     for position in incexp.incexp_positions:
-        incexp_header_form.positions[position.position_id].category.choices = choices_list
-        incexp_header_form.positions[position.position_id].category.data = master_slave_encrypt(position.category_id, position.subcategory_id)
+        position_choices = list(choices_list)
+        current_choice = master_slave_encrypt(position.category_id, position.subcategory_id)
+        if not any(choice[0] == current_choice for choice in position_choices):
+            subcategory = Subategory.query.filter_by(id=position.subcategory_id).first()
+            category = Category.query.filter_by(id=position.category_id).first()
+            if subcategory and category:
+                position_choices.append((
+                    current_choice,
+                    f'{category.name_pl.strip()} : {subcategory.name_pl.strip()}'
+                ))
+
+        incexp_header_form.positions[position.position_id].category.choices = position_choices
+        incexp_header_form.positions[position.position_id].category.data = current_choice
 
         incexp_header_form.positions[position.position_id].amount.data = position.amount_absolute
         incexp_header_form.positions[position.position_id].comment.data = position.comment
@@ -155,7 +166,7 @@ def get_categories():
 def get_subcategories():
     category_id = request.args.get('category-id', None)
     if category_id:
-        subcategories = Subategory.query.filter_by(category_id=category_id).all()
+        subcategories = Subategory.query.filter_by(category_id=category_id).filter(Subategory.is_active == 1).all()
         return render_template("incexp/utils/options_select.html.jinja", options=subcategories)
     return ''
 
@@ -169,7 +180,7 @@ def get_cat_sub_options():
                                         Subategory.name_pl,
                                         )
                                 .join(Subategory, Category.id == Subategory.category_id)
-                                .filter(Category.type_id == type_id)
+                                .filter(Category.type_id == type_id, Subategory.is_active == 1)
                                 .order_by(Category.id, Subategory.id)
                             ).all()
 
