@@ -1,31 +1,29 @@
-  <div class="row border p-2 border-white rounded" hx-target="this" hx-swap="outerHTML">
-      <div class="col-2"><span>{{ subcategory.id }}</span></div>    
-      <div class="col-4"><span>{{ subcategory.name_pl }}</span></div>
-      <div class="col-3">
+<tr class="child-row">
+    <td>{{ subcategory.id }}</td>
+    <td>{{ subcategory.name_pl }}</td>
+    <td>
         {% if type_id == "1" %}
             {% if subcategory.is_fixed_cost == 0 %}
-                <span>Koszt zmienny</span>
+                <span class="badge bg-info status-badge">Koszt zmienny</span>
             {% else %}
-                <span>Koszt stały</span>
+                <span class="badge bg-primary status-badge">Koszt stały</span>
             {% endif %}
         {% else %}
             {% if subcategory.is_fixed_cost == 0 %}
-                <span>Dochód zmienny</span>
+                <span class="badge bg-info status-badge">Dochód zmienny</span>
             {% else %}
-                <span>Dochód stały</span>
+                <span class="badge bg-primary status-badge">Dochód stały</span>
             {% endif %}
         {% endif %}
-      </div>
-      <div class="col-2">
+    </td>
+    <td>
         {% if subcategory.is_active == 1 %}
-            <span>Aktywna</span>
+            <span class="badge bg-success status-badge">Aktywna</span>
         {% else %}
-            <span>Zawieszona</span>
+            <span class="badge bg-secondary status-badge">Zawieszona</span>
         {% endif %}
-      </div>
-      <div class="col-1">
-            <button hx-get="{{ '/type/%s/category/%s/subcategory/%s/edit' %(type_id, subcategory.category_id, subcategory.id) }} "  class="btn btn-warning">Zmień</button>
-      </div>
-      <div class="col-1"></div>
-
-  </div> 
+    </td>
+    <td>
+        <button hx-get="{{ '/type/%s/category/%s/subcategory/%s/edit' %(type_id, subcategory.category_id, subcategory.id) }}" hx-target="closest tr" hx-swap="outerHTML" class="btn btn-warning btn-sm">Zmień</button>
+    </td>
+</tr>

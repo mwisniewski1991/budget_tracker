@@ -1,16 +1,21 @@
-.header {
-    border: 1px dashed grey;
+:root {
+    --bt-expense: #ff3e00;
+    --bt-income: #207407;
 }
 
-.display-1{
-    color: #ff3e00;
-  }
+.header {
+    border: 1px dashed var(--bs-border-color);
+}
+
+.display-1 {
+    color: var(--bt-expense);
+}
 
 .position {
-    border: 1px dashed black;
+    border: 1px dashed var(--bs-border-color);
 }
 
-.hidden{
+.hidden {
     display: none;
 }
 
@@ -19,23 +24,43 @@ div.htmx-swapping div {
     transition: opacity .25s ease-out;
 }
 
-.type_expense{
-    color: #ff3e00;
+.type_expense {
+    color: var(--bt-expense);
 }
 
-.type_income{
-    color: #207407;
+.type_income {
+    color: var(--bt-income);
 }
 
-.header-main-info{
+.header-main-info {
     font-size: 1.05em;
     font-weight: bold;
 }
 
-.position-main-info{
+.position-main-info {
     font-size: 1.05em;
 }
 
-.position-additional-info{
+.position-additional-info {
     font-style: italic;
+}
+
+.list-section {
+    margin-bottom: 1.5rem;
+}
+
+.child-row td:first-child {
+    padding-left: 2rem;
+}
+
+.child-row td:nth-child(2) {
+    font-size: 0.95em;
+}
+
+.status-badge {
+    font-size: 0.85em;
+}
+
+.parent-row td {
+    font-weight: 600;
 }

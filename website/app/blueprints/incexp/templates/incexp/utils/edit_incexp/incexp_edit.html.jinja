@@ -5,7 +5,7 @@
 
 <h2 class="my-2">Wprowadź zmiany</h2>
 
-<div class="container my-2 border border-white rounded">
+<div class="container my-2 border border-secondary rounded">
 
     <form class="form" id="incexp-add-form" action='/incexp/{{ incexp.id }}/edit' method="POST">
 
@@ -37,7 +37,7 @@
         <div id="incexp-add-positions-box">
             {% for position in incexp.incexp_positions %}
 
-                <div class="container my-2 border border-white rounded" id="incexp-add-positions-box_{{loop.index}}">
+                <div class="container my-2 border border-secondary rounded" id="incexp-add-positions-box_{{loop.index}}">
                     <div class="row my-2">
 
                         <div class="col-1"><span>{{ position.position_id }}</span></div>    

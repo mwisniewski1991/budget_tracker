@@ -3,7 +3,7 @@
 {% block content %}
 <h2 class="my-2">Import transakcji z CSV</h2>
 
-<div class="container my-2 border border-white rounded">
+<div class="container my-2 border border-secondary rounded">
     <form action="{{ url_for('bulk_import.preview_bulk_import') }}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="csv_file" class="form-label">Wybierz plik CSV</label>

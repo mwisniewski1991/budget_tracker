@@ -4,65 +4,57 @@
 
     <h2>Właściciele i konta</h2>
 
-    <div class="container py-2 border border-warning rounded">
-        <div class="container">
-
-        <h6>Dodaj nowego właściciela</h6>  
-         <form action='/owners' method="POST"> 
-            <div class="row">
-                <div class="col-6">
-                    <input type="text" id="owner_name_pl" name="owner_name_pl" placeholder="Wpisz nazwę">
+    <div class="list-section border border-warning rounded p-3">
+        <h6 class="mb-3">Dodaj nowego właściciela</h6>
+        <form action="/owners" method="POST">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="owner_name_pl" name="owner_name_pl" placeholder="Wpisz nazwę">
                 </div>
-                <div class="col-2">
+                <div class="col-auto">
                     <button type="submit" class="btn btn-primary">Prześlij</button>
                 </div>
             </div>
         </form>
-
-      </div>
     </div>
 
-
-
     {% for owner in owners %}
-    <div class="container mt-2 py-2 border border-warning rounded">
-
-        <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
-            <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
-            {% with owner=owner %}
-                {% include "owners/owners_read.html.jinja" %}
-            {% endwith %}
-            </div>   
-        </div>   
-
-        <div class="container mt-2 border border-white rounded">
-            {% for account in owner.accounts %}
-                <div class="container my-2" hx-target="this" hx-swap="innerHTML">
+    <div class="list-section border border-warning rounded p-3">
+        <table class="table table-dark table-hover table-sm mb-0">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:10%">ID</th>
+                    <th scope="col" style="width:40%">Nazwa</th>
+                    <th scope="col" style="width:25%">Status</th>
+                    <th scope="col" style="width:15%">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% with owner=owner %}
+                    {% include "owners/owners_read.html.jinja" %}
+                {% endwith %}
+                {% for account in owner.accounts %}
                     {% with account=account %}
                         {% include "owners/account_read.html.jinja" %}
                     {% endwith %}
-                </div>   
-            {% endfor %}
-                
-                            
-                <div class="container py-2 my-2 border border-warning rounded">
-                    <h6>Dodaj konto</h4>
-                    <form action="{{ '/owners/%s/accounts' %owner.id }} " method="POST"> 
+                {% endfor %}
+            </tbody>
+        </table>
 
-                        <div class="row">
-                            <div class="col-6">
-                                <input type="text" id="account_name_pl" name="account_name_pl" placeholder="Wpisz nazwę">
-                            </div>
-                            <div class="col-2">
-                                <button type="submit" class="btn btn-primary">Prześlij</button>
-                            </div>
-                        </div>
-                    </form>
+        <div class="border border-secondary rounded p-3 mt-3">
+            <h6 class="mb-3">Dodaj konto</h6>
+            <form action="{{ '/owners/%s/accounts' % owner.id }}" method="POST">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="account_name_pl" name="account_name_pl" placeholder="Wpisz nazwę">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Prześlij</button>
+                    </div>
                 </div>
+            </form>
         </div>
     </div>
     {% endfor %}
 
-
 {% endblock %}
-

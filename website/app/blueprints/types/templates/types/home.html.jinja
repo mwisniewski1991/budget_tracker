@@ -3,62 +3,58 @@
 
     <h2>Kategorie i podkategorie</h2>
 
+    <div class="list-section border border-warning rounded p-3">
+        <h6 class="mb-3">Dodaj kategorię</h6>
+        <form action="/type/{{ type_id }}/category" method="POST">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="category_name_pl" name="category_name_pl" placeholder="Wpisz nazwę">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Prześlij</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-    <div class="container py-2 border border-warning rounded">
-        <div class="container">
-            <h6>Dodaj kategorię</h6>  
-            <form action='/type/{{ type_id }}/category' method="POST"> 
-                <div class="row">
-                    <div class="col-6">
-                        <input type="text" id="category_name_pl" name="category_name_pl" placeholder="Wpisz nazwę">
+    {% for category in categories %}
+    <div class="list-section border border-warning rounded p-3">
+        <table class="table table-dark table-hover table-sm mb-0">
+            <thead>
+                <tr>
+                    <th scope="col" style="width:10%">ID</th>
+                    <th scope="col" style="width:35%">Nazwa</th>
+                    <th scope="col" style="width:25%">Typ</th>
+                    <th scope="col" style="width:15%">Status</th>
+                    <th scope="col" style="width:15%">Akcje</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% with category=category %}
+                    {% include "types/category_read.html.jinja" %}
+                {% endwith %}
+                {% for subcategory in category.subcategories %}
+                    {% with subcategory=subcategory %}
+                        {% include "types/subcategory_read.html.jinja" %}
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="border border-secondary rounded p-3 mt-3">
+            <h6 class="mb-3">Dodaj podkategorię</h6>
+            <form action="{{ '/type/%s/category/%s/subcategory' %(type_id, category.id) }}" method="POST">
+                <div class="row g-2 align-items-center">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" id="new_subcategory_name" name="new_subcategory_name" placeholder="Wpisz nazwę">
                     </div>
-                    <div class="col-2">
+                    <div class="col-auto">
                         <button type="submit" class="btn btn-primary">Prześlij</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
-
-    {% for category in categories %}
-    <div class="container mt-2 py-2 border border-warning rounded">
-
-        <div class="container mt-2">
-            <div class="container mt-2" hx-target="this" hx-swap="innerHTML">
-                {% with category=category %}
-                    {% include "types/category_read.html.jinja" %}
-                {% endwith %}
-            </div>   
-        </div>   
-
-        <div class="container mt-2 border border-white rounded">
-            {% for subcategory in category.subcategories %}
-                <div class="container my-2" hx-target="this" hx-swap="innerHTML">
-                    {% with subcategory=subcategory %}
-                        {% include "types/subcategory_read.html.jinja" %}
-                    {% endwith %}
-                </div>   
-            {% endfor %}
-                            
-            <div class="container py-2 my-2 border border-warning rounded">
-                <h6>Dodaj podkategorię</h4>
-                <form action="{{ '/type/%s/category/%s/subcategory' %(type_id, category.id) }} " method="POST"> 
-
-                    <div class="row">
-                        <div class="col-6">
-                            <input type="text" id="new_subcategory_name" name="new_subcategory_name" placeholder="Wpisz nazwę">
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-primary">Prześlij</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
     {% endfor %}
-
-
 
 {% endblock %}

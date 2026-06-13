@@ -4,7 +4,7 @@
     <h2 class="pt-2">Dochody i wydatki</h3>
 
     {# FILTERS #}
-    <div  class="container my-2 border border-white rounded">
+    <div  class="container my-2 border border-secondary rounded">
 
 
         <button class="btn btn-info my-2" hx-on:click="htmx.toggleClass(htmx.find('#incexp-filters-details'), 'hidden');">
@@ -106,13 +106,13 @@
     </div>  
 
     {# NEW INCEXP #}
-    <div class="container my-2 border border-white rounded">
+    <div class="container my-2 border border-secondary rounded">
         {% include "incexp/utils/new_incexp.html.jinja" %}
     </div>
 
  
     {# INCEXP LIST #}
-    <div class="container py-2 border border-white rounded" id="incexp_list_existing">
+    <div class="container py-2 border border-secondary rounded" id="incexp_list_existing">
         {% with incexp_list=incexp_list %}
             {% include "incexp/utils/existing_incexp/incexp_list_existing.html.jinja" %}
         {% endwith %}

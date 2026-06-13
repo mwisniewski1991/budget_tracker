@@ -1,15 +1,14 @@
-
-<div class="row border p-2" hx-target="this" hx-swap="outerHTML">
-    <div class="col-2"><span>{{ account.id }}</span></div>    
-    <div class="col-4"><span>{{ account.name_pl }}</span></div>    
-    <div class="col-3">
-            {% if account.is_active == 1 %}
-                <span>Aktywne</span>
-            {% else %}
-                <span>Zawieszone</span>
-            {% endif %}
-        </div>
-    <div class="col-1"><button hx-get="{{ '/owners/%s/accounts/%s/edit' %(account.owner_id, account.id) }} "  class="btn btn-warning">Zmień</button>
-        </div>
-    <div class="col-1"></div>
-</div> 
+<tr class="child-row">
+    <td>{{ account.id }}</td>
+    <td>{{ account.name_pl }}</td>
+    <td>
+        {% if account.is_active == 1 %}
+            <span class="badge bg-success status-badge">Aktywne</span>
+        {% else %}
+            <span class="badge bg-secondary status-badge">Zawieszone</span>
+        {% endif %}
+    </td>
+    <td>
+        <button hx-get="{{ '/owners/%s/accounts/%s/edit' %(account.owner_id, account.id) }}" hx-target="closest tr" hx-swap="outerHTML" class="btn btn-warning btn-sm">Zmień</button>
+    </td>
+</tr>

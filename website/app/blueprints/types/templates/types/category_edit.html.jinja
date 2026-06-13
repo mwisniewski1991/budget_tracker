@@ -1,25 +1,12 @@
-<form hx-put="{{ '/type/%s/category/%s' %(type_id, category.id) }} " hx-target="this" hx-swap="outerHTML" >
-
-    <div class="row border p-2 border-primary rounded">
-
-        <div class="col-2"><span>{{ category.id }}</span></div>    
-
-        <div class="col-4">
-            <input type="text" id="category_name_pl" name="category_name_pl" value="{{category.name_pl}}">
-        </div>
-        <div class="col-3"></div>
-
-        <div class="col-1 me-2">
-            <div class="col"><button class="btn btn-danger" hx-get="{{ '/type/%s/category/%s/read' %(type_id, category.id) }} " >Cancel</button></div>
-        </div>
-        <div class="col-1">
-            <div class="col"><button class="btn btn-primary">Submit</button></div>
-        </div>
-
-    </div>
-
-</form>
-
-
-
- 
+<tr class="parent-row">
+    <td>{{ category.id }}</td>
+    <td>
+        <input type="text" class="form-control form-control-sm" name="category_name_pl" value="{{ category.name_pl }}">
+    </td>
+    <td></td>
+    <td></td>
+    <td class="text-nowrap">
+        <button type="button" class="btn btn-danger btn-sm" hx-get="{{ '/type/%s/category/%s/read' %(type_id, category.id) }}" hx-target="closest tr" hx-swap="outerHTML">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" hx-put="{{ '/type/%s/category/%s' %(type_id, category.id) }}" hx-include="closest tr" hx-target="closest tr" hx-swap="outerHTML">Submit</button>
+    </td>
+</tr>
