@@ -51,8 +51,11 @@ def confirmed_owners_html(owner_id):
 # ACCOUNTS
 @owners.route('/<owner_id>/accounts', methods=['POST'])
 def add_accounts(owner_id):
-    new_account_name = request.form.get('account_name_pl', None)
-    new_account = Accounts(name_pl = new_account_name, owner_id=owner_id)
+    new_account_name = request.form.get('account_name_pl', '').strip()
+    if not new_account_name:
+        return redirect('/owners')
+
+    new_account = Accounts(name_pl=new_account_name, owner_id=owner_id)
     db.session.add(new_account)
     db.session.commit()
     return redirect('/owners')

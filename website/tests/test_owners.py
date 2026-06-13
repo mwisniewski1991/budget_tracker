@@ -36,6 +36,22 @@ def test_add_account_to_owner(client):
     assert response.status_code == 302  # Redirect after successful creation
     assert response.headers['Location'] == '/owners'
 
+def test_add_account_empty_name_rejected(client):
+    """Test POST request with empty account name is rejected"""
+    client.post("/owners/", data={'owner_name_pl': 'Test Owner'})
+
+    response = client.post("/owners/1/accounts", data={
+        'account_name_pl': ''
+    })
+    assert response.status_code == 302
+    assert response.headers['Location'] == '/owners'
+
+    response = client.post("/owners/1/accounts", data={
+        'account_name_pl': '   '
+    })
+    assert response.status_code == 302
+    assert response.headers['Location'] == '/owners'
+
 
 # def test_edit_account(client):
 #     """Test PUT request to edit an account"""

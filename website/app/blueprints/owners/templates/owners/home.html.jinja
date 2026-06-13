@@ -46,7 +46,7 @@
             <form action="{{ '/owners/%s/accounts' % owner.id }}" method="POST">
                 <div class="row g-2 align-items-center">
                     <div class="col-md-6">
-                        <input type="text" class="form-control" id="account_name_pl" name="account_name_pl" placeholder="Wpisz nazwę">
+                        <input type="text" class="form-control" name="account_name_pl" placeholder="Wpisz nazwę" required>
                     </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-primary">Prześlij</button>
